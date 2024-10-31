@@ -1,0 +1,112 @@
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Varela Round", sans-serif;
+    font-weight: 400;
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0; /* Remove default margin */
+}
+
+h1 {
+    font-family: "Playwrite PE", cursive; /* Consistent font with .main_logo */
+    font-size: 50px; /* Size matching .main_logo */
+    font-weight: 900; /* Weight matching .main_logo */
+    color: #2c2c2c; /* Matching color scheme */
+    text-align: center; /* Centered like other headings */
+    margin: 0 0 60px; /* Match margin */
+}
+
+.main_logo {
+    margin: 0 0 60px;
+    font-family: "Playwrite PE", cursive;
+    font-weight: 900;
+    font-size: 50px;
+    text-align: center;
+}
+
+.homepage {
+    background: rgba(0, 0, 0, 0.83); /* Slightly more opaque for readability */
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.39);
+    padding: 0.5em;
+    height: 100vh; /* Full height for the homepage */
+    display: flex;
+    align-items: center; /* Center contents vertically */
+    justify-content: center; /* Center contents horizontally */
+}
+
+.container {
+    display: flex; 
+    max-width: 100% !important;
+}
+
+.main-content {
+    width: 100%;
+    padding: 3em;
+    background: #fff;
+    margin: 0 1em; /* Adjusted margin */
+    border-radius: 20px;
+    height: 85vh; /* Retaining scrollability */
+    overflow-y: auto; /* Use auto for better UX */
+}
+
+.main-content::-webkit-scrollbar {
+    width: 30px;
+    background: transparent;
+}
+
+.main-content::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 20px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+    background: #c2c2c2;
+    border-radius: 20px;
+    border: 10px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: #9773dc;
+    border: 10px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+}
+
+.events-section {
+    margin-top: 3em;
+}
+
+.calendar-container {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+}
+
+/* Responsive Styles */
+@media only screen and (max-width: 768px) {
+    .main-content {
+        padding: 2em; /* Adjust padding for smaller screens */
+    }
+
+    .main_logo {
+        font-size: 40px; /* Smaller font size on mobile */
+    }
+
+    h1 {
+        font-size: 40px; /* Adjust h1 font size for mobile */
+    }
+}
+
+input#Notification {
+    border: 1px solid #d2d2d2;
+    border-radius: 7px;
+    padding: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
