@@ -6,7 +6,6 @@ const RegisterPage = () => {
     const [password, setPassword] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [gender, setGender] = useState('');
-    const [type, setType] = useState('student');
     const [receiveNews, setReceiveNews] = useState(false);
     const [fullName, setFullName] = useState('');
     const [errors, setErrors] = useState({});
@@ -65,7 +64,6 @@ const RegisterPage = () => {
                 fullName,
                 dateOfBirth,
                 gender,
-                type,
                 email,
                 password,
                 receiveNews
@@ -150,16 +148,6 @@ const RegisterPage = () => {
                                 </select>
                             </label>
 
-                            <label htmlFor="type">Type
-                                <select
-                                    id="type"
-                                    value={type}
-                                    onChange={(e) => setType(e.target.value)}
-                                >
-                                    <option value="student">Student</option>
-                                    <option value="lecturer">Lecturer</option>
-                                </select>
-                            </label>
 
                             <div className="receive-emails">
                                 <label htmlFor="receiveNews">
