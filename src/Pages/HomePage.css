@@ -37,6 +37,7 @@ h1 {
     display: flex;
     align-items: center; /* Center contents vertically */
     justify-content: center; /* Center contents horizontally */
+    width: 100%;
 }
 
 .container {
@@ -50,8 +51,9 @@ h1 {
     background: #fff;
     margin: 0 1em; /* Adjusted margin */
     border-radius: 20px;
-    height: 85vh; /* Retaining scrollability */
+    height: 80vh; /* Retaining scrollability */
     overflow-y: auto; /* Use auto for better UX */
+    width: 1000px;
 }
 
 .main-content::-webkit-scrollbar {

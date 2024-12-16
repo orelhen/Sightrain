@@ -1,0 +1,25 @@
+.red-square-game {
+    text-align: center;
+    margin: 20px;
+}
+
+.square {
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+    background-color: blue;
+    border: 5px solid black;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.square.red {
+    background-color: red;
+}
+
+.results {
+    margin-top: 20px;
+    text-align: left;
+    display: inline-block;
+}
+

@@ -1,0 +1,36 @@
+.matrix-game {
+    text-align: center;
+}
+
+.matrix {
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    grid-template-rows: repeat(2, 100px);
+    gap: 10px;
+    justify-content: center;
+}
+
+.square {
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    border: 2px solid black;
+}
+
+.square:hover {
+    background-color: lightblue;
+}
+
+label {
+    display: block;
+    margin: 10px 0;
+}
+
+input[type="range"] {
+    width: 200px;
+}

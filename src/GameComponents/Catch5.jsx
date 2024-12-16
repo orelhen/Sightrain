@@ -92,7 +92,7 @@ const Catch5Game = () => {
       {/* Hardness Slider */}
       <div style={sliderContainerStyle}>
         <label>
-          <strong>Hardness (Speed): </strong>
+          <strong>Diffeculty </strong>
           {numberSpeed}ms
         </label>
         <input
