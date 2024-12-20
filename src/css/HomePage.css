@@ -1,0 +1,20 @@
+
+.homepage {
+    background: rgba(0, 0, 0, 0.83); /* Slightly more opaque for readability */
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.39);
+    padding: 0.5em;
+    height: 100vh; /* Full height for the homepage */
+    display: flex;
+    align-items: center; /* Center contents vertically */
+    justify-content: center; /* Center contents horizontally */
+    width: 100%;
+}
+
+
+
+
+
+
+

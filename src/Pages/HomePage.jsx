@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './HomePage.css';
+import '../css/HomePage.css';
 import Sidebar from '../Components/Sidebar';
 import Catch5Game from '../GameComponents/Catch5';
 import RedSquareGame from '../GameComponents/RedSquareGame';
@@ -16,7 +16,6 @@ const HomePage = () => {
     return (
         <div className="homepage">
             <Sidebar onGameClick={handleGameClick} />
-            <div className="container">
                 <main className="main-content">
                     <h1 className="main_logo">Sightrain</h1>
                     {activeGame === 'game1' && <Catch5Game />}
@@ -24,7 +23,6 @@ const HomePage = () => {
                     {activeGame === 'game3' && <QuickMemoryGame />}
                     {activeGame === 'game4' && <MatrixGame />}
                 </main>
-            </div>
         </div>
     );
 };

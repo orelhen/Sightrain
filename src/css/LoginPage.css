@@ -1,37 +1,4 @@
-/* Base app styles */
-body {
-    font-family: 'Varela Round', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  /* App layout */
-  .App {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 2em;
-  }
-  
-  /* Form section styling */
-  .form-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2em;
-    background: #000000d4;
-    backdrop-filter: blur(20px);
-    border-radius: 25px;
-    box-shadow: 0 15px 60px #00000063;
-  }
-  
+
   .form-container {
     display: flex;
     flex-direction: row;

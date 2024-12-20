@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './Css/RedSquareGame.css';
+import '../css/GamesCss/RedSquareGame.css';
 
 const RedSquareGame = () => {
     const [isRed, setIsRed] = useState(false);

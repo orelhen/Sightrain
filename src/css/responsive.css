@@ -1,0 +1,13 @@
+@media screen and (max-width: 1919px) {
+    .main-content {
+        width: 1200px;
+    }
+}
+
+
+@media screen and (max-width: 1439px) {
+    .main-content {
+        width: 800px;
+
+    }
+}

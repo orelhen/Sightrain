@@ -1,0 +1,43 @@
+
+/* Base app styles */
+body {
+  font-family: 'Varela Round', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  scroll-behavior: smooth;
+
+}
+
+/* App layout */
+.App {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 2em;
+}
+
+.main-content {
+  padding: 3em;
+  background: #fff;
+  margin: 0 1em; /* Adjusted margin */
+  border-radius: 20px;
+  height: 80vh; /* Retaining scrollability */
+  width: 1600px;
+  overflow: hidden;
+}
+
+.main_logo {
+  margin: 0 0 60px;
+  font-family: "Playwrite PE", cursive;
+  font-weight: 900;
+  font-size: 50px;
+  text-align: center;
+}
+

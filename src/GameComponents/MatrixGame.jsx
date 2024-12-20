@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Css/MatrixGame.css';
+import '../css/GamesCss/MatrixGame.css';
 
 const MatrixGame = () => {
     const [stage, setStage] = useState('start'); // start, showX, input, results

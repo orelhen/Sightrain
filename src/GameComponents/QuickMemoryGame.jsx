@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Css/QuickMemoryGame.css';
+import '../css/GamesCss/QuickMemoryGame.css';
 
 const QuickMemoryGame = () => {
     const [stage, setStage] = useState('start'); // start, countdown, showNumber, input, results
