@@ -1,0 +1,58 @@
+/* Container for the profile component */
+.profile-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Heading for the profile section */
+  .profile-container h2 {
+    margin-bottom: 1rem;
+    color: #333333;
+  }
+  
+  /* Profile image styling */
+  .profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid #6200ea;
+  }
+  
+  /* User information text */
+  .profile-info {
+    margin: 0.5rem 0;
+    color: #555555;
+  }
+  
+  /* Bold labels for user details */
+  .profile-info strong {
+    color: #333333;
+  }
+  
+  /* Button styling */
+  .profile-button {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #6200ea;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Button hover effect */
+  .profile-button:hover {
+    background-color: #3700b3;
+  }
+  
