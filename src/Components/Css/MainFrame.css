@@ -12,7 +12,7 @@
 }
 
 .hero-section h2 {
-    font-size: 3rem;
+    font-size: 1.5rem;
     margin-bottom: 0.5em;
 }
 
@@ -45,7 +45,7 @@
 
 .benefits-list {
     list-style-type: disc;
-    text-align: right;
+    text-align: left;
     margin: 1em auto;
     max-width: 600px;
     padding-left: 20px;

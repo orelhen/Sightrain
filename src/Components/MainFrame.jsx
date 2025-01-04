@@ -4,28 +4,47 @@ import './Css/MainFrame.css';
 const MainFrame = () => {
     return (
         <div className="home-container" id="home">
+            {/* About Us Section */}
             <section className="hero-section">
-                <h2>?מי אנחנו</h2>
+                <h2>Welcome to SighTrain</h2>
                 <p>
-                        אנו פלטפורמה מתקדמת ונגישה שנועדה להחליף מערכות מיושנות בבתי החולים בישראל. 
-                        מטרתה לספק פתרון למטופלים הסובלים מהפרעות ראייה בעקבות אירוע מוחי.
-                        המערכת מציעה תרגולים מותאמים אישית לשיפור תפקוד שרירי העין ולחיזוק הקשרים הנוירונים במוח במטרה להאיץ את תהליך השיקום.
-                        באמצעות ממשק ידידותי, משחקים אינטראקטיביים וכלי מעקב מתקדמים, המטופלים יכולים לתרגל מכל מקום ובכל זמן, המערכת מפיקה מדדים סטטיסטיים אשר יהיו נגישים לצוות הרפואי בזמן אמת.
-                        באופן כללי, המערכת מציעה חוויית משתמש חדשנית וממוקדת, תוך שמירה על נגישות מלאה המתאימה למטופלים בגילאים שונים ולצרכים מגוונים.
-
+                    At SighTrain, we’re revolutionizing the way minds and eyes work together. 
+                    Our platform blends science, technology, and engaging experiences to create a space where progress is not only achievable but enjoyable. 
+                    Whether you’re exploring interactive games or guided video sessions, SighTrain is here to help strengthen connections and inspire growth.
                 </p>
             </section>
+            
+            {/* Features Section */}
             <section className="hero-section" id="features">
-                <h2>יתרונות אימון הקשר של העיניים עם המוח</h2>
+                <h2>What Makes SighTrain Unique?</h2>
                 <ul className="benefits-list">
-                <p>.משפר את התפיסה החזותית ועיבוד הקוגניטיבי</p>
-                <p>.משפר את הריכוז והפרודוקטיביות באמצעות תרגילים ממוקדים</p>
-                <p>.מציע תובנות מותאמות אישית לאופטימיזציה של תיאום מוח-ראייה</p>
-                <p>.מיועד לסטודנטים, מקצוענים ולומדים לכל החיים</p>
+                    <li>Dynamic eye-training games that challenge and entertain</li>
+                    <li>Curated video sessions to enhance focus and coordination</li>
+                    <li>Real-time progress tracking with insightful data</li>
+                    <li>Accessible from anywhere with a user-friendly design</li>
                 </ul>
             </section>
+
+            {/* Call to Action Section */}
+
+            <section className="hero-section video">
+                <h2>See SighTrain in Action</h2>
+                <video controls className="highlight-video">...</video>
+            </section>
+
+            <section className="hero-section faq">
+                <h2>Frequently Asked Questions</h2>
+                <div className="faq-item">...</div>
+            </section>
+            <section className="hero-section call-to-action">
+                <h2>Hop On Board with SighTrain</h2>
+                <p>
+                    Join the journey to better connections. With SighTrain you’re unlocking your eyes potential.
+                </p>
+                <button className="cta-button">Get Started</button>
+            </section>
         </div>
-    );  
+    );
 };
 
 export default MainFrame;

@@ -10,7 +10,7 @@ body {
   align-items: center;
   height: 100vh;
   scroll-behavior: smooth;
-
+  overflow: hidden;
 }
 
 /* App layout */
@@ -30,7 +30,7 @@ body {
   border-radius: 20px;
   height: 80vh; /* Retaining scrollability */
   width: 1600px;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .main_logo {

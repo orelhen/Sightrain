@@ -7,7 +7,8 @@ import RedSquareGame from '../GameComponents/RedSquareGame';
 import QuickMemoryGame from '../GameComponents/QuickMemoryGame';
 import MatrixGame from '../GameComponents/MatrixGame';  // Import Game 4 (MatrixGame)
 import VideoGallery from '../Components/VideoGallery';
-import UserProfile from '../Components/UserProfile'
+import UserProfile from '../Components/UserProfile';
+import Timer from '../Components/Timer'; 
 
 const HomePage = () => {
     const [activeGame, setActiveGame] = useState('main');
@@ -20,9 +21,9 @@ const HomePage = () => {
     return (
         <div className="homepage">
             <Sidebar onGameClick={handleGameClick} />
+            <Timer />
                 <main className="main-content">
-                    
-                    <h1 className="main_logo">Sightrain</h1>
+                <h1 className="main_logo">Sightrain</h1>
                     {activeGame === 'profile' && <UserProfile />}
                     {activeGame === 'main' && <MainFrame />}
                     {activeGame === 'game1' && <Catch5Game />}
