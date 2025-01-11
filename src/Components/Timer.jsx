@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './Css/Timer.css'; // Import CSS for styling
+import '../css/ComponentsCss/Timer.css'; // Import CSS for styling
 //import { FaClock } from 'react-icons/fa'; // Install react-icons if not already installed
 
 const Timer = () => {

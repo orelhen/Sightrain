@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../css/Register.css';
+import '../css/PagesCss/Register.css';
 
 const RegisterPage = () => {
     const [email, setEmail] = useState('');
@@ -167,7 +167,7 @@ const RegisterPage = () => {
                             {serverMessage && <p className="server-message">{serverMessage}</p>}
                             <p>
                                 Have an account?
-                                <a href="/login" className="register-link"> Login</a>
+                                <a href="/home" className="register-link"> Login</a>
                             </p>
                         </div>
                     </form>

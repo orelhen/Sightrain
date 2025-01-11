@@ -14,6 +14,17 @@ const Catch5Game = () => {
   const [boxSize, setBoxSize] = useState(100); // Default size
   const [numberSpeed, setNumberSpeed] = useState(500); // Default number speed
 
+  //beep
+  const [beepsound, setbeepsound] = useState(true);
+
+
+    const toggleBeep = () => {
+        setbeepsound((prev) => !prev);
+    };
+
+
+
+
   useEffect(() => {
     let interval;
     if (isGameRunning) {
@@ -21,6 +32,7 @@ const Catch5Game = () => {
         const randomNum = Math.floor(Math.random() * 10); // Generate a random number between 0-9
         setCurrentNumber(randomNum);
         if (randomNum === 5) {
+          if (beepsound) playBeep();
           setStartTime(Date.now());
           setTimesFiveShown((prev) => prev + 1); // Increment count of 5s shown
           setTimeout(() => {
@@ -45,6 +57,16 @@ const Catch5Game = () => {
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [isGameRunning, currentNumber]);
+
+
+
+  const playBeep = () => {
+    const audio = new Audio('/Sounds/beep.mp3'); 
+    audio
+        .play()
+        .catch((err) => console.error('Error playing audio:', err));
+};
+
 
   const handleStartGame = () => {
     setIsGameRunning(true);
@@ -73,7 +95,7 @@ const Catch5Game = () => {
   return (
     <div style={{ textAlign: "center", marginTop: "20px" }}>
       <h1>Catch5</h1>
-
+      <div className="settings">
       {/* Box Size Slider */}
       <div style={sliderContainerStyle}>
         <label>
@@ -91,6 +113,7 @@ const Catch5Game = () => {
 
       {/* Hardness Slider */}
       <div style={sliderContainerStyle}>
+     
         <label>
           <strong>Diffeculty </strong>
           {numberSpeed}ms
@@ -105,6 +128,16 @@ const Catch5Game = () => {
         />
       </div>
 
+      <div>
+          <label>
+             Beep:
+          <input
+            type="checkbox"
+            checked={beepsound}
+            onChange={toggleBeep} />
+          </label>
+      </div>
+    </div>
       {!isGameRunning && !gameEnd && (
         <button onClick={handleStartGame} style={buttonStyle}>
           Start Game

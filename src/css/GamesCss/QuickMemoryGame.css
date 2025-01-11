@@ -35,3 +35,16 @@
 .quick-memory-game .error-message {
     color: red;
 }
+
+.settings{
+    background: #efefef;
+    border-radius: 80px;
+    width: fit-content;
+    padding: 20px;
+}
+
+.gamedesc{
+    background: #efefef;
+    border-radius: 80px;
+    padding: 20px;
+}

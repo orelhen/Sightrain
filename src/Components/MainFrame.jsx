@@ -1,5 +1,5 @@
 import React from 'react';
-import './Css/MainFrame.css';
+import '../css/ComponentsCss/MainFrame.css';
 
 const MainFrame = () => {
     return (

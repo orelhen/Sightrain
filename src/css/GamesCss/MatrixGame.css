@@ -4,13 +4,13 @@
 
 .matrix {
     display: grid;
-    grid-template-columns: repeat(2, 100px);
-    grid-template-rows: repeat(2, 100px);
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
     gap: 10px;
     justify-content: center;
 }
 
-.square {
+.matrixsquare {
     width: 100px;
     height: 100px;
     background-color: lightgray;

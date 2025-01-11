@@ -12,6 +12,13 @@ const RedSquareGame = () => {
     const redTimeoutRef = useRef(null); // Reference for the miss timeout
     const intervalRef = useRef(null); // Reference for the main interval
 
+    const [beepsound, setbeepsound] = useState(true);
+
+
+    const toggleBeep = () => {
+        setbeepsound((prev) => !prev);
+    };
+
     const handleUserResponse = () => {
         if (isRed) {
             const reactionTime = Date.now() - startTime;
@@ -19,6 +26,13 @@ const RedSquareGame = () => {
             setIsRed(false);
             clearTimeout(redTimeoutRef.current); // Prevent marking as missed
         }
+    };
+
+    const playBeep = () => {
+        const audio = new Audio('/Sounds/beep.mp3'); 
+        audio
+            .play()
+            .catch((err) => console.error('Error playing audio:', err));
     };
 
     const handleKeyPress = (e) => {
@@ -51,6 +65,7 @@ const RedSquareGame = () => {
                 }
 
                 setIsRed(true);
+                if (beepsound) playBeep();
                 setRedSquareCount((prev) => prev + 1);
                 setStartTime(Date.now());
 
@@ -84,6 +99,16 @@ const RedSquareGame = () => {
     return (
         <div className="red-square-game">
             <h2>Red Square Game</h2>
+            <div>
+                        <label>
+                            Beep:
+                            <input
+                                type="checkbox"
+                                checked={beepsound}
+                                onChange={toggleBeep}
+                            />
+                        </label>
+                    </div>
             {gameRunning ? (
                 <div
                     className={`square ${isRed ? 'red' : ''}`}

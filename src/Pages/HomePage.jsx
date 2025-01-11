@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../css/HomePage.css';
+import '../css/PagesCss/HomePage.css';
 import Sidebar from '../Components/Sidebar';
 import MainFrame from '../Components/MainFrame';
 import Catch5Game from '../GameComponents/Catch5';
@@ -12,7 +12,7 @@ import Timer from '../Components/Timer';
 
 const HomePage = () => {
     const [activeGame, setActiveGame] = useState('main');
-
+    const [EnableSound ,setEnableSound] = useState(true);
     const handleGameClick = (gameId) => {
         setActiveGame(gameId);
     };

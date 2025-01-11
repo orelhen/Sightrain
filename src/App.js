@@ -5,14 +5,14 @@ import RegisterPage from './Pages/RegisterPage';
 import LoginPage from './Pages/LoginPage';
 import HomePage from './Pages/HomePage';
 import './css/responsive.css';
-import './css/App.css';
+import './css/PagesCss/App.css';
 
 
 const App = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<RegisterPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/home" element={<HomePage />} />

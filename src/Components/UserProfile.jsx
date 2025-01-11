@@ -1,4 +1,4 @@
-import './Css/UserProfile.css';
+import '../css/ComponentsCss/UserProfile.css';
 const UserProfile = () => {
 
   //**********add dinamic user db 

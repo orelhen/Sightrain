@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import './Css/Sidebar.css';
-
+import '../css/ComponentsCss/Sidebar.css';
 const Sidebar = ({ onGameClick }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 

@@ -3,9 +3,9 @@ import '../css/GamesCss/MatrixGame.css';
 
 const MatrixGame = () => {
     const [stage, setStage] = useState('start'); // start, showX, input, results
-    const [matrix, setMatrix] = useState([['', ''], ['', '']]); // 2x2 matrix
-    const [clickedSquare, setClickedSquare] = useState([]); // Track clicked square
-    const [xPosition, setXPosition] = useState(null); // Position of the 'X'
+    const [matrix, setMatrix] = useState([['', '', ''], ['', '', ''], ['', '', '']]); // 2x2 matrix
+    const [clickedSquare, setClickedSquare] = useState(null); // Track clicked square
+    const [xPosition, setXPosition] = useState([]); // Positions of X's for the current round
     const [round, setRound] = useState(1);
     const [results, setResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
@@ -16,24 +16,24 @@ const MatrixGame = () => {
     const generateRandomXPositions = () => {
         const positions = [];
         for (let i = 0; i < difficulty; i++) {
-            const randomRow = Math.floor(Math.random() * 2);
-            const randomCol = Math.floor(Math.random() * 2);
+            const randomRow = Math.floor(Math.random() * 3);
+            const randomCol = Math.floor(Math.random() * 3);
             positions.push([randomRow, randomCol]);
         }
-        return positions;
+        return positions; // Return an array of positions, e.g. [[0, 1], [1, 0]]
     };
 
     const startGame = () => {
         setStage('showX');
         setRound(1);
         setResults([]);
+        setErrorMessage('');
+        setClickedSquare(null);
     };
 
     const handleSquareClick = (row, col) => {
-        setClickedSquare(prevClickedSquares => [
-            ...prevClickedSquares, // Spread previous squares
-            [row, col] // Add the new clicked square
-        ]);
+        // Track only the last clicked square
+        setClickedSquare([row, col]);
     };
 
     const handleInputSubmit = () => {
@@ -43,7 +43,8 @@ const MatrixGame = () => {
         }
         setErrorMessage('');
 
-        const isCorrect = JSON.stringify(clickedSquare) === JSON.stringify(xPosition);
+        // Check if clickedSquare matches any position in xPosition
+        const isCorrect = xPosition.some(pos => JSON.stringify(pos) === JSON.stringify(clickedSquare));
 
         setResults((prev) => [
             ...prev,
@@ -66,17 +67,19 @@ const MatrixGame = () => {
             setXPosition(positions);
 
             // Clear the matrix and place the X's
-            setMatrix((prevMatrix) => {
-                const newMatrix = prevMatrix.map(row => row.slice()); // Copy of matrix
+            setMatrix([['', '', ''], ['', '', ''], ['', '', '']]); // Reset the matrix
+
+            setTimeout(() => {
+                const newMatrix = [['', '', ''], ['', '', ''], ['', '', '']];
                 positions.forEach(([row, col]) => {
                     newMatrix[row][col] = 'X';
                 });
-                return newMatrix;
-            });
+                setMatrix(newMatrix);
+            }, 0); // Immediately show X's before the timer
 
             // Hide the X's after the specified blink speed
             timer = setTimeout(() => {
-                setMatrix([['', ''], ['', '']]);
+                setMatrix([['', '', ''], ['', '', ''], ['', '', '']]);
                 setStage('input');
             }, blinkSpeed); // X will be visible for `blinkSpeed` ms
         }
@@ -101,7 +104,7 @@ const MatrixGame = () => {
                             row.map((cell, colIndex) => (
                                 <div
                                     key={`${rowIndex}-${colIndex}`}
-                                    className={`square ${cell === 'X' ? 'blink' : ''}`}
+                                    className={`matrixsquare ${cell === 'X' ? 'blink' : ''}`}
                                 >
                                     {cell}
                                 </div>
@@ -119,7 +122,7 @@ const MatrixGame = () => {
                             row.map((cell, colIndex) => (
                                 <div
                                     key={`${rowIndex}-${colIndex}`}
-                                    className="square"
+                                    className="matrixsquare"
                                     onClick={() => handleSquareClick(rowIndex, colIndex)}
                                 >
                                     {cell}
@@ -138,7 +141,7 @@ const MatrixGame = () => {
                     <ul>
                         {results.map((result, index) => (
                             <li key={index}>
-                                Round {result.round}: X was at [{result.position[0]}, {result.position[1]}] - You clicked [{result.clicked[0]}, {result.clicked[1]}] ({result.isCorrect ? 'Correct' : 'Incorrect'})
+                                Round {result.round}: X was at {result.position.map(pos => `[${pos[0]}, ${pos[1]}]`).join(', ')} - You clicked [{result.clicked[0]}, {result.clicked[1]}] ({result.isCorrect ? 'Correct' : 'Incorrect'})
                             </li>
                         ))}
                     </ul>
