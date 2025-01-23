@@ -1,43 +1,136 @@
 
 /* Base app styles */
 body {
-  font-family: 'Varela Round', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f8f9fa;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   scroll-behavior: smooth;
-  overflow: hidden;
-}
-
-/* App layout */
-.App {
-  text-align: center;
   display: flex;
+  padding: 5em;
+  direction: rtl;
+  font-family: "rubik";
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 2em;
-}
-
-.main-content {
-  padding: 3em;
-  background: #fff;
-  margin: 0 1em; /* Adjusted margin */
-  border-radius: 20px;
-  height: 80vh; /* Retaining scrollability */
-  width: 1600px;
-  overflow: scroll;
-}
-
-.main_logo {
-  margin: 0 0 60px;
-  font-family: "Playwrite PE", cursive;
-  font-weight: 900;
-  font-size: 50px;
   text-align: center;
 }
+
+h1{
+  font-size: 62px;
+  font-weight: 800;
+
+}
+
+h2{
+  font-size: 54px;
+  font-weight: 700;
+
+}
+
+
+p{
+  font-size: 30px;
+  font-family: "Heebo";
+}
+
+li{
+  font-size: 30px;
+  font-family: "Heebo";
+  list-style-type: none;
+}
+
+li:before{
+  font-size: 30px;
+  font-family: "Heebo";
+  list-style-type: none;
+}
+
+button{
+  background-color: #000;
+  color: #fff;
+  font-family: "Heebo";
+  padding: 15px 40px;
+  font-size: 22px;
+  border-radius: 15px;
+  border: 3px solid transparent;
+  cursor: pointer;
+  border: 3px solid #fff;
+  &:hover{
+    background: #fff;
+    border: 3px solid #000;
+    transition: 0.4s all;
+    color: #000;
+  }
+}
+
+.controllers{
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  display: flex;
+
+  button{
+    margin: 0 5px;
+  }
+
+  .timer-container{
+    display: flex;
+
+    .timer{
+      border: 3px solid #000;
+      border-radius: 15px;
+      display: flex;
+      width: 150px;
+      align-items: center;
+      font-size: 28px;
+      gap: 10px;
+      font-weight: 700;
+      margin-right: 10px;
+      justify-content: center;
+    }
+  }
+
+
+}
+
+/* Color Modes */
+/* Default Light Theme */
+.light{
+  background-color: white !important;
+  color: black !important;
+}
+
+/* Dark Mode */
+.dark{
+  background-color: black !important;
+  color: white !important;
+
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  background-color: blue !important;
+  color: yellow !important;
+
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+  position: fixed;
+  top: 10px;
+  left: 220px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Button Hover Effect */
+.theme-toggle-btn:hover {
+  opacity: 0.8;
+}
+
+
+
 

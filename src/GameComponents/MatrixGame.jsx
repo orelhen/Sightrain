@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../css/GamesCss/MatrixGame.css';
+import '../css/GamesCss/Games.scss';
 
 const MatrixGame = () => {
     const [stage, setStage] = useState('start'); // start, showX, input, results
@@ -88,11 +89,49 @@ const MatrixGame = () => {
     }, [stage, round, difficulty, blinkSpeed]);
 
     return (
-        <div className="matrix-game">
+        <div className="game">
+            
             {stage === 'start' && (
                 <div>
                     <h2>Matrix Memory Game</h2>
-                    <button onClick={startGame}>Start Game</button>
+                    <div className="gamedesc">
+                        <h3>
+                       עליכם לזהות באילו מהקוביות נמצאו ה-X
+                        </h3>
+                    </div>
+
+                    <div className='settings'>
+                    <div>
+                <label>
+                    Difficulty (Number of X's):
+                    <input
+                        type="range"
+                        min="1"
+                        max="3"
+                        value={difficulty}
+                        onChange={(e) => setDifficulty(Number(e.target.value))}
+                    />
+                    {difficulty} X(s)
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    Blink Speed (ms):
+                    <input
+                        type="range"
+                        min="200"
+                        max="1000"
+                        value={blinkSpeed}
+                        onChange={(e) => setBlinkSpeed(Number(e.target.value))}
+                    />
+                    {blinkSpeed} ms
+                </label>
+            </div>
+            </div>
+                    <button className='start_game' onClick={startGame}>Start Game <i class="fa-solid fa-play"></i></button>
+            
+
                 </div>
             )}
 
@@ -150,33 +189,7 @@ const MatrixGame = () => {
             )}
 
             {/* Difficulty and Blink Speed Sliders */}
-            <div>
-                <label>
-                    Difficulty (Number of X's):
-                    <input
-                        type="range"
-                        min="1"
-                        max="3"
-                        value={difficulty}
-                        onChange={(e) => setDifficulty(Number(e.target.value))}
-                    />
-                    {difficulty} X(s)
-                </label>
-            </div>
-
-            <div>
-                <label>
-                    Blink Speed (ms):
-                    <input
-                        type="range"
-                        min="200"
-                        max="1000"
-                        value={blinkSpeed}
-                        onChange={(e) => setBlinkSpeed(Number(e.target.value))}
-                    />
-                    {blinkSpeed} ms
-                </label>
-            </div>
+           
         </div>
     );
 };

@@ -1,42 +1,39 @@
 import React, { useState } from 'react';
-import '../css/ComponentsCss/Sidebar.css';
-const Sidebar = ({ onGameClick }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+import '../css/ComponentsCss/Sidebar.scss';
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
+const Sidebar = ({ onGameClick }) => {
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   return (
-    <div className="sidebar">
-      <button className="sidebar-btn" onClick={() => onGameClick('profile')}>Profile</button>
-      <button className="sidebar-btn" onClick={() => onGameClick('main')}>Main</button>
-      <button className="sidebar-btn" onClick={() => onGameClick('videos')}>Videos</button>
-
-      {/* Dropdown for Games */}
-      <div className="dropdown-container">
-        <button className="sidebar-btn dropdown-toggle" onClick={toggleDropdown}>
-          Games
-        </button>
-        {isDropdownOpen && (
-          <div className="dropdown-menu">
-            <button className="dropdown-item" onClick={() => onGameClick('game1')}>
-              Game 1
-            </button>
-            <button className="dropdown-item" onClick={() => onGameClick('game2')}>
-              Game 2
-            </button>
-            <button className="dropdown-item" onClick={() => onGameClick('game3')}>
-              Game 3
-            </button>
-            <button className="dropdown-item" onClick={() => onGameClick('game4')}>
-              Game 4
-            </button>
-          </div>
-        )}
+    <>
+      {/* Floating menu button */}
+      <div className="floating-menu" onClick={() => setIsSidebarVisible(true)}>
+        <i class="fa-solid fa-bars"></i>
       </div>
-      
-    </div>
+
+      {/* Sidebar */}
+      <div 
+        className={`sidebar ${isSidebarVisible ? 'visible' : ''}`} 
+      >
+        <button className='close_menu' onClick={() => setIsSidebarVisible(false)}><i class="fa-solid fa-xmark"></i></button>
+
+        <div className='primary_btn'>
+          <button onClick={() => onGameClick('profile')}>פרופיל <i class="fa-regular fa-id-card"></i></button>
+          <button onClick={() => onGameClick('main')}>דף הבית <i class="fa-solid fa-house"></i></button>
+          <button onClick={() => onGameClick('videos')}>סרטונים <i class="fa-solid fa-film"></i></button>
+        </div>
+        <h3>משחקים <i class="fa-solid fa-brain"></i></h3>
+        <div className='games_btn'>
+          <button onClick={() => onGameClick('game1')}>לתפוס 5</button>
+          <button onClick={() => onGameClick('game2')}><i class="fa-solid fa-cube"></i> קוביה אדומה</button>
+          <button onClick={() => onGameClick('game3')}>משחק זכרון</button>
+          <button onClick={() => onGameClick('game4')}>מציאת X</button>
+          <button onClick={() => onGameClick('game5')}>תנועה חלקה <i class="fa-regular fa-eye"></i></button>
+          <button onClick={() => onGameClick('game6')}>עומק</button>
+        </div>
+
+      </div>
+    </>
   );
 };
 

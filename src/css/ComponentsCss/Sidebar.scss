@@ -1,0 +1,117 @@
+.floating-menu {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    background: #000;
+    border-radius: 10px;
+    display: flex;
+    border: 3px solid transparent;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.4s all;
+
+    i{
+        font-size: 32px;
+        color: #fff;
+    }
+
+    &:hover {
+        background: #fff;
+        border: 3px solid #000;
+        transition: 0.4s all;
+
+        i{
+            color: #000;
+        }
+    }
+
+}
+
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px; /* Initially hidden */
+    height: 100%;
+    width: 500px;
+    background: #000;
+    padding: 20px;
+    transition: right 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+    visibility: hidden;
+    flex-direction: column;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.02);
+    padding: 7em 5em;
+    color: #fff;
+
+    h3{
+        font-size: 42px;
+        border-bottom: 4px solid #fff;
+        padding-bottom: 10px;
+        margin: 30px 0 10px;
+    }
+
+    button {
+        cursor: pointer;
+        width: fit-content;
+        background: transparent;
+        font-weight: 700;
+        color: #fff;
+        border: 0;
+        padding: 10px 30px;
+        margin: 5px 0;
+        font-size: 36px;
+        font-family: "Open Sans";
+        border-radius: 50px;
+        transition: 0.4s all;
+        border: 3px solid transparent;
+
+        &:hover {
+            border: 3px solid #fff;
+            transition: 0.4s all;
+        }
+    }
+
+    .close_menu{
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        border: 3px solid #000;
+        width: 70px;
+        height: 70px;
+        color: #000;
+        font-size: 32px;
+        display: flex;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        line-height: 0;
+        transition: 0.4s all;
+
+        &:hover {
+            background: rgba(0,0,0,0.8);
+            transition: 0.4s all;
+            color: #fff;
+        }
+    }
+
+    .primary_btn, .games_btn{
+        display: flex;
+        flex-direction: column;
+    }
+
+
+
+}
+
+.sidebar.visible {
+    right: 0;
+    opacity: 1;
+    visibility: visible;
+}

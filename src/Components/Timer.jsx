@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import '../css/ComponentsCss/Timer.css'; // Import CSS for styling
 //import { FaClock } from 'react-icons/fa'; // Install react-icons if not already installed
+
 
 const Timer = () => {
     const [seconds, setSeconds] = useState(0);
@@ -25,10 +25,10 @@ const Timer = () => {
   
     return (
       <div className="timer-container">
-        <button className="reset-btn" onClick={resetTimer}>
-          Reset
+        <button onClick={resetTimer}>
+          איפוס זמן 
         </button>
-        <div className="timer">{formatTime(seconds)}</div>
+        <div className="timer">{formatTime(seconds)} <i class="fa-regular fa-clock"></i></div>
       </div>
     );
   };

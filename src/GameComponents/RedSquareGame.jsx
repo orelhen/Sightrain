@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../css/GamesCss/RedSquareGame.css';
+import '../css/GamesCss/Games.scss';
 
 const RedSquareGame = () => {
     const [isRed, setIsRed] = useState(false);
@@ -30,9 +31,7 @@ const RedSquareGame = () => {
 
     const playBeep = () => {
         const audio = new Audio('/Sounds/beep.mp3'); 
-        audio
-            .play()
-            .catch((err) => console.error('Error playing audio:', err));
+        audio.play().catch((err) => console.error('Error playing audio:', err));
     };
 
     const handleKeyPress = (e) => {
@@ -97,9 +96,14 @@ const RedSquareGame = () => {
     }, []);
 
     return (
-        <div className="red-square-game">
+        <div className="game">
             <h2>Red Square Game</h2>
-            <div>
+            <div className="gamedesc">
+                
+            </div>
+            <div className="settings">
+            <h3>הגדרות משחק:</h3>
+                <div>
                         <label>
                             Beep:
                             <input
@@ -109,6 +113,7 @@ const RedSquareGame = () => {
                             />
                         </label>
                     </div>
+                </div>
             {gameRunning ? (
                 <div
                     className={`square ${isRed ? 'red' : ''}`}

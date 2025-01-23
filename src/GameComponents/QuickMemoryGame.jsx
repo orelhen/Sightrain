@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../css/GamesCss/QuickMemoryGame.css';
+import '../css/GamesCss/Games.scss';
 
 const QuickMemoryGame = () => {
     const [stage, setStage] = useState('start'); // start, countdown, showNumber, input, results
@@ -12,8 +12,8 @@ const QuickMemoryGame = () => {
     const [errorMessage, setErrorMessage] = useState('');
 
     // New state variables for sliders
-    const [difficulty, setDifficulty] = useState(500); // Difficulty slider (number display time)
-    const [gameLength, setGameLength] = useState(3); // Game length slider (rounds)
+    const [difficulty, setDifficulty] = useState(1200); // Difficulty slider (number display time)
+    const [gameLength, setGameLength] = useState(1); // Game length slider (rounds)
     const [fontSize, setFontSize] = useState(3); // Font size slider (number font size)
     const [Spacing, setSpacing] = useState(0); // Spacing between numbers
 
@@ -27,14 +27,12 @@ const QuickMemoryGame = () => {
     const generateNumber = () => {
         const number = Math.floor(100 + Math.random() * 99900).toString(); // Generate 3-digit number
         setCurrentNumber(number); // Set the formatted number
-        return number.split('').join('-'.repeat(Spacing));; // Format the number with spacing
+        return number.split('').join(' '.repeat(Spacing));; // Format the number with spacing
     };
 
     const playBeep = () => {
         const audio = new Audio('/Sounds/beep.mp3'); 
-        audio
-            .play()
-            .catch((err) => console.error('Error playing audio:', err));
+        audio.play().catch((err) => console.error('Error playing audio:', err));
     };
 
     const startGame = () => {
@@ -68,6 +66,10 @@ const QuickMemoryGame = () => {
             setStage('results');
         }
     };
+
+
+
+   
 
     useEffect(() => {
         let timer;
@@ -103,15 +105,21 @@ const QuickMemoryGame = () => {
     }, [stage, countdown, difficulty, gameLength, Spacing]);
 
     return (
-        <div className="quick-memory-game">
+        <div className="game">
             {stage === 'start' && (
                 <div>
-                    <h2>Quick Memory Game</h2>
-                    
+                    <h2>משחק זכרון</h2>
+
+                    <div className="gamedesc">
+                        <h3>
+                        במשחק הזה, יהיו לך כמה מיליסניות לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית
+                        </h3>
+                    </div>
+
                     <div className="settings"> 
-                    <h3>select game settings:</h3>
-                    <div>
-                        <label>Difficulty (number display time): {difficulty}ms</label>
+                        <h3>הגדרות משחק:</h3>
+
+                        <label>רמת קושי (זמן הצגת המספר): {difficulty}מ"ש</label>
                         <input
                             type="range"
                             min="150"
@@ -119,10 +127,8 @@ const QuickMemoryGame = () => {
                             value={difficulty}
                             onChange={(e) => setDifficulty(Number(e.target.value))}
                         />
-                    </div>
 
-                    <div>
-                        <label>Game Length (rounds): {gameLength}</label>
+                        <label>אורך המשחק (שלבים): {gameLength}</label>
                         <input
                             type="range"
                             min="1"
@@ -130,10 +136,8 @@ const QuickMemoryGame = () => {
                             value={gameLength}
                             onChange={(e) => setGameLength(Number(e.target.value))}
                         />
-                    </div>
 
-                    <div>
-                        <label>Font Size: {fontSize}</label>
+                        <label>גודל הטקסט: {fontSize}</label>
                         <input
                             type="range"
                             min="1"
@@ -141,9 +145,8 @@ const QuickMemoryGame = () => {
                             value={fontSize}
                             onChange={(e) => setFontSize(Number(e.target.value))}
                         />
-                    </div>
-                    <div>
-                        <label>Game Spacing: {Spacing}</label>
+
+                        <label>רווח בין המספרים: {Spacing}</label>
                         <input
                             type="range"
                             min="0"
@@ -151,10 +154,9 @@ const QuickMemoryGame = () => {
                             value={Spacing}
                             onChange={(e) => setSpacing(Number(e.target.value))}
                         />
-                    </div>
-                      <div>
+
                         <label>
-                            Beep:
+                        צפצוף:
                             <input
                                 type="checkbox"
                                 checked={beepsound}
@@ -162,32 +164,28 @@ const QuickMemoryGame = () => {
                             />
                         </label>
                     </div>
-                    
-                    </div>
-                    <div className="gamedesc">
-                    <h3>in this game, you will have a few miliseconds to remember the numbers you see on screen, when the time is up input the numbers you saw</h3>
-                    <button onClick={startGame}>Start Game</button>
-                    </div>
+
+                    <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
                 </div>
             )}
 
             {stage === 'countdown' && (
                 <div>
-                    <h2>Get Ready!</h2>
+                    <h2>התכונן!</h2>
                     <p>{countdown}</p>
                 </div>
             )}
 
             {stage === 'showNumber' && (
                 <div>
-                    <h2>Remember this number:</h2>
-                    <p style={{ fontSize: `${fontSize}em` }}>{DisplayNumber}</p>
+                    <h2>זכור את המספר הבא:</h2>
+                    <p style={{ fontSize: `${fontSize}em`, whiteSpace: 'pre' }}>[ {DisplayNumber} ]</p>
                 </div>
             )}
 
             {stage === 'input' && (
-                <div>
-                    <h2>Enter the number:</h2>
+                <div class="answer_input">
+                    <h2>הכנס מספר:</h2>
                     <input
                         id="numberInput"
                         type="text"
@@ -196,28 +194,28 @@ const QuickMemoryGame = () => {
                         maxLength="5"
                         autoFocus
                     />
-                    <button onClick={handleInputSubmit}>Submit</button>
+                    <button onClick={handleInputSubmit}>אישור</button>
                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 </div>
             )}
 
             {stage === 'results' && (
-                <div>
-                    <h2>Game Over! Here are your results:</h2>
+                <div class="results">
+                    <h2>המשחק נגמר! אלו הן התוצאות:</h2>
                     <ul>
                         {results.map((result, index) => (
                             <li key={index}>
-                                Round {result.round}: Number {result.number} - Your Answer: {result.input} ({result.isCorrect ? 'Correct' : 'Incorrect'})
+                                סיבוב {result.round}: מספר {result.number} - המספר שלך: {result.input} ({result.isCorrect ? 'מצויין' : 'שגיאה'})
                             </li>
                         ))}
-                         <h2>Game Settings:</h2>
-                         <li>Diffeculty: {difficulty} ms </li>
-                         <li>length: {gameLength} rounds</li>
-                         <li>Font size: {fontSize}</li>
-                         <li>Spacing between numbers: {Spacing}</li>
+                         <h2>אפשרויות המשחק:</h2>
+                         <li>זמן תצוגת המספר: {difficulty} ms </li>
+                         <li>אורך המשחק: {gameLength} שלבים</li>
+                         <li>גודל הטקסט: {fontSize}</li>
+                         <li>מרווח בין המספרים: {Spacing}</li>
                          
                     </ul>
-                    <button onClick={() => setStage('start')}>Back to Start</button>
+                    <button onClick={() => setStage('start')}>חזרה להתחלה</button>
                 </div>
             )}
         </div>

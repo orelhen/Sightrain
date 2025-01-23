@@ -54,36 +54,6 @@ const RegisterPage = () => {
             setErrors(newErrors);
             return;
         }
-
-        fetch("http://localhost:5000/register", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                fullName,
-                dateOfBirth,
-                gender,
-                email,
-                password,
-                receiveNews
-            }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    setServerMessage('Registration successful! Redirecting to login...');
-                    setTimeout(() => {
-                        window.location.href = '/login';  // Redirects without `react-router-dom`
-                    }, 2000);
-                } else {
-                    setServerMessage(data.message || 'Registration failed.');
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                setServerMessage('An error occurred. Please try again.');
-            });
     };
 
     return (

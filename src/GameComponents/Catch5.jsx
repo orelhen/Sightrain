@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import '../css/GamesCss/Games.scss';
+
 
 const Catch5Game = () => {
   const [currentNumber, setCurrentNumber] = useState(0);
@@ -11,35 +13,34 @@ const Catch5Game = () => {
   const [gameEnd, setGameEnd] = useState(false);
 
   // Sliders state
-  const [boxSize, setBoxSize] = useState(100); // Default size
-  const [numberSpeed, setNumberSpeed] = useState(500); // Default number speed
+  const [boxSize, setBoxSize] = useState(300); // Default size
+  const [numberSpeed, setNumberSpeed] = useState(1000); // Default number speed
 
-  //beep
+  // Beep sound state
   const [beepsound, setbeepsound] = useState(true);
 
+  // Box position state
+  const [boxPosition, setBoxPosition] = useState("center");
 
-    const toggleBeep = () => {
-        setbeepsound((prev) => !prev);
-    };
-
-
-
+  const toggleBeep = () => {
+    setbeepsound((prev) => !prev);
+  };
 
   useEffect(() => {
     let interval;
     if (isGameRunning) {
       interval = setInterval(() => {
-        const randomNum = Math.floor(Math.random() * 10); // Generate a random number between 0-9
+        const randomNum = Math.floor(Math.random() * 10);
         setCurrentNumber(randomNum);
         if (randomNum === 5) {
           if (beepsound) playBeep();
           setStartTime(Date.now());
-          setTimesFiveShown((prev) => prev + 1); // Increment count of 5s shown
+          setTimesFiveShown((prev) => prev + 1);
           setTimeout(() => {
             if (currentNumber === 5) {
-              setCurrentNumber(0); // Reset if not clicked
+              setCurrentNumber(0);
             }
-          }, Math.min(numberSpeed + 300, 500)); // Show 5 for a little longer than the hardness level
+          }, Math.min(numberSpeed + 300, 500));
         }
       }, numberSpeed);
     }
@@ -50,7 +51,7 @@ const Catch5Game = () => {
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.code === "Space" && isGameRunning) {
-        handleClick(); // Trigger click handler
+        handleClick();
       }
     };
 
@@ -58,15 +59,10 @@ const Catch5Game = () => {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [isGameRunning, currentNumber]);
 
-
-
   const playBeep = () => {
     const audio = new Audio('/Sounds/beep.mp3'); 
-    audio
-        .play()
-        .catch((err) => console.error('Error playing audio:', err));
-};
-
+    audio.play().catch((err) => console.error('Error playing audio:', err));
+  };
 
   const handleStartGame = () => {
     setIsGameRunning(true);
@@ -78,7 +74,7 @@ const Catch5Game = () => {
     setTimeout(() => {
       setIsGameRunning(false);
       setGameEnd(true);
-    }, 15000); // Run game for 15 seconds
+    }, 15000);
   };
 
   const handleClick = () => {
@@ -86,89 +82,100 @@ const Catch5Game = () => {
       const reactionTime = Date.now() - startTime;
       setReactionTimes((prev) => [...prev, reactionTime]);
       setCorrectClicks((prev) => prev + 1);
-      setCurrentNumber(0); // Reset the number
+      setCurrentNumber(0);
     } else {
-      setMissClicks((prev) => prev + 1); // Increment miss clicks if wrong number
+      setMissClicks((prev) => prev + 1);
     }
   };
 
+  const positionStyles = {
+    center: { top: "50%", left: "50%", transform: "translate(-50%, -50%)" },
+    "left-up": { top: "5%", left: "5%" },
+    "left-down": { bottom: "5%", left: "5%" },
+    "right-up": { top: "5%", right: "5%" },
+    "right-down": { bottom: "5%", right: "5%" },
+  };
+
   return (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
+    <div className="game" style={{ textAlign: "center", marginTop: "20px" }}>
       <h1>Catch5</h1>
-      <div className="settings">
-      {/* Box Size Slider */}
-      <div style={sliderContainerStyle}>
-        <label>
-          <strong>Box Size: </strong>
-          {boxSize}px
-        </label>
-        <input
-          type="range"
-          min="100"
-          max="300"
-          value={boxSize}
-          onChange={(e) => setBoxSize(parseInt(e.target.value))}
-        />
-      </div>
+      {!isGameRunning && (
+        <div>
+         <div className="gamedesc">
+         <h3>
+         במשחק הזה, יהיו לך כמה מיליסניות לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית
+         </h3>
+         </div> 
 
-      {/* Hardness Slider */}
-      <div style={sliderContainerStyle}>
-     
-        <label>
-          <strong>Diffeculty </strong>
-          {numberSpeed}ms
-        </label>
-        <input
-          type="range"
-          min="300"
-          max="1500"
-          step="50"
-          value={numberSpeed}
-          onChange={(e) => setNumberSpeed(parseInt(e.target.value))}
-        />
-      </div>
-
-      <div>
-          <label>
-             Beep:
-          <input
-            type="checkbox"
-            checked={beepsound}
-            onChange={toggleBeep} />
-          </label>
-      </div>
-    </div>
-      {!isGameRunning && !gameEnd && (
-        <button onClick={handleStartGame} style={buttonStyle}>
-          Start Game
-        </button>
+        <div className="settings">
+       
+            <h3>הגדרות משחק:</h3>
+               
+          <div style={sliderContainerStyle}>
+            <label>
+              <strong>Box Size: </strong>
+              {boxSize}px
+            </label>
+            <input
+              type="range"
+              min="100"
+              max="400"
+              value={boxSize}
+              onChange={(e) => setBoxSize(parseInt(e.target.value))}
+            />
+          </div>
+          <div style={sliderContainerStyle}>
+            <label>
+              <strong>Difficulty: </strong>
+              {numberSpeed}ms
+            </label>
+            <input
+              type="range"
+              min="600"
+              max="2000"
+              step="50"
+              value={numberSpeed}
+              onChange={(e) => setNumberSpeed(parseInt(e.target.value))}
+            />
+          </div>
+          <div>
+            <label>
+              צפצוף:
+              <input type="checkbox" checked={beepsound} onChange={toggleBeep} />
+            </label>
+          </div>
+          <div>
+            <label>
+              מיקום הקופסא:
+              <select value={boxPosition} onChange={(e) => setBoxPosition(e.target.value)}>
+                <option value="center">מרכז</option>
+                <option value="left-up">שמאל למעלה</option>
+                <option value="left-down">שמאל למטה</option>
+                <option value="right-up">ימין למעלה</option>
+                <option value="right-down">ימין למטה</option>
+              </select>
+            </label>
+          </div>
+          <button onClick={handleStartGame} >
+            התחל משחק
+          </button>
+        </div>
+        </div>
       )}
 
+      
       {isGameRunning && (
-        <div
-          style={{
-            ...gameBoxStyle,
-            width: `${boxSize}px`,
-            height: `${boxSize}px`,
-            fontSize: `${boxSize / 3}px`,
-          }}
-        >
+        <div style={{ ...gameBoxStyle, position: "absolute", ...positionStyles[boxPosition], width: `${boxSize}px`, height: `${boxSize}px`, fontSize: `${boxSize / 3}px` }}>
           <h2>{currentNumber}</h2>
         </div>
       )}
 
-      {isGameRunning && (
-        <button onClick={handleClick} style={buttonStyle}>
-          Click if it's 5 (or press Space)
-        </button>
-      )}
-
       {gameEnd && (
         <div>
-          <h2>Game Over!</h2>
-          <p>Correct clicks: {correctClicks}</p>
-          <p>Miss clicks: {missClicks}</p>
-          <p>Number 5 was shown: {timesFiveShown} times</p>
+          <h2>המשחק נגמר!</h2>
+          <p>כמות לחיצות: {correctClicks}</p>
+          <p>פספוסים: {missClicks}</p>
+          <p>המספר 5 הוצג: {timesFiveShown} פעמים</p>
           {reactionTimes.length > 0 && (
             <p>
               Average reaction time:{" "}
@@ -178,9 +185,12 @@ const Catch5Game = () => {
               ms
             </p>
           )}
-          {reactionTimes.length === 0 && <p>No correct clicks recorded!</p>}
+          {reactionTimes.length === 0 && <p>לא נקלטו לחיצות</p>}
           <button onClick={handleStartGame} style={buttonStyle}>
-            Play Again
+            שחק שוב
+          </button>
+          <button onClick={handleStartGame} style={buttonStyle}>
+            שמור תוצאות
           </button>
         </div>
       )}
