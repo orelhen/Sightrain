@@ -39,7 +39,7 @@ const MatrixGame = () => {
 
     const handleInputSubmit = () => {
         if (!clickedSquare) {
-            setErrorMessage('Please click a square!');
+            setErrorMessage('אנא בחר מרובע!');
             return;
         }
         setErrorMessage('');
@@ -93,7 +93,7 @@ const MatrixGame = () => {
             
             {stage === 'start' && (
                 <div>
-                    <h2>Matrix Memory Game</h2>
+                    <h2>מצא את ה-X</h2>
                     <div className="gamedesc">
                         <h3>
                        עליכם לזהות באילו מהקוביות נמצאו ה-X
@@ -103,21 +103,21 @@ const MatrixGame = () => {
                     <div className='settings'>
                     <div>
                 <label>
-                    Difficulty (Number of X's):
+                    כמות -X (עדיין לא עובד):
                     <input
                         type="range"
                         min="1"
-                        max="3"
+                        max="1"
                         value={difficulty}
                         onChange={(e) => setDifficulty(Number(e.target.value))}
                     />
-                    {difficulty} X(s)
+                    {difficulty} 
                 </label>
             </div>
 
             <div>
                 <label>
-                    Blink Speed (ms):
+                    רמת קושים :
                     <input
                         type="range"
                         min="200"
@@ -125,11 +125,11 @@ const MatrixGame = () => {
                         value={blinkSpeed}
                         onChange={(e) => setBlinkSpeed(Number(e.target.value))}
                     />
-                    {blinkSpeed} ms
+                    {blinkSpeed} מ"ש
                 </label>
             </div>
             </div>
-                    <button className='start_game' onClick={startGame}>Start Game <i class="fa-solid fa-play"></i></button>
+                    <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
             
 
                 </div>
@@ -137,7 +137,7 @@ const MatrixGame = () => {
 
             {stage === 'showX' && (
                 <div>
-                    <h2>Watch the X Blink!</h2>
+                    <h2>עקבו אחרי איכן ה-X!</h2>
                     <div className="matrix">
                         {matrix.map((row, rowIndex) =>
                             row.map((cell, colIndex) => (
@@ -155,7 +155,7 @@ const MatrixGame = () => {
 
             {stage === 'input' && (
                 <div>
-                    <h2>Where was the X?</h2>
+                    <h2>איכן היה ה-X?</h2>
                     <div className="matrix">
                         {matrix.map((row, rowIndex) =>
                             row.map((cell, colIndex) => (
@@ -169,22 +169,23 @@ const MatrixGame = () => {
                             ))
                         )}
                     </div>
-                    <button onClick={handleInputSubmit}>Submit</button>
+                    <p></p>
+                    <button onClick={handleInputSubmit}>בחר</button>
                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                 </div>
             )}
 
             {stage === 'results' && (
                 <div>
-                    <h2>Game Over! Here are your results:</h2>
+                    <h2>המשחק נגמר! אלו הן התוצאות:</h2>
                     <ul>
                         {results.map((result, index) => (
                             <li key={index}>
-                                Round {result.round}: X was at {result.position.map(pos => `[${pos[0]}, ${pos[1]}]`).join(', ')} - You clicked [{result.clicked[0]}, {result.clicked[1]}] ({result.isCorrect ? 'Correct' : 'Incorrect'})
+                                סיבוב {result.round}: X נמצא ב {result.position.map(pos => `[${pos[0]}, ${pos[1]}]`).join(', ')} - אתה לחצת [{result.clicked[0]}, {result.clicked[1]}] ({result.isCorrect ? 'נכון!' : 'טעות'})
                             </li>
                         ))}
                     </ul>
-                    <button onClick={startGame}>Play Again</button>
+                    <button onClick={startGame}>שחק שוב</button>
                 </div>
             )}
 

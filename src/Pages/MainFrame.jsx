@@ -6,7 +6,7 @@ import RedSquareGame from '../GameComponents/RedSquareGame';
 import QuickMemoryGame from '../GameComponents/QuickMemoryGame';
 import MatrixGame from '../GameComponents/MatrixGame';
 import SmoothPursuitExercise from '../GameComponents/SmoothPursuitExercise';
-import DepthPerceptionTrainer from '../GameComponents/DepthPerceptionTrainer';
+import ColorShadeGame from '../GameComponents/ColorShadeGame';
 
 import VideoGallery from '../Components/VideoGallery';
 import UserProfile from '../Components/UserProfile';
@@ -50,7 +50,7 @@ const MainFrame = () => {
                 {activeGame === 'game3' && <QuickMemoryGame />}
                 {activeGame === 'game4' && <MatrixGame />}
                 {activeGame === 'game5' && <SmoothPursuitExercise />}
-                {activeGame === 'game6' && <DepthPerceptionTrainer />}
+                {activeGame === 'game6' && <ColorShadeGame />}
                 {activeGame === 'videos' && <VideoGallery />}
             </main>
         </div>

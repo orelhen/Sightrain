@@ -99,7 +99,9 @@ const RedSquareGame = () => {
         <div className="game">
             <h2>Red Square Game</h2>
             <div className="gamedesc">
-                
+            <h3>
+                       עליכם ללחוץ על הריבוע ברגע שיהפוך לאדום
+                        </h3>
             </div>
             <div className="settings">
             <h3>הגדרות משחק:</h3>

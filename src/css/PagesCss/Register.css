@@ -32,7 +32,8 @@
   .reg_main {
     max-width: 60%;
     width: -webkit-fill-available;
-    text-align: left;
+    text-align: right;
+    direction: rtl;
   }
   
   .reg_main h2 {
@@ -81,7 +82,6 @@
   
   .registration-form-container input:focus,
   .registration-form-container select:focus {
-    background-color: #9773dc1a !important;
     outline: none;
   }
   

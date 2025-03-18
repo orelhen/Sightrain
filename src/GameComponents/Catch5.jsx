@@ -113,8 +113,8 @@ const Catch5Game = () => {
                
           <div style={sliderContainerStyle}>
             <label>
-              <strong>Box Size: </strong>
-              {boxSize}px
+              <strong>גודל הקופסא: </strong>
+              {boxSize}פיקסלים
             </label>
             <input
               type="range"
@@ -126,8 +126,8 @@ const Catch5Game = () => {
           </div>
           <div style={sliderContainerStyle}>
             <label>
-              <strong>Difficulty: </strong>
-              {numberSpeed}ms
+              <strong>רמת קושי: </strong>
+              {numberSpeed}מ"ש 
             </label>
             <input
               type="range"

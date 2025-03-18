@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import '../css/PagesCss/Register.css';
 
 const RegisterPage = () => {
+    const [userId, setUserId] = useState('');
+    const [role, setRole] = useState('normal');
+    const [hospital, setHospital] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [dateOfBirth, setDateOfBirth] = useState('');
-    const [gender, setGender] = useState('');
-    const [receiveNews, setReceiveNews] = useState(false);
-    const [fullName, setFullName] = useState('');
+    const [name, setName] = useState('');
+    const [age, setAge] = useState('');
     const [errors, setErrors] = useState({});
     const [serverMessage, setServerMessage] = useState('');
 
@@ -17,37 +18,19 @@ const RegisterPage = () => {
     };
 
     const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-        return passwordRegex.test(password);
-    };
-
-    const validateFullName = (name) => {
-        const nameRegex = /^[A-Za-z\s]{1,20}$/;
-        return nameRegex.test(name);
+        return password.length >= 8;
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const newErrors = {};
 
-        if (!validateFullName(fullName)) {
-            newErrors.fullName = 'Full name must be between 1 and 20 characters and contain only letters and spaces.';
-        }
-
         if (!validateEmail(email)) {
-            newErrors.email = 'Invalid email format.';
+            newErrors.email = 'אימייל לא תקין';
         }
 
         if (!validatePassword(password)) {
-            newErrors.password = 'Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, and one number.';
-        }
-
-        if (dateOfBirth) {
-            const today = new Date();
-            const dob = new Date(dateOfBirth);
-            if (dob >= today) {
-                newErrors.dateOfBirth = 'Date of Birth must be in the past.';
-            }
+            newErrors.password = 'הסיסמה חייבת להכיל לפחות 8 תווים';
         }
 
         if (Object.keys(newErrors).length > 0) {
@@ -62,82 +45,49 @@ const RegisterPage = () => {
                 <div className="registration-form-container">
                     <form onSubmit={handleSubmit}>
                         <div className="reg_main">
-                            <h2>Register</h2>
-                            <label htmlFor="fullName">Full Name
-                                <input
-                                    type="text"
-                                    id="fullName"
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    required
-                                />
-                                {errors.fullName && <p className="error-message">{errors.fullName}</p>}
+                            <h2>הרשמה</h2>
+                            <label htmlFor="userId">תעודת זהות
+                                <input type="text" id="userId" value={userId} onChange={(e) => setUserId(e.target.value)} required />
                             </label>
 
-                            <label htmlFor="email">Email
-                                <input
-                                    type="email"
-                                    id="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                />
+                            <label htmlFor="name">שם מלא
+                                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+                            </label>
+
+                            <label htmlFor="age">גיל
+                                <input type="text" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
+                            </label>
+
+                            <label htmlFor="email">אימייל
+                                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                                 {errors.email && <p className="error-message">{errors.email}</p>}
                             </label>
 
-                            <label htmlFor="password">Password
-                                <input
-                                    type="password"
-                                    id="password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
+                            <label htmlFor="password">סיסמה
+                                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                                 {errors.password && <p className="error-message">{errors.password}</p>}
                             </label>
 
-                            <label htmlFor="dateOfBirth">Date of Birth (optional)
-                                <input
-                                    type="date"
-                                    id="dateOfBirth"
-                                    value={dateOfBirth}
-                                    onChange={(e) => setDateOfBirth(e.target.value)}
-                                />
-                                {errors.dateOfBirth && <p className="error-message">{errors.dateOfBirth}</p>}
-                            </label>
-
-                            <label htmlFor="gender">Gender
-                                <select
-                                    id="gender"
-                                    value={gender}
-                                    onChange={(e) => setGender(e.target.value)}
-                                >
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                    <option value="else">Else</option>
+                            <label htmlFor="role">תפקיד
+                                <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
+                                    <option value="normal">משתמש רגיל</option>
+                                    <option value="caregiver">מטפל</option>
                                 </select>
                             </label>
 
-
-                            <div className="receive-emails">
-                                <label htmlFor="receiveNews">
-                                    <input
-                                        type="checkbox"
-                                        id="receiveNews"
-                                        checked={receiveNews}
-                                        onChange={(e) => setReceiveNews(e.target.checked)}
-                                    />
-                                    Interested in receiving news?
+                            {role === 'caregiver' && (
+                                <label htmlFor="hospital">בית חולים
+                                    <input type="text" id="hospital" value={hospital} onChange={(e) => setHospital(e.target.value)} required />
                                 </label>
-                            </div>
+                            )}
                         </div>
 
                         <div className="reg_btn_container">
-                            <button type="submit">Register</button>
+                            <button type="submit">הירשם</button>
                             {serverMessage && <p className="server-message">{serverMessage}</p>}
                             <p>
-                                Have an account?
-                                <a href="/home" className="register-link"> Login</a>
+                                כבר יש לך חשבון?
+                                <a href="/home" className="register-link"> התחבר</a>
                             </p>
                         </div>
                     </form>

@@ -57,8 +57,8 @@ const SmoothPursuitExercise = () => {
   return (
     <div className="game" style={styles.container}>
       <div className="gamedesc"> 
-      <h2>Smooth Pursuit Exercise</h2>
-      <p>Follow the moving dot with your eyes.</p>
+      <h2>אימון תנועה חלקה</h2>
+      <p>הסתכלו למרכז המסך ועקבו אחרי הכדור עם העיניים.</p>
       </div>
 
       <div class="smoothbox" style={{ ...styles.box, width: boxSize.width, height: boxSize.height }}>
@@ -75,7 +75,7 @@ const SmoothPursuitExercise = () => {
       {/* Speed Control */}
       <div className="settings">
       <label>
-        Speed:
+        מהירות:
         <input
           type="range"
           min="1"
@@ -88,7 +88,7 @@ const SmoothPursuitExercise = () => {
 
       {/* Dot Size Control */}
       <label>
-        Dot Size:
+        גודל הכדור:
         <input
           type="range"
           min="30"
@@ -96,19 +96,19 @@ const SmoothPursuitExercise = () => {
           value={dotSize}
           onChange={(e) => setDotSize(Number(e.target.value))}
         />
-        {dotSize}px
+        {dotSize}
       </label>
 
       {/* Direction Control */}
       <label>
-        Movement Direction:
+        כיוון התנועה:
         <select
           value={movementDirection}
           onChange={(e) => setMovementDirection(e.target.value)}
         >
-          <option value="diagonal">Diagonal</option>
-          <option value="horizontal">Left to Right</option>
-          <option value="vertical">Top to Bottom</option>
+          <option value="diagonal">אלכסון </option>
+          <option value="horizontal">לרוחב</option>
+          <option value="vertical">למעלה,למטה</option>
         </select>
       </label>
       </div>
