@@ -1,30 +1,42 @@
 import React, { useState } from 'react';
 import '../css/PagesCss/LoginPage.css';
 
+import { getAuth,signInWithEmailAndPassword } from '../firebase'; // Ensure this path matches your project structure
+
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
 
-    function handleSubmit(event) {
-        event.preventDefault();
-        // Add form submission logic here
-        setMessage('Form submitted');
-    }
-
+  
     function navigateToRegister() {
         window.location.href = '/register';
     }
 
-    function navigateToHome() {
-        window.location.href = '/home';
+    function navigateToHome(user) {
+        window.location.href = `/home`;
     }
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        const auth = getAuth();
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, username, password);
+            const user = userCredential.user;
+            console.log("User ID:", user.uid); // Log the user ID
+            navigateToHome(user);
+        } catch (error) {
+            setMessage(`Error: ${error.message}`);
+        }
+    }
+    
     return (
         <section className="main-content">
             <h1>Register</h1>
 
             <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username</label>
+                <div>
+                <label htmlFor="username">כתובת דואר אלקטרוני </label>
                 <input
                     type="text"
                     id="username"
@@ -33,7 +45,7 @@ function LoginPage() {
                     required
                 />
 
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">סיסמה</label>
                 <input
                     type="password"
                     id="password"
@@ -41,18 +53,18 @@ function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-
-                <button type="submit">Login</button>
+                </div>
+                <button type="submit">התחבר</button>
                 {message && <p>{message}</p>}
 
                 <p>
-                    Don't have an account? 
-                    <button onClick={navigateToRegister} className="register-link">Register</button>
+                    אין לך משתמש?
+                    <button onClick={navigateToRegister} className="register-link">הרשם</button>
                 </p>
 
                 <p>
-                    Continue as guest
-                    <button onClick={navigateToHome} className="register-link">Guest</button>
+                    
+                    <button onClick={navigateToHome} className="register-link">המשך כאורח</button>
                 </p>
             </form>
             

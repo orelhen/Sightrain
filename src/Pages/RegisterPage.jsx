@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../css/PagesCss/Register.css';
+import { getAuth, createUserWithEmailAndPassword } from "../firebase.js";
 
 const RegisterPage = () => {
     const [userId, setUserId] = useState('');
@@ -21,8 +22,45 @@ const RegisterPage = () => {
         return password.length >= 8;
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    
+    let usid="";
+    const handleFirebaseRegistration = async () => {
+        const auth = getAuth();
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            setServerMessage('הרשמה בוצעה בהצלחה');
+            console.log('Registered user:', user);
+            usid=user.uid;
+        } catch (error) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setServerMessage(`שגיאה בהרשמה: ${errorMessage}`);
+            console.error('Firebase registration error:', errorCode, errorMessage);
+        }
+    };
+    const saveUserToFirestore = async (userId, name, age, email, role, hospital) => {
+        try {
+            const { firestore } = await import('../firebase'); // Import Firestore from your firebase.js
+            const { doc, setDoc } = await import('firebase/firestore'); // Import Firestore methods
+            const userDoc = doc(firestore, 'users', usid);
+            await setDoc(userDoc, {
+                ID: userId, 
+                name,
+                age,
+                email,
+                role,
+                hospital: role === 'caregiver' ? hospital : null,
+                createdAt: new Date(),
+            });
+            console.log('User saved to Firestore');
+        } catch (error) {
+            console.error('Error saving user to Firestore:', error);
+            setServerMessage('שגיאה בשמירת המשתמש למסד הנתונים');
+        }
+    };
+
+    const handleRegistration = async () => {
         const newErrors = {};
 
         if (!validateEmail(email)) {
@@ -37,6 +75,18 @@ const RegisterPage = () => {
             setErrors(newErrors);
             return;
         }
+
+        try {
+            await handleFirebaseRegistration();
+            await saveUserToFirestore(userId, name, age, email, role, hospital);
+        } catch (error) {
+            console.error('Error during registration:', error);
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        handleRegistration();
     };
 
     return (
@@ -87,7 +137,7 @@ const RegisterPage = () => {
                             {serverMessage && <p className="server-message">{serverMessage}</p>}
                             <p>
                                 כבר יש לך חשבון?
-                                <a href="/home" className="register-link"> התחבר</a>
+                                <a href="/login" className="register-link"> התחבר</a>
                             </p>
                         </div>
                     </form>

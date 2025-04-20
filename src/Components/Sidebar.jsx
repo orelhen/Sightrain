@@ -30,6 +30,7 @@ const Sidebar = ({ onGameClick }) => {
           <button onClick={() => onGameClick('game4')}>מציאת X</button>
           <button onClick={() => onGameClick('game5')}>תנועה חלקה <i class="fa-regular fa-eye"></i></button>
           <button onClick={() => onGameClick('game6')}>צבעים</button>
+          <button onClick={() => onGameClick('game7')}>סאקדת שעון</button>
         </div>
 
       </div>

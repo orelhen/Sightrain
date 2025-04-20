@@ -14,6 +14,7 @@ const Timer = () => {
 
     return () => clearInterval(timer); // Cleanup on unmount
   }, [seconds]);
+  
 
   const resetTimer = () => {
     setSeconds(0);

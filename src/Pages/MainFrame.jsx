@@ -7,10 +7,11 @@ import QuickMemoryGame from '../GameComponents/QuickMemoryGame';
 import MatrixGame from '../GameComponents/MatrixGame';
 import SmoothPursuitExercise from '../GameComponents/SmoothPursuitExercise';
 import ColorShadeGame from '../GameComponents/ColorShadeGame';
-
+import ClockSaccada from '../GameComponents/ClockSaccada';
 import VideoGallery from '../Components/VideoGallery';
 import UserProfile from '../Components/UserProfile';
 import Timer from '../Components/Timer';
+import { getAuth, onAuthStateChanged } from "../firebase.js";
 
 
 
@@ -27,6 +28,18 @@ const MainFrame = () => {
     useEffect(() => {
         document.body.className = `main_frame ${theme}`;
     }, [theme]);
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Logged in user:", user.displayName || user.email);
+            } else {
+                console.log("No user is logged in.");
+            }
+        });
+
+        return () => unsubscribe(); // Cleanup subscription on unmount
+    }, []);
 
     return (
         <div >
@@ -51,6 +64,7 @@ const MainFrame = () => {
                 {activeGame === 'game4' && <MatrixGame />}
                 {activeGame === 'game5' && <SmoothPursuitExercise />}
                 {activeGame === 'game6' && <ColorShadeGame />}
+                {activeGame === 'game7' && <ClockSaccada/>} 
                 {activeGame === 'videos' && <VideoGallery />}
             </main>
         </div>
