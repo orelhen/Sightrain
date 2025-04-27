@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { getAuth, firestore, doc, getDoc, setDoc, onAuthStateChanged } from '../firebase.js'; // Ensure Firebase is correctly configured and imported
+
 
 const ColorShadeGame = () => {
   const [balls, setBalls] = useState([]);
@@ -82,11 +84,71 @@ const ColorShadeGame = () => {
     setIsGameActive(false);
   };
 
+
+  const saveResultsToDatabase = async () => {
+    try {
+      const auth = getAuth();
+      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const userDoc = doc(firestore, "users", currentUser.uid);
+          const userSnapshot = await getDoc(userDoc);
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.data();
+            const sessionKey = `Session (${new Date().toLocaleDateString()})`;
+            const updatedResults = {
+              [sessionKey]: {
+                "ColorShadeGame": [
+                  ...(Array.isArray(userData.gameResults?.[sessionKey]?.ColorShadeGame) ? userData.gameResults[sessionKey].ColorShadeGame : []),
+                  {
+                    correctAnswers,
+                    incorrectAnswers,
+                    ballCount,
+                    difficulty,
+                    ballSize
+                  }
+                ]
+              }
+            };
+            const mergedResults = userData.gameResults
+              ? {
+                  ...userData.gameResults,
+                  [sessionKey]: {
+                    ...(userData.gameResults[sessionKey] || {}),
+                    "ColorShadeGame": updatedResults[sessionKey]["ColorShadeGame"]
+                  }
+                }
+              : updatedResults;
+
+            await setDoc(userDoc, { gameResults: mergedResults }, { merge: true });
+            console.log("Results saved successfully!");
+            setScore(0); // Reset score after saving
+          } else {
+            console.error("No such user document!");
+          }
+        } else {
+          alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
+          console.error("No user is logged in!");
+        }
+      });
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.error("Error saving results:", error);
+    }
+  };
+
+
   useEffect(() => {
     if (isGameActive) {
       generateBalls();
     }
   }, [isGameActive, ballCount, color, difficulty, ballSize]);
+
+  useEffect(() => {
+    if (score === 5) {
+      finishGame();
+    }
+  }, [score]);
 
   return (
     <div className="game" style={styles.container}>
@@ -94,81 +156,99 @@ const ColorShadeGame = () => {
       <div className="gamedesc">
         <p>מצאו את הכדור הכהה יותר!</p>
       </div>
+      {!isGameActive && score === 0 && (
+        <div className="settings" style={styles.settings}>
+          <label>
+            כמות כדורים:
+            <input
+              type="range"
+              min="5"
+              max="25"
+              value={ballCount}
+              onChange={(e) => setBallCount(Number(e.target.value))}
+              disabled={isGameActive} // Disable when game is active
+            />
+            {ballCount}
+          </label>
+          <label>
+            צבע הכדור:
+            <select
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              disabled={isGameActive} // Disable when game is active
+            >
+              <option value="blue">כחול</option>
+              <option value="orange">כתום</option>
+              <option value="red">אדום</option>
+              <option value="white">לבן</option>
+            </select>
+          </label>
+          <label>
+            רמת קושי :
+            <input
+              type="range"
+              min="1"
+              max="8"
+              value={difficulty}
+              onChange={(e) => setDifficulty(Number(e.target.value))}
+              disabled={isGameActive} // Disable when game is active
+            />
+            {difficulty}
+          </label>
+          <label>
+            גודל הכדור:
+            <input
+              type="range"
+              min="2"
+              max="5"
+              value={ballSize}
+              onChange={(e) => setBallSize(Number(e.target.value))}
+              disabled={isGameActive} // Disable when game is active
+            />
+            {ballSize}
+          </label>
+        </div>
+      )}
 
-      <div style={styles.score}>תוצאה: {score}</div>
-
-      <div style={styles.gameBox}>
-        {balls.map((ball) => (
-          <div
-            key={ball.id}
-            style={{
-              ...styles.ball,
-              left: ball.x,
-              top: ball.y,
-              backgroundColor: ball.color,
-              width: `${ballSize * 20}px`,
-              height: `${ballSize * 20}px`,
-              border: '2px solid white', // Adding white border to each ball
-            }}
-            onClick={() => handleBallClick(ball.id)}
-          />
-        ))}
-      </div>
+      {isGameActive && (
+        <div style={styles.gameBox}>
+          {balls.map((ball) => (
+            <div
+              key={ball.id}
+              style={{
+                ...styles.ball,
+                left: ball.x,
+                top: ball.y,
+                backgroundColor: ball.color,
+                width: `${ballSize * 20}px`,
+                height: `${ballSize * 20}px`,
+                border: '2px solid white', // Adding white border to each ball
+              }}
+              onClick={() => handleBallClick(ball.id)}
+            />
+          ))}
+          <div style={styles.score}>תוצאה: {score}</div>
+        </div>
+      )}
       <div style={styles.feedback}>{feedback}</div>
-
-      <div className="settings" style={styles.settings}>
-        <label>
-          כמות כדורים:
-          <input
-            type="range"
-            min="5"
-            max="25"
-            value={ballCount}
-            onChange={(e) => setBallCount(Number(e.target.value))}
-          />
-          {ballCount}
-        </label>
-        <label>
-          צבע הכדור:
-          <select value={color} onChange={(e) => setColor(e.target.value)}>
-            <option value="blue">כחול</option>
-            <option value="orange">כתום</option>
-            <option value="red">אדום</option>
-            <option value="white">לבן</option>
-          </select>
-        </label>
-        <label>
-          רמת קושי :
-          <input
-            type="range"
-            min="1"
-            max="8"
-            value={difficulty}
-            onChange={(e) => setDifficulty(Number(e.target.value))}
-          />
-          {difficulty}
-        </label>
-        <label>
-          גודל הכדור:
-          <input
-            type="range"
-            min="2"
-            max="5"
-            value={ballSize}
-            onChange={(e) => setBallSize(Number(e.target.value))}
-          />
-          {ballSize}
-        </label>
-      </div>
 
       {!isGameActive && (
         <>
           <button onClick={startGame} style={styles.button}>התחלו משחק חדש!</button>
-          <div class="results">
-          <h2>המשחק נגמר! אלו הן התוצאות:</h2>
-            <p>נכונים: {correctAnswers}</p>
-            <p>שגויים: {incorrectAnswers}</p>
-          </div>
+
+          {score > 0 && (
+            <div className="results">
+              <h2>המשחק נגמר! אלו הן התוצאות:</h2>
+             
+              <p>נכונים: {correctAnswers}</p>
+              <p>שגויים: {incorrectAnswers}</p>
+              <p>רמת קושי: {difficulty} מתוך 8</p>
+              <p>כמות כדורים: {ballCount}</p>
+              <p>גודל כדורים: {ballSize}</p>
+              <p>כמות סיבובים: {correctAnswers + incorrectAnswers}</p>
+              <button onClick={saveResultsToDatabase} style={styles.button}>שמור תוצאות</button>
+            </div>
+          )}
         </>
       )}
 
@@ -190,6 +270,7 @@ const styles = {
     fontSize: '24px',
     fontWeight: 'bold',
     marginBottom: '20px',
+    color: 'white',
   },
   feedback: {
     fontSize: '20px',

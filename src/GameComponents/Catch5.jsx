@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import '../css/GamesCss/Games.scss';
 
+import { getAuth, firestore, doc, getDoc, setDoc, onAuthStateChanged } from '../firebase.js'; // Ensure Firebase is correctly configured and imported
+
 
 const Catch5Game = () => {
   const [currentNumber, setCurrentNumber] = useState(0);
@@ -19,11 +21,73 @@ const Catch5Game = () => {
   // Beep sound state
   const [beepsound, setbeepsound] = useState(true);
 
+  const toggleBeep = () => {
+    setbeepsound((prev) => !prev);
+  };
+
   // Box position state
   const [boxPosition, setBoxPosition] = useState("center");
 
-  const toggleBeep = () => {
-    setbeepsound((prev) => !prev);
+  const saveResultsToDatabase = async () => {
+    try {
+      const auth = getAuth();
+      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          const userDoc = doc(firestore, "users", currentUser.uid);
+          const userSnapshot = await getDoc(userDoc);
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.data();
+            const sessionKey = `Session (${new Date().toLocaleDateString()})`;
+            const updatedResults = {
+              [sessionKey]: {
+              "Catch5Game": [
+                ...(Array.isArray(userData.gameResults?.[sessionKey]?.Catch5Game) ? userData.gameResults[sessionKey].Catch5Game : []),
+                {
+                correctClicks,
+                missClicks,
+                timesFiveShown,
+                reactionTimes,
+                averageReactionTime: reactionTimes.length > 0
+                  ? (reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length).toFixed(2)
+                  : null,
+                boxPosition, // Add the box position to the results
+                difficulty: numberSpeed, // Add difficulty level
+                boxSize, // Add box size
+                timestamp: new Date().toISOString() // Add timestamp for each result
+                }
+              ]
+              }
+            };
+            const mergedResults = userData.gameResults
+              ? {
+                  ...userData.gameResults,
+                  [sessionKey]: {
+                    ...(userData.gameResults[sessionKey] || {}),
+                    "Catch5Game": updatedResults[sessionKey]["Catch5Game"]
+                  }
+                }
+              : updatedResults;
+
+            await setDoc(userDoc, { gameResults: mergedResults }, { merge: true });
+            console.log("Results saved successfully!");
+          } else {
+            console.error("No such user document!");
+          }
+        } else {
+          alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
+          console.error("No user is logged in!");
+        }
+      });
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.error("Error saving results:", error);
+    }
+    handleStartGame(); // Restart the game after saving results
+  };
+
+  const handleSaveResults = () => {
+    saveResultsToDatabase();
   };
 
   useEffect(() => {
@@ -99,7 +163,7 @@ const Catch5Game = () => {
   return (
     <div className="game" style={{ textAlign: "center", marginTop: "20px" }}>
       <h1>Catch5</h1>
-      {!isGameRunning && (
+      {!isGameRunning && !gameEnd && (
         <div>
          <div className="gamedesc">
          <h3>
@@ -186,10 +250,22 @@ const Catch5Game = () => {
             </p>
           )}
           {reactionTimes.length === 0 && <p>לא נקלטו לחיצות</p>}
-          <button onClick={handleStartGame} style={buttonStyle}>
+          <button
+            onClick={() => {
+              setGameEnd(false);
+              handleStartGame();
+            }}
+            style={buttonStyle}
+          >
             שחק שוב
           </button>
-          <button onClick={handleStartGame} style={buttonStyle}>
+          <button
+            onClick={() => {
+              setGameEnd(false);
+              handleSaveResults();
+            }}
+            style={buttonStyle}
+          >
             שמור תוצאות
           </button>
         </div>

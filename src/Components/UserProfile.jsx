@@ -1,14 +1,20 @@
 import '../css/ComponentsCss/UserProfile.css';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged, signOut ,firestore,doc, getDoc} from "../firebase.js";
+import { useNavigate } from 'react-router-dom'; 
+import { getAuth, onAuthStateChanged, signOut ,firestore,doc, getDoc,setDoc} from "../firebase.js";
+
 const UserProfile = () => {
 
   //**********add dinamic user db 
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const auth = getAuth();
-
+  const [showSummary, setShowSummary] = useState(false);
+  const [selectedSession, setSelectedSession] = useState(null);
+  const [showAddPatientForm, setShowAddPatientForm] = useState(false);
+  const [newPatientId, setNewPatientId] = useState('');
+  const [newPatientName, setNewPatientName] = useState('');
+  const [newPatientLastLogin, setNewPatientLastLogin] = useState('');
 
   //fetch logged in user data
   useEffect(() => {
@@ -22,9 +28,11 @@ const UserProfile = () => {
           age: userData.age,
           createdAt: userData.createdAt,
           email: userData.email,
+          patients: userData.patients || [],
           hospital: userData.hospital,
           name: userData.name,
           role: userData.role,
+          gameResults: userData.gameResults || null, // Ensure gameResults is included
         });
       } else {
         console.error("No such user document!");
@@ -43,6 +51,7 @@ const UserProfile = () => {
   }, [auth]);
 
 
+  
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -51,8 +60,87 @@ const UserProfile = () => {
       console.error('Error logging out:', error);
     }
   };
-  
+
+    // Handlers for adding and removing patients
+    const handleAddPatient = async () => {
+      try {
+      const auth = getAuth();
+      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+        const userDoc = doc(firestore, "users", currentUser.uid);
+        const userSnapshot = await getDoc(userDoc);
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          const updatedPatients = {
+          ...userData.patients,
+          [newPatientId]: {
+            id: newPatientId,
+            name: newPatientName
+                    },
+          };
+
+          await setDoc(userDoc, { patients: updatedPatients }, { merge: true });
+          console.log("Patient added successfully!");
+          setNewPatientId('');
+          setNewPatientName('');
+          setNewPatientLastLogin('');
+          setShowAddPatientForm(false);
+        } else {
+          console.error("No such user document!");
+        }
+        } else {
+        alert("אנא התחבר למשתמש על מנת להוסיף מטופל.");
+        console.error("No user is logged in!");
+        }
+      });
+
+      return () => unsubscribe();
+      } catch (error) {
+      console.error("Error adding patient:", error);
+      }
+    };
+    
+    const handleRemovePatient = async (patientId) => {
+      try {
+        
+      const currentUser = auth.currentUser;
+      if (currentUser) {
+        const userDoc = doc(firestore, "users", currentUser.uid);
+        const userSnapshot = await getDoc(userDoc);
+        if (userSnapshot.exists()) {
+        const userData = userSnapshot.data();
+        const updatedPatients = { ...userData.patients };
+        
+        // Ensure the patient exists before attempting to delete
+        if (updatedPatients[patientId]) {
+          delete updatedPatients[patientId];
+
+          // Update the database
+          await setDoc(userDoc, { patients: updatedPatients }, { merge: true });
+          console.log(`Patient with ID: ${patientId} removed successfully from Firebase!`);
+          
+          // Update the local state
+          setUser((prevUser) => ({
+          ...prevUser,
+          patients: updatedPatients,
+          }));
+        } else {
+          console.error(`Patient with ID: ${patientId} does not exist in Firebase.`);
+        }
+        } else {
+        console.error("No such user document in Firebase!");
+        }
+      } else {
+        alert("אנא התחבר למשתמש על מנת להסיר מטופל.");
+        console.error("No user is logged in!");
+      }
+      } catch (error) {
+      console.error(`Error removing patient with ID: ${patientId} from Firebase`, error);
+      }
+    };
   if (!user) {
+  
+  
     return (
       <div className="profile-container">
         <h2>משתמש לא מחובר</h2>
@@ -61,41 +149,8 @@ const UserProfile = () => {
     );
   }
 
-    //***********add dinamic user information
-    return (
-      <div className="profile-container">
-      <h2>הפרופיל שלי</h2>
+ 
 
-      {user?.photo && (
-        <img
-          src={user.photo}
-          alt="User Profile"
-          className="profile-image"
-        />
-      )}
-
-      <p className="profile-info">
-        <strong>תעודת זהות:</strong> {user?.id}
-      </p>
-      <p className="profile-info">
-        <strong>שם מלא:</strong> {user?.name}
-      </p>
-      <p className="profile-info">
-        <strong>כתובת מייל:</strong> {user?.email}
-      </p>
-      <p className="profile-info">
-        <strong>גיל:</strong> {user?.age}
-      </p>
-      <p className="profile-info">
-        <strong>בה"ח:</strong> {user?.hospital}
-      </p>
-      <p className="profile-info">
-        <strong>תפקיד:</strong> {user?.role}
-      </p>
-      <button onClick={handleLogout}>התנתק</button>
-      <button>הדפס סיכום</button>
-      </div>
-    );
-  };
+};
 
 export default UserProfile;

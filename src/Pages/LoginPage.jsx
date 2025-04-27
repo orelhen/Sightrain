@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../css/PagesCss/LoginPage.css';
-
+    
 import { getAuth,signInWithEmailAndPassword } from '../firebase'; // Ensure this path matches your project structure
 
 function LoginPage() {
@@ -31,43 +31,57 @@ function LoginPage() {
     }
     
     return (
-        <section className="main-content">
-            <h1>Register</h1>
-
-            <form onSubmit={handleSubmit}>
-                <div>
-                <label htmlFor="username">כתובת דואר אלקטרוני </label>
-                <input
-                    type="text"
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
-
-                <label htmlFor="password">סיסמה</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
+        <section className="form-container">
+            <div className="form-content">
+                <h2>התחברות</h2>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        type="text"
+                        id="username"
+                        placeholder="כתובת דואר אלקטרוני"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="סיסמה"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <button type="submit">התחבר</button>
+                    {message && <p>{message}</p>}
+                </form>
+                <p>
+                    אין לך משתמש?{' '}
+                    <button onClick={navigateToRegister} className="register-link">
+                        הרשם
+                    </button>
+                </p>
+                <p>
+                    <button onClick={navigateToHome} className="register-link">
+                        המשך כאורח
+                    </button>
+                </p>
+            </div>
+            <div className="iframe_bg">
+                  <iframe
+                    className="main_iframe"
+                    src="https://yourdomain.com/eye-training-image.jpg"
+                    title="Eye Training Image"
+                    />
+                <div className="why_overlay_btn">
+                    <a href="#why">למה?</a>
                 </div>
-                <button type="submit">התחבר</button>
-                {message && <p>{message}</p>}
-
-                <p>
-                    אין לך משתמש?
-                    <button onClick={navigateToRegister} className="register-link">הרשם</button>
-                </p>
-
-                <p>
-                    
-                    <button onClick={navigateToHome} className="register-link">המשך כאורח</button>
-                </p>
-            </form>
-            
+                <div className="why_overlay">
+                    <p>
+                    ההרשמה לאתר SighTrain מאפשרת לכל משתמש לקבל חוויית אימון אישית וממוקדת. כאשר משתמשים רשומים ומחוברים, המערכת שומרת את כל נתוני ההתקדמות, התוצאות מהאימונים והסטטיסטיקות האישיות שלהם. נתונים אלה מאפשרים למשתמשים ולעוסקים בתחום הרפואה לעקוב מקרוב אחרי השיפור ביכולות הראייה לאורך זמן ולהתאים את תכנית השיקום לפי הצורך.
+                    בנוסף, משתמשים מחוברים נהנים מגישה מותאמת אישית, אפשרות להמשכיות בין מפגשי האימון, שמירת ההעדפות האישיות, ומעקב רציף שמסייע בקידום תהליך השיקום בצורה מדויקת ויעילה יותר.
+                    </p>
+                </div>
+            </div>
         </section>
     );
 }

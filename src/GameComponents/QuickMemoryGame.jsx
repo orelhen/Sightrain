@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../css/GamesCss/Games.scss';
 
+import { getAuth, firestore, doc, getDoc, setDoc, onAuthStateChanged } from '../firebase.js'; // Ensure Firebase is correctly configured and imported
+
 const QuickMemoryGame = () => {
     const [stage, setStage] = useState('start'); // start, countdown, showNumber, input, results
     const [countdown, setCountdown] = useState(2); // Countdown timer
@@ -10,13 +12,13 @@ const QuickMemoryGame = () => {
     const [round, setRound] = useState(1); // 3 rounds
     const [results, setResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
-
+    
     // New state variables for sliders
     const [difficulty, setDifficulty] = useState(1200); // Difficulty slider (number display time)
     const [gameLength, setGameLength] = useState(1); // Game length slider (rounds)
     const [fontSize, setFontSize] = useState(3); // Font size slider (number font size)
     const [Spacing, setSpacing] = useState(0); // Spacing between numbers
-
+    const auth = getAuth(); // Ensure getAuth is correctly initialized
     //beep
     const [beepsound, setbeepsound] = useState(true);
     const toggleBeep = () => {
@@ -96,14 +98,72 @@ const QuickMemoryGame = () => {
                 document.getElementById('numberInput').focus();
             }, 100);
         }
+        if (stage === 'SaveResults') {
+            const saveResultsToDatabase = async () => {
+            try {
+                const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+                if (currentUser) {
+                    const userDoc = doc(firestore, "users", currentUser.uid);
+                    const userSnapshot = await getDoc(userDoc);
+                    if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    const sessionKey = `Session (${new Date().toLocaleDateString()})`;
+                    const updatedResults = {
+                        [sessionKey]: {
+                        "QuickMemoryGame": results
+                        }
+                    };
+                    const mergedResults = userData.gameResults
+                        ? { 
+                            ...userData.gameResults, 
+                            [sessionKey]: {
+                                ...(userData.gameResults[sessionKey] || {}),
+                                "QuickMemoryGame": [
+                                    ...(userData.gameResults[sessionKey]?.QuickMemoryGame || []),
+                                    ...results.map(result => ({
+                                        ...result,
+                                        difficulty,
+                                        spacing: Spacing,
+                                        fontSize
+                                    }))
+                                ]
+                            }
+                        }
+                        : {
+                            ...updatedResults,
+                            [sessionKey]: {
+                                "QuickMemoryGame": results.map(result => ({
+                                    ...result,
+                                    difficulty,
+                                    spacing: Spacing,
+                                    fontSize
+                                }))
+                            }
+                        };
+                    await setDoc(userDoc, { gameResults: mergedResults }, { merge: true });
+                    console.log("Results saved successfully!");
+                    } else {
+                    console.error("No such user document!");
+                    }
+                } else {
+                    alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
+                    console.error("No user is logged in!");
+                }
+                });
 
-        if (stage === 'results') {
-            // Show the final results after the rounds
+                return () => unsubscribe();
+            } catch (error) {
+                console.error("Error saving results:", error);
+            }
+            };
+
+            saveResultsToDatabase();
+            setStage('start')
         }
-
         return () => clearTimeout(timer); // Cleanup timeout when component unmounts or state changes
-    }, [stage, countdown, difficulty, gameLength, Spacing]);
+        }, [stage, countdown, difficulty, gameLength, Spacing]);
 
+        
     return (
         <div className="game">
             {stage === 'start' && (
@@ -216,6 +276,7 @@ const QuickMemoryGame = () => {
                          
                     </ul>
                     <button onClick={() => setStage('start')}>חזרה להתחלה</button>
+                    <button onClick={() => setStage('SaveResults')}>שמור תוצאות</button>
                 </div>
             )}
         </div>
