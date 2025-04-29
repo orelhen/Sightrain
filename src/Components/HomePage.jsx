@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  
+import FeedbackForm from './feedbackform.jsx';
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const [showFeedback, setShowFeedback] = useState(false);
+   
     return (
         <div className="home-container" id="home">
-            {/* אודותינו */}
+            {/* Original sections remain the same */}
+            {/* Original sections remain the same */}
             <section className="hero-section">
                 <h2>ברוכים הבאים ל-SighTrain</h2>
                 <p>
@@ -62,8 +66,16 @@ const HomePage = () => {
                 <p>
                     הצטרפו למסע לחיזוק הקשרים. עם SighTrain אתם מנצלים את הפוטנציאל של העיניים שלכם.
                 </p>
-                <button className="cta-button" onClick={() => navigate('/login')} >התחילו עכשיו</button>
             </section>
+            
+            {/* Other sections remain the same */}
+
+            <button onClick={() => navigate('/login')} >התחילו עכשיו</button>
+            <button onClick={() => setShowFeedback(true)}>שלח משוב על האתר</button>
+
+            {showFeedback && (
+                <FeedbackForm onClose={() => setShowFeedback(false)}/>
+            )}
         </div>
     );
 };

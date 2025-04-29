@@ -56,8 +56,8 @@ const SmoothPursuitExercise = () => {
 
   return (
     <div className="game" style={styles.container}>
+        <h2>אימון תנועה חלקה</h2>
       <div className="gamedesc"> 
-      <h2>אימון תנועה חלקה</h2>
       <p>הסתכלו למרכז המסך ועקבו אחרי הכדור עם העיניים.</p>
       </div>
 

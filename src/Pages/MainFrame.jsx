@@ -11,12 +11,14 @@ import ClockSaccada from '../GameComponents/ClockSaccada';
 import VideoGallery from '../Components/VideoGallery';
 import UserProfile from '../Components/UserProfile';
 import Timer from '../Components/Timer';
-import { getAuth, onAuthStateChanged } from "../firebase.js";
+import Manual from '../Components/manual.jsx';
+import CgHomepage from '../Components/CgHomepage';
+import PatientManagement from '../Components/PatientManagment.jsx';
 
-
+import { getAuth, onAuthStateChanged ,firestore,doc, getDoc} from "../firebase.js";
 
 const MainFrame = () => {
-    const [activeGame, setActiveGame] = useState('main');
+    const [activeComponent, setActiveComponent] = useState('HomePage');
     const [theme, setTheme] = useState('light');  // light, dark, high-contrast
 
     const toggleTheme = () => {
@@ -25,21 +27,48 @@ const MainFrame = () => {
         );
     };
 
+    const [user, setUser] = useState(null);
+
     useEffect(() => {
         document.body.className = `main_frame ${theme}`;
     }, [theme]);
+
     useEffect(() => {
+        const fetchUserData = async (userId) => {
+            const userDoc = doc(firestore, "users", userId);
+            const userSnapshot = await getDoc(userDoc);
+            if (userSnapshot.exists()) {
+                const userData = userSnapshot.data();
+                setUser({
+                    id: userData.ID,
+                    age: userData.age,
+                    createdAt: userData.createdAt,
+                    email: userData.email,
+                    patients: userData.patients || [],
+                    hospital: userData.hospital,
+                    name: userData.name,
+                    role: userData.role,
+                    gameResults: userData.gameResults || {},
+                });
+            } else {
+                console.error("No such user document!");
+            }
+        };
+
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 console.log("Logged in user:", user.displayName || user.email);
+                fetchUserData(user.uid);
             } else {
                 console.log("No user is logged in.");
+                setUser(null);
             }
         });
 
         return () => unsubscribe(); // Cleanup subscription on unmount
     }, []);
+    
 
     return (
         <div >
@@ -52,20 +81,23 @@ const MainFrame = () => {
                 <Timer />
             </div>
 
-            <Sidebar onGameClick={setActiveGame} />
+            <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} />
 
             <main>
                 <h1 className="main_logo">SighTrain</h1>
-                {activeGame === 'profile' && <UserProfile />}
-                {activeGame === 'main' && <HomePage />}
-                {activeGame === 'game1' && <Catch5Game />}
-                {activeGame === 'game2' && <RedSquareGame />}
-                {activeGame === 'game3' && <QuickMemoryGame />}
-                {activeGame === 'game4' && <MatrixGame />}
-                {activeGame === 'game5' && <SmoothPursuitExercise />}
-                {activeGame === 'game6' && <ColorShadeGame />}
-                {activeGame === 'game7' && <ClockSaccada/>} 
-                {activeGame === 'videos' && <VideoGallery />}
+                {activeComponent === 'profile' && <UserProfile Loggedinuserdata={user}/>}
+                {activeComponent === 'patientManagment' && <PatientManagement/>}
+                {activeComponent === 'HomePage' && <HomePage/>}
+                {activeComponent === 'cgHomePage' && <CgHomepage/>}
+                {activeComponent === 'manual' && <Manual />}
+                {activeComponent === 'Catch5Game' && <Catch5Game />}
+                {activeComponent === 'RedSquareGame' && <RedSquareGame />}
+                {activeComponent === 'QuickMemoryGame' && <QuickMemoryGame />}
+                {activeComponent === 'MatrixGame' && <MatrixGame />}
+                {activeComponent === 'SmoothPursuitExercise' && <SmoothPursuitExercise />}
+                {activeComponent === 'ColorShadeGame' && <ColorShadeGame />}
+                {activeComponent === 'ClockSaccada' && <ClockSaccada/>} 
+                {activeComponent === 'videos' && <VideoGallery />}
             </main>
         </div>
     );

@@ -1,13 +1,11 @@
 .video-gallery {
     padding: 2em;
-    background-color: #f9f9f9;
     text-align: center;
 }
 
 .video-gallery h2 {
     font-size: 2rem;
     margin-bottom: 1em;
-    color: #6200ea;
 }
 
 .videos-container {
@@ -18,7 +16,6 @@
 }
 
 .video-card {
-    background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 1em;
@@ -30,12 +27,10 @@
 .video-card h3 {
     margin-top: 0.5em;
     font-size: 1.2rem;
-    color: #333;
 }
 
 .video-card p {
     font-size: 0.9rem;
-    color: #666;
     margin: 0.5em 0;
 }
 

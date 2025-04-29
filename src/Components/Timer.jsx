@@ -7,8 +7,8 @@ const Timer = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setSeconds((prev) => prev + 1);
-      if ((seconds + 1) % 60 === 0) { 
-        setShowReminder(true); // Show the reminder every 60 seconds
+      if ((seconds + 1) % 120 === 0) { 
+        setShowReminder(true); // Show the reminder every 120 seconds
       }
     }, 1000);
 

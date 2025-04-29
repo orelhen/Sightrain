@@ -154,10 +154,12 @@ const ColorShadeGame = () => {
     <div className="game" style={styles.container}>
       <h2>משחק צבעים</h2>
       <div className="gamedesc">
-        <p>מצאו את הכדור הכהה יותר!</p>
+        <h3>מצאו את הכדור הכהה יותר!</h3>
       </div>
       {!isGameActive && score === 0 && (
         <div className="settings" style={styles.settings}>
+            <h3>הגדרות משחק:</h3>
+               
           <label>
             כמות כדורים:
             <input
@@ -234,7 +236,7 @@ const ColorShadeGame = () => {
 
       {!isGameActive && (
         <>
-          <button onClick={startGame} style={styles.button}>התחלו משחק חדש!</button>
+         <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
 
           {score > 0 && (
             <div className="results">

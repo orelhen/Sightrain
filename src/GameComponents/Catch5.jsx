@@ -18,12 +18,6 @@ const Catch5Game = () => {
   const [boxSize, setBoxSize] = useState(300); // Default size
   const [numberSpeed, setNumberSpeed] = useState(1000); // Default number speed
 
-  // Beep sound state
-  const [beepsound, setbeepsound] = useState(true);
-
-  const toggleBeep = () => {
-    setbeepsound((prev) => !prev);
-  };
 
   // Box position state
   const [boxPosition, setBoxPosition] = useState("center");
@@ -70,6 +64,8 @@ const Catch5Game = () => {
 
             await setDoc(userDoc, { gameResults: mergedResults }, { merge: true });
             console.log("Results saved successfully!");
+            setIsGameRunning(false);
+            setGameEnd(false);
           } else {
             console.error("No such user document!");
           }
@@ -92,14 +88,32 @@ const Catch5Game = () => {
 
   useEffect(() => {
     let interval;
+    let lastNumber = null; // To ensure no two consecutive numbers are the same
+    let fiveCount = 0; // To track the number of times 5 appears
+
     if (isGameRunning) {
       interval = setInterval(() => {
-        const randomNum = Math.floor(Math.random() * 10);
+        let randomNum;
+        do {
+          randomNum = Math.floor(Math.random() * 10);
+        } while (randomNum === lastNumber); // Ensure no two consecutive numbers are the same
+
+        lastNumber = randomNum;
         setCurrentNumber(randomNum);
+
         if (randomNum === 5) {
-          if (beepsound) playBeep();
+          
           setStartTime(Date.now());
           setTimesFiveShown((prev) => prev + 1);
+          fiveCount++;
+
+          if (fiveCount === 3) {
+            setTimeout(() => {
+              setIsGameRunning(false);
+              setGameEnd(true);
+            }, 2000); // End the game 2 seconds after the second 5 appears
+          }
+
           setTimeout(() => {
             if (currentNumber === 5) {
               setCurrentNumber(0);
@@ -123,10 +137,7 @@ const Catch5Game = () => {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [isGameRunning, currentNumber]);
 
-  const playBeep = () => {
-    const audio = new Audio('/Sounds/beep.mp3'); 
-    audio.play().catch((err) => console.error('Error playing audio:', err));
-  };
+ 
 
   const handleStartGame = () => {
     setIsGameRunning(true);
@@ -138,7 +149,7 @@ const Catch5Game = () => {
     setTimeout(() => {
       setIsGameRunning(false);
       setGameEnd(true);
-    }, 15000);
+    }, 20000); // Game duration of 20 seconds
   };
 
   const handleClick = () => {
@@ -162,19 +173,18 @@ const Catch5Game = () => {
 
   return (
     <div className="game" style={{ textAlign: "center", marginTop: "20px" }}>
-      <h1>Catch5</h1>
+      <h1>תפסו את ה 5</h1>
       {!isGameRunning && !gameEnd && (
         <div>
          <div className="gamedesc">
          <h3>
-         במשחק הזה, יהיו לך כמה מיליסניות לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית
+         במשחק הזה, יהיו לך כמה מילישניות לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית
          </h3>
          </div> 
 
         <div className="settings">
        
-            <h3>הגדרות משחק:</h3>
-               
+            <h3>הגדרות משחק:</h3>        
           <div style={sliderContainerStyle}>
             <label>
               <strong>גודל הקופסא: </strong>
@@ -202,12 +212,7 @@ const Catch5Game = () => {
               onChange={(e) => setNumberSpeed(parseInt(e.target.value))}
             />
           </div>
-          <div>
-            <label>
-              צפצוף:
-              <input type="checkbox" checked={beepsound} onChange={toggleBeep} />
-            </label>
-          </div>
+         
           <div>
             <label>
               מיקום הקופסא:
@@ -220,10 +225,10 @@ const Catch5Game = () => {
               </select>
             </label>
           </div>
-          <button onClick={handleStartGame} >
-            התחל משחק
-          </button>
+         
         </div>
+        <button className='start_game'  onClick={handleStartGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
+
         </div>
       )}
 
@@ -235,39 +240,23 @@ const Catch5Game = () => {
       )}
 
       {gameEnd && (
-        <div>
+        <div className="results">
           <h2>המשחק נגמר!</h2>
           <p>כמות לחיצות: {correctClicks}</p>
           <p>פספוסים: {missClicks}</p>
           <p>המספר 5 הוצג: {timesFiveShown} פעמים</p>
           {reactionTimes.length > 0 && (
             <p>
-              Average reaction time:{" "}
+              זמן תגובה ממוצע:{" "}
               {(
                 reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length
               ).toFixed(2)}{" "}
-              ms
+              מ"ש
             </p>
           )}
           {reactionTimes.length === 0 && <p>לא נקלטו לחיצות</p>}
-          <button
-            onClick={() => {
-              setGameEnd(false);
-              handleStartGame();
-            }}
-            style={buttonStyle}
-          >
-            שחק שוב
-          </button>
-          <button
-            onClick={() => {
-              setGameEnd(false);
-              handleSaveResults();
-            }}
-            style={buttonStyle}
-          >
-            שמור תוצאות
-          </button>
+          <button onClick={() => {setGameEnd(false);  setIsGameRunning(false);}}>שחק שוב</button>
+          <button onClick={() => {handleSaveResults();}}>שמור תוצאות</button>
         </div>
       )}
     </div>
@@ -283,7 +272,7 @@ const gameBoxStyle = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  border: "2px solid #000",
+  border: "4px solid #000",
   fontWeight: "bold",
 };
 

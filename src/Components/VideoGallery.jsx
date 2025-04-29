@@ -4,31 +4,30 @@ import '../css/ComponentsCss/VideoGallery.css';
 const VideoGallery = () => {
     const videos = [
         {
-            title: "Lazy Eye Exercises / Lazy eye Training / Eye exercise to improve Vision",
-            description: "In order to regain sight, it is highly recommended to do eye exercises. Doing eye exercises regularly can help you to improve the eyesight or Lazy eye. Your eyes will work in full force and it will give you an opportunity to see the world better..",
+            title: "תרגילי עין עצלה / אימון עין עצלה / תרגילי עיניים לשיפור הראייה",
+            description: "על מנת לשפר את הראייה, מומלץ מאוד לבצע תרגילי עיניים. ביצוע תרגילי עיניים באופן קבוע יכול לעזור לשפר את הראייה או את העין העצלה. העיניים שלך יעבדו במלוא הכוח וזה ייתן לך הזדמנות לראות את העולם טוב יותר.",
             link: "https://www.youtube.com/embed/mqXR8O2VJLo?si=ISTEAFacKTsvevAS" // Replace with your YouTube embed link
         },
         {
-            title: "DARKMODE FPS Eye Training Warmup",
-            description: "a warmup that was high-resolution and didn't have little errors in it. Practicing eye tracking and training your eyes can improve focus, reading speed, visual perception, and can improve cognitive abilities.",
+            title: "חימום עיניים במצב חשוך",
+            description: "חימום ברזולוציה גבוהה ללא שגיאות קטנות. תרגול מעקב עיניים ואימון העיניים יכול לשפר את המיקוד, מהירות הקריאה, תפיסה חזותית ויכולות קוגניטיביות.",
             link: "https://www.youtube.com/embed/gCR5EbuNcIE?si=EXmyYkGmyonCYFZb" // Replace with your YouTube embed link
         },
         {
-            title: "Eye Exercises - Eye Exercises to improve Vision - Vision Therapy",
-            description: "How to improve vision? Our eye exercises are also ideal for people with good eyesight. Various eye care techniques can help you avoid dryness, fatigue,  computer vision syndrome, eye redness and problems caused by the constant use of computers and smartphones in work and daily life.",
+            title: "תרגילי עיניים - תרגילי עיניים לשיפור הראייה - טיפול בראייה",
+            description: "איך לשפר את הראייה? תרגילי העיניים שלנו מתאימים גם לאנשים עם ראייה טובה. טכניקות שונות לטיפול בעיניים יכולות לעזור להימנע מיובש, עייפות, תסמונת ראיית מחשב, אדמומיות בעיניים ובעיות הנגרמות משימוש מתמיד במחשבים וסמארטפונים בעבודה ובחיי היומיום.",
             link: "https://www.youtube.com/embed/A3v5F2by_u4?si=ZG3g1634CwujIvfy" // Replace with your YouTube embed link
         },
         {
-            title: "Eye Exercises - Loss of orientation exercise",
-            description: "Use only one eye, Cover your healthy eye. 1 or 2 feet distance from the screen, depending on screen size.Keep focus on the red dot at all times.Full screen display. Try using a big monitor, or a 10'' tablet, but keep your head closer to it.Dark room.If you use glasses wear them while watching this.",
+            title: "תרגילי עיניים - תרגיל לאובדן אוריינטציה",
+            description: "השתמש רק בעין אחת, כסה את העין הבריאה שלך. מרחק של 1 או 2 רגלים מהמסך, תלוי בגודל המסך. שמור על מיקוד בנקודה האדומה בכל עת. תצוגת מסך מלא. נסה להשתמש בצג גדול או בטאבלט בגודל 10 אינץ', אך שמור את הראש קרוב אליו. חדר חשוך. אם אתה משתמש במשקפיים, הרכב אותם בזמן הצפייה.",
             link: "https://www.youtube.com/embed/iJeY3XOZlBs?si=MMB7UleVYnqsCQl1" // Replace with your YouTube embed link
         }
-        
     ];
 
     return (
         <div className="video-gallery">
-            <h2>Explore Eye Trainin Videos</h2>
+            <h1>חקור סרטוני אימון עיניים</h1>
             <div className="videos-container">
                 {videos.map((video, index) => (
                     <div className="video-card" key={index}>

@@ -2,7 +2,6 @@
 .profile-container {
     margin: 2rem auto;
     padding: 1.5rem;
-    background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -11,7 +10,6 @@
   /* Heading for the profile section */
   .profile-container h2 {
     margin-bottom: 1rem;
-    color: #333333;
   }
   
   /* Profile image styling */
@@ -27,12 +25,10 @@
   /* User information text */
   .profile-info {
     margin: 0.5rem 0;
-    color: #555555;
   }
   
   /* Bold labels for user details */
   .profile-info strong {
-    color: #333333;
   }
   
   /* Button styling */
@@ -40,19 +36,15 @@
     display: inline-block;
     margin-top: 1.5rem;
     padding: 0.75rem 1.5rem;
-    background-color: #6200ea;
-    color: #ffffff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     text-decoration: none;
     font-size: 1rem;
-    transition: background-color 0.3s ease;
   }
   
   /* Button hover effect */
   .profile-button:hover {
-    background-color: #3700b3;
   }
   
   .summary-table {
@@ -60,14 +52,12 @@
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 15px;
-    background-color: #ffffff;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     overflow: hidden;
   }
 
   .summary-table h3, .summary-table h4, .summary-table h5 {
     margin-bottom: 10px;
-    color: #333;
   }
 
   .summary-table table {
@@ -90,14 +80,11 @@
   }
 
   .summary-table th {
-    background-color: #121212;
-    color: #fff;
     font-weight: bold;
     border-radius: 16px;
     border: 5px solid #fff;
   }
 
   .summary-table tr:hover {
-    background-color: #cac9c9;
   }
 

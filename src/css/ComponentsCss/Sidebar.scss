@@ -54,7 +54,6 @@
         padding-bottom: 10px;
         margin: 30px 0 10px;
     }
-
     button {
         cursor: pointer;
         width: fit-content;
@@ -67,12 +66,17 @@
         font-size: 36px;
         font-family: "Open Sans";
         border-radius: 50px;
-        transition: 0.4s all;
         border: 3px solid transparent;
 
         &:hover {
             border: 3px solid #fff;
             transition: 0.4s all;
+        }
+
+        &.active {
+            background: #fff;
+            color: #000;
+            border: 3px solid #000;
         }
     }
 
@@ -92,11 +96,10 @@
         justify-content: center;
         align-items: center;
         line-height: 0;
-        transition: 0.4s all;
 
         &:hover {
             background: rgba(0,0,0,0.8);
-            transition: 0.4s all;
+            transition: 0.8s all;
             color: #fff;
         }
     }
@@ -104,6 +107,7 @@
     .primary_btn, .games_btn{
         display: flex;
         flex-direction: column;
+        
     }
 
 
@@ -114,4 +118,6 @@
     right: 0;
     opacity: 1;
     visibility: visible;
+    transition: 0.8s all;
+
 }

@@ -83,10 +83,56 @@ button{
       margin-right: 10px;
       justify-content: center;
     }
-  }
+  }}
 
-
+.reminder {
+  position: absolute;
+  top: 80px; /* Adjusted to appear under the timer */
+  left: 20px;
+  padding: 15px;
+  border-radius: 50px;
+  border: 2px solid white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  text-align: center;
 }
+
+
+/* Range Slider Styles */
+/* Range slider container */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: black;
+  border-radius: 5px;
+  border: 2px solid white;
+  outline: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 40px;
+  height: 30px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 40px;
+  height: 30px;
+  background: white;
+  border: 2px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+
+
 
 /* Color Modes */
 /* Default Light Theme */
@@ -108,6 +154,61 @@ button{
   color: yellow !important;
 
 }
+
+
+textarea {
+  width: 80%;
+  min-height: 150px;
+  padding: 15px;
+  font-family: "Heebo";
+  font-size: 18px;
+  border: 4px solid #000;
+  border-radius: 15px;
+  resize: vertical;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+textarea:focus {
+  border-color: #000;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+textarea::placeholder {
+  color: #666;
+  font-family: "Heebo";
+}
+
+/* Select Dropdown Styles */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  font-family: "Heebo";
+  font-size: 18px;
+  padding: 10px 15px;
+  border: 4px solid black;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+select:hover {
+  background-color: #f0f0f0;
+}
+
+select:focus {
+  border-color: #000000;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+select option {
+  font-family: "Heebo";
+  font-size: 16px;
+}
+
 
 /* Theme Toggle Button */
 .theme-toggle-btn {

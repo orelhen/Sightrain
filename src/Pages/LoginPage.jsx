@@ -51,20 +51,18 @@ function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button type="submit">התחבר</button>
                     {message && <p>{message}</p>}
+                    <button type="submit">התחבר</button>
                 </form>
-                <p>
+                
+              
                     אין לך משתמש?{' '}
-                    <button onClick={navigateToRegister} className="register-link">
+                    <button onClick={navigateToRegister}>
                         הרשם
                     </button>
-                </p>
-                <p>
-                    <button onClick={navigateToHome} className="register-link">
+                    <button onClick={navigateToHome} >
                         המשך כאורח
                     </button>
-                </p>
             </div>
             <div className="iframe_bg">
                   <iframe
