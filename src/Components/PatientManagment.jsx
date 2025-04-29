@@ -5,7 +5,6 @@ import { firestore, doc, getDoc, setDoc,updateDoc,deleteField } from '../firebas
 
 const PatientManagement = () => {
     const [user, setUser] = useState(null);
-    const [showSummary, setShowSummary] = useState(false);
     const [showAddPatientForm, setShowAddPatientForm] = useState(false);
     const [newPatientId, setNewPatientId] = useState('');
     const [newPatientName, setNewPatientName] = useState('');
@@ -18,14 +17,7 @@ const PatientManagement = () => {
             if (userSnapshot.exists()) {
                 const userData = userSnapshot.data();
                 setUser({
-                    id: userData.ID,
-                    age: userData.age,
-                    createdAt: userData.createdAt,
-                    email: userData.email,
-                    patients: userData.patients || {},
-                    hospital: userData.hospital,
-                    name: userData.name,
-                    role: userData.role,
+                    patients: userData.patients,
                 });
             } else {
                 console.error('No such user document!');

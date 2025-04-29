@@ -18,7 +18,7 @@ import PatientManagement from '../Components/PatientManagment.jsx';
 import { getAuth, onAuthStateChanged ,firestore,doc, getDoc} from "../firebase.js";
 
 const MainFrame = () => {
-    const [activeComponent, setActiveComponent] = useState('HomePage');
+    const [activeComponent, setActiveComponent] = useState('HomePage'); // TODO: navigate to home page based on use.
     const [theme, setTheme] = useState('light');  // light, dark, high-contrast
 
     const toggleTheme = () => {
@@ -81,7 +81,7 @@ const MainFrame = () => {
                 <Timer />
             </div>
 
-            <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} />
+            <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} /> 
 
             <main>
                 <h1 className="main_logo">SighTrain</h1>

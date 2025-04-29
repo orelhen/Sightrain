@@ -123,6 +123,23 @@ const Catch5Game = () => {
       }, numberSpeed);
     }
 
+  //   setTimeout(() => {
+  //     let randomNum;
+  //     do {
+  //       randomNum = Math.floor(Math.random() * 10);
+  //     } while (randomNum === lastNumber); // Ensure no two consecutive numbers are the same
+
+  //     lastNumber = randomNum;
+
+  //     // Ensure the number 5 is shown at least twice
+  //     if (timesFiveShown < 2 && Math.random() < 0.5) {
+  //       randomNum = 5;
+  //     }
+
+  //     setCurrentNumber(randomNum);
+  //   }, Math.min(numberSpeed + 300, 500));
+  // }
+
     return () => clearInterval(interval);
   }, [isGameRunning, numberSpeed, currentNumber]);
 
