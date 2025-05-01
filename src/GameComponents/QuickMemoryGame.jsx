@@ -172,7 +172,7 @@ const QuickMemoryGame = () => {
 
                     <div className="gamedesc">
                         <h3>
-                        במשחק הזה, יהיו לך כמה מיליסניות לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית
+                        במשחק הזה, יהיו לך זמן מוגבל לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית
                         </h3>
                     </div>
 
@@ -181,7 +181,7 @@ const QuickMemoryGame = () => {
 
                         <label>רמת קושי (זמן הצגת המספר): {difficulty}מ"ש</label>
                         <input
-                            type="range"
+                            type= "range"
                             min="150"
                             max="2500"
                             value={difficulty}
