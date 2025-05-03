@@ -8,11 +8,12 @@ import MatrixGame from '../GameComponents/MatrixGame';
 import SmoothPursuitExercise from '../GameComponents/SmoothPursuitExercise';
 import ColorShadeGame from '../GameComponents/ColorShadeGame';
 import ClockSaccada from '../GameComponents/ClockSaccada';
+import Scanning from '../GameComponents/Scanning';
 import VideoGallery from '../Components/VideoGallery';
 import UserProfile from '../Components/UserProfile';
 import Timer from '../Components/Timer';
 import Manual from '../Components/manual.jsx';
-import CgHomepage from '../Components/CgHomepage';
+import CgHomepage from '../Components/CgHomepage.jsx';
 import PatientManagement from '../Components/PatientManagment.jsx';
 
 import { getAuth, onAuthStateChanged ,firestore,doc, getDoc} from "../firebase.js";
@@ -97,6 +98,8 @@ const MainFrame = () => {
                 {activeComponent === 'SmoothPursuitExercise' && <SmoothPursuitExercise />}
                 {activeComponent === 'ColorShadeGame' && <ColorShadeGame />}
                 {activeComponent === 'ClockSaccada' && <ClockSaccada/>} 
+                {activeComponent === 'Scanning' && <Scanning/>} 
+
                 {activeComponent === 'videos' && <VideoGallery />}
             </main>
         </div>

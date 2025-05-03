@@ -72,6 +72,9 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata}) => {
               <button 
                 className={lastclicked === 'ClockSaccada' ? 'active' : ''} onClick={() => { ComponentClick('ClockSaccada'); handleSetLastClicked('ClockSaccada'); }}>סאקדת שעון
               </button>
+              <button 
+                className={lastclicked === 'Scanning' ? 'active' : ''} onClick={() => { ComponentClick('Scanning'); handleSetLastClicked('Scanning'); }}> סריקה
+              </button>
               <h3>אימון ראיה <i className="fa-regular fa-eye"></i></h3>
               <button 
                 className={lastclicked === 'SmoothPursuitExercise' ? 'active' : ''} onClick={() => { ComponentClick('SmoothPursuitExercise'); handleSetLastClicked('SmoothPursuitExercise'); }}>תנועה חלקה <i></i>
