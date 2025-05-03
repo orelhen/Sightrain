@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import { firestore } from '../firebase'; // Ensure this path is correct based on your project structure
+import { firestore } from '../firebase';
 
 const symbolSets = {
   numbers: '0123456789'.split(''),
@@ -17,25 +17,28 @@ const ScanningGame = () => {
   const [fontSize, setFontSize] = useState(24);
   const [symbolSetType, setSymbolSetType] = useState('letters');
   const [scanDirection, setScanDirection] = useState('ltr');
-  const [beepSound, setBeepSound] = useState(true);
+  const [beepSound, setBeepSound] = useState(false);
   const [targetChar, setTargetChar] = useState('a');
   const [rows, setRows] = useState([]);
-  const [currentRowIndex, setCurrentRowIndex] = useState(0);
+  const [currentRowIndex, setCurrentRowIndex] = useState(-1);
+  const [visibleChars, setVisibleChars] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [reactionTimes, setReactionTimes] = useState([]);
   const [correctDetections, setCorrectDetections] = useState(0);
   const [totalTargets, setTotalTargets] = useState(0);
   const [gameEnd, setGameEnd] = useState(false);
   const [user, setUser] = useState(null);
+  const [numberOfLines, setNumberOfLines] = useState(3);
 
   const auth = getAuth();
+  const charIntervalRef = useRef(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
     return () => unsubscribe();
-  }, [auth]);
+  }, []);
 
   const generateRow = () => {
     const symbols = symbolSets[symbolSetType];
@@ -55,45 +58,82 @@ const ScanningGame = () => {
     return row;
   };
 
+  const revealRowCharacters = (row, rowIndex) => {
+    let index = 0;
+    const direction = scanDirection === 'ltr' ? 1 : -1;
+    const initial = scanDirection === 'rtl' ? row.length - 1 : 0;
+
+    const revealed = [...row].map(() => null); // Ensure fixed positions
+    setVisibleChars((prev) => [...prev, revealed]);
+
+    charIntervalRef.current = setInterval(() => {
+      revealed[initial + index * direction] = row[initial + index * direction];
+      setVisibleChars((prev) => {
+        const updated = [...prev];
+        updated[rowIndex] = [...revealed];
+        return updated;
+      });
+
+      if (beepSound && row[initial + index * direction] === targetChar) {
+        const audio = new Audio('/Sounds/beep.mp3');
+        audio.play().catch(() => {});
+      }
+
+      if (row[initial + index * direction] === targetChar) {
+        setStartTime(Date.now());
+      }
+
+      index++;
+      if (index >= row.length) {
+        clearInterval(charIntervalRef.current);
+        charIntervalRef.current = null;
+
+        if (rowIndex + 1 < numberOfLines) {
+          setTimeout(() => {
+            showNextRow(rowIndex + 1);
+          }, displayTime);
+        } else {
+          setTimeout(() => {
+            setStage('results');
+            setGameEnd(true);
+          }, displayTime);
+        }
+      }
+    }, displayTime / row.length);
+  };
+
+  const showNextRow = (index) => {
+    const newRow = generateRow();
+    setRows((prev) => [...prev, newRow]);
+    setCurrentRowIndex(index);
+    setTotalTargets((prev) => prev + 1);
+    revealRowCharacters(newRow, index);
+  };
+
   const startGame = () => {
     setStage('play');
     setRows([]);
-    setCurrentRowIndex(0);
+    setVisibleChars([]);
+    setCurrentRowIndex(-1);
     setReactionTimes([]);
     setCorrectDetections(0);
     setTotalTargets(0);
     setGameEnd(false);
     setStartTime(null);
-
-    const interval = setInterval(() => {
-      const newRow = generateRow();
-      setRows((prevRows) => [...prevRows, newRow]);
-      setCurrentRowIndex((prevIndex) => prevIndex + 1);
-      setTotalTargets((prevTotal) => prevTotal + 1);
-      setStartTime(Date.now());
-
-      if (beepSound) {
-        const audio = new Audio('/Sounds/beep.mp3'); // Ensure this path is correct
-        audio.play().catch(console.error);
-      }
-
-      if (currentRowIndex >= 20) { // Adjust the number of rows as needed
-        clearInterval(interval);
-        setGameEnd(true);
-        setStage('results');
-      }
-    }, displayTime);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.code === 'Space' && stage === 'play') {
-      const reactionTime = Date.now() - startTime;
-      setReactionTimes((prevTimes) => [...prevTimes, reactionTime]);
-      setCorrectDetections((prevCount) => prevCount + 1);
-    }
+    showNextRow(0);
   };
 
   useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.code === 'Space' && stage === 'play') {
+        const now = Date.now();
+        if (startTime) {
+          const reactionTime = now - startTime;
+          setReactionTimes((prev) => [...prev, reactionTime]);
+          setCorrectDetections((prev) => prev + 1);
+        }
+      }
+    };
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [stage, startTime]);
@@ -107,6 +147,7 @@ const ScanningGame = () => {
     const userDoc = doc(firestore, 'users', user.uid);
     const userSnapshot = await getDoc(userDoc);
     const sessionKey = `Session (${new Date().toLocaleDateString()})`;
+
     const newResults = {
       correctDetections,
       totalTargets,
@@ -124,35 +165,21 @@ const ScanningGame = () => {
       symbolSetType,
       scanDirection,
       targetChar,
+      numberOfLines,
       timestamp: new Date().toISOString(),
     };
 
-    const updatedResults = {
+    const existing = userSnapshot.exists()
+      ? userSnapshot.data().gameResults?.[sessionKey]?.ScanningGame || []
+      : [];
+
+    const merged = {
       [sessionKey]: {
-        ScanningGame: [
-          ...(userSnapshot.exists() &&
-          userSnapshot.data().gameResults &&
-          userSnapshot.data().gameResults[sessionKey] &&
-          userSnapshot.data().gameResults[sessionKey].ScanningGame
-            ? userSnapshot.data().gameResults[sessionKey].ScanningGame
-            : []),
-          newResults,
-        ],
+        ScanningGame: [...existing, newResults],
       },
     };
 
-    const mergedResults = userSnapshot.exists()
-      ? {
-          ...userSnapshot.data().gameResults,
-          ...updatedResults,
-        }
-      : updatedResults;
-
-    await setDoc(
-      userDoc,
-      { gameResults: mergedResults },
-      { merge: true }
-    );
+    await setDoc(userDoc, { gameResults: merged }, { merge: true });
     alert('Results saved successfully!');
   };
 
@@ -161,20 +188,38 @@ const ScanningGame = () => {
       {stage === 'start' && (
         <div>
           <h2>Scanning Game</h2>
+          <div className="gamedesc">
+         <h3>
+         משחק זה נועד לשפר את מהירות הסריקה החזותית, זיהוי דפוסים ותגובה מהירה.
+        בכל סבב מופיעה שורת תווים, כאשר כל תו נחשף אחד אחרי השני, בהתאם לכיוון שנבחר (מימין לשמאל או משמאל לימין).
+        המטרה היא לזהות תו מטרה שהוגדר מראש – ברגע שהמשתמש מזהה את התו, עליו ללחוץ על מקש הרווח במהירות האפשרית.
+         </h3>
+         </div> 
           <div className="settings">
             <label>
-              Display Time (ms): {displayTime}
+            זמן באלפיות שנייה:  {displayTime}: 
               <input
                 type="range"
-                min="100"
-                max="2000"
-                step="100"
+                min="50" 
+                max="1000"
+                step="50"
                 value={displayTime}
                 onChange={(e) => setDisplayTime(Number(e.target.value))}
               />
             </label>
             <label>
-              Characters per Row: {charactersPerRow}
+              מספר שורות: {numberOfLines}
+              <input
+                type="range"
+                min="3"
+                max="25"
+                step="1"
+                value={numberOfLines}
+                onChange={(e) => setNumberOfLines(Number(e.target.value))}
+              />
+            </label>
+            <label>
+              מספר סמלים בכל שורה:{charactersPerRow}
               <input
                 type="range"
                 min="5"
@@ -185,18 +230,18 @@ const ScanningGame = () => {
               />
             </label>
             <label>
-              Spacing (px): {spacing}
+               רווח בין סמלים : {spacing}
               <input
                 type="range"
                 min="5"
-                max="50"
+                max="120"
                 step="1"
                 value={spacing}
                 onChange={(e) => setSpacing(Number(e.target.value))}
               />
             </label>
             <label>
-              Font Size (px): {fontSize}
+              גודל הגופן: {fontSize}
               <input
                 type="range"
                 min="12"
@@ -207,28 +252,28 @@ const ScanningGame = () => {
               />
             </label>
             <label>
-              Symbol Set:
+             סוגי סמלים:
               <select
                 value={symbolSetType}
                 onChange={(e) => setSymbolSetType(e.target.value)}
               >
-                <option value="numbers">Numbers</option>
-                <option value="letters">Letters</option>
-                <option value="symbols">Symbols</option>
+                <option value="numbers">מספרים</option>
+                <option value="letters">אותיות</option>
+                <option value="symbols">סמלים</option>
               </select>
             </label>
             <label>
-              Scan Direction:
+              כיוון סריקה:
               <select
                 value={scanDirection}
                 onChange={(e) => setScanDirection(e.target.value)}
               >
-                <option value="ltr">Left to Right</option>
-                <option value="rtl">Right to Left</option>
+                <option value="ltr"> מימין לשמאל</option> 
+                <option value="rtl">משמאל לימין </option>
               </select>
             </label>
             <label>
-              Target Character:
+              חפש את הסמל:
               <input
                 type="text"
                 maxLength="1"
@@ -237,7 +282,7 @@ const ScanningGame = () => {
               />
             </label>
             <label>
-              Beep Sound:
+              השמע צליל:
               <input
                 type="checkbox"
                 checked={beepSound}
@@ -245,29 +290,32 @@ const ScanningGame = () => {
               />
             </label>
           </div>
-          <button onClick={startGame}>Start Game</button>
+          <button onClick={startGame}>התחל משחק</button>
         </div>
       )}
 
       {stage === 'play' && (
         <div className="game-area">
-          {rows.map((row, index) => (
+          {visibleChars.map((row, i) => (
             <div
-              key={index}
-              className="row"
+              key={i}
               style={{
                 display: 'flex',
-                flexDirection: scanDirection === 'ltr' ? 'row' : 'row-reverse',
+                flexDirection: 'row', // Always render in the same direction
                 marginBottom: '10px',
-                filter: index < currentRowIndex - 1 ? 'blur(2px)' : 'none',
+                filter: i < currentRowIndex ? 'blur(8px)' : 'none',
               }}
             >
-              {row.map((char, idx) => (
+              {row.map((char, j) => (
                 <span
-                  key={idx}
+                  key={j}
                   style={{
+                    display: 'inline-block',
+                    width: `${fontSize * 0.6 }px`,  
+                    height: `${fontSize* 1.2 }px`,
                     marginRight: `${spacing}px`,
-                    fontSize: `${fontSize}px`,
+                    fontSize: `${fontSize}px`,  
+                    textAlign: 'center',
                   }}
                 >
                   {char}
