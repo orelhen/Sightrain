@@ -187,12 +187,13 @@ const ScanningGame = () => {
     <div className="game">
       {stage === 'start' && (
         <div>
-          <h2>Scanning Game</h2>
+          <h2>סריקה</h2>
           <div className="gamedesc">
          <h3>
-         משחק זה נועד לשפר את מהירות הסריקה החזותית, זיהוי דפוסים ותגובה מהירה.
-        בכל סבב מופיעה שורת תווים, כאשר כל תו נחשף אחד אחרי השני, בהתאם לכיוון שנבחר (מימין לשמאל או משמאל לימין).
-        המטרה היא לזהות תו מטרה שהוגדר מראש – ברגע שהמשתמש מזהה את התו, עליו ללחוץ על מקש הרווח במהירות האפשרית.
+          <></>
+         משחק זה נועד לשפר את מהירות הסריקה החזותית, זיהוי דפוסים ותגובה מהירה.<br/>
+        בכל סבב מופיעה שורת תווים, כאשר כל תו נחשף אחד אחרי השני, בהתאם לכיוון שנבחר (מימין לשמאל או משמאל לימין).<br/>
+        המטרה היא לזהות תו מטרה שהוגדר מראש – ברגע שהמשתמש מזהה את התו, עליו ללחוץ על מקש הרווח במהירות האפשרית.<br/>
          </h3>
          </div> 
           <div className="settings">
@@ -290,7 +291,8 @@ const ScanningGame = () => {
               />
             </label>
           </div>
-          <button onClick={startGame}>התחל משחק</button>
+          
+          <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
         </div>
       )}
 
@@ -301,7 +303,7 @@ const ScanningGame = () => {
               key={i}
               style={{
                 display: 'flex',
-                flexDirection: 'row', // Always render in the same direction
+                flexDirection: 'row',
                 marginBottom: '10px',
                 filter: i < currentRowIndex ? 'blur(8px)' : 'none',
               }}
@@ -328,20 +330,20 @@ const ScanningGame = () => {
 
       {stage === 'results' && (
         <div className="results">
-          <h2>Results</h2>
-          <p>Target Character: {targetChar}</p>
-          <p>Total Targets Shown: {totalTargets}</p>
-          <p>Correct Detections: {correctDetections}</p>
+          <h2>תוצאות</h2>
+          <p>תו: {targetChar}</p>
+          <p>סה"כ מטרות שהוצגו: {totalTargets}</p>
+          <p>זיהויים נכונים: {correctDetections}</p>
           <p>
-            Average Reaction Time:{' '}
+            זמן תגובה ממוצע:{' '}
             {reactionTimes.length > 0
               ? (
                   reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length
-                ).toFixed(2) + ' ms'
-              : 'N/A'}
+                ).toFixed(2) + ' אלפיות שנייה'
+              : 'לא זמין'}
           </p>
-          <button onClick={() => setStage('start')}>Play Again</button>
-          <button onClick={saveResultsToDatabase}>Save Results</button>
+          <button onClick={() => setStage('start')}>שחק שוב</button>
+          <button onClick={saveResultsToDatabase}>שמור תוצאות</button>
         </div>
       )}
     </div>

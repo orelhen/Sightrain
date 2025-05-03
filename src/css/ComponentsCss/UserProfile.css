@@ -84,6 +84,20 @@
     border-radius: 16px;
     border: 5px solid #fff;
   }
+  .session-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    justify-content: center;
+  }
+
+  .session-list li {
+    flex: 0 1 auto;
+  }
 
   .summary-table tr:hover {
   }

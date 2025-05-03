@@ -9,6 +9,7 @@ const SmoothPursuitExercise = () => {
   const [movementDirection, setMovementDirection] = useState("diagonal"); // Default direction
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [direction, setDirection] = useState({ x: 1, y: 1 });
+  const [DotColor, setDotColor] = useState("red"); // Default dot color
 
   useEffect(() => {
     // Set the initial position based on the selected direction
@@ -67,6 +68,7 @@ const SmoothPursuitExercise = () => {
             ...styles.dot,
             width: dotSize,
             height: dotSize,
+            backgroundColor: DotColor,
             transform: `translate(${position.x}px, ${position.y}px)`,
           }}
         ></div>
@@ -79,7 +81,7 @@ const SmoothPursuitExercise = () => {
         <input
           type="range"
           min="1"
-          max="10"
+          max="30"
           value={speed}
           onChange={(e) => setSpeed(Number(e.target.value))}
         />
@@ -91,14 +93,27 @@ const SmoothPursuitExercise = () => {
         גודל הכדור:
         <input
           type="range"
-          min="30"
-          max="100"
+          min="10"
+          max="200"
           value={dotSize}
           onChange={(e) => setDotSize(Number(e.target.value))}
         />
         {dotSize}
       </label>
-
+          <label>
+            צבע הכדור:
+            <select
+              value={DotColor}
+              onChange={(e) => setDotColor(e.target.value)}
+            >
+              <option value="red">אדום</option>
+              <option value="yellow">צהוב</option>
+              <option value="white">לבן</option>
+              <option value="black">שחור</option>
+              <option value="green">ירוק</option>
+              <option value="blue">כחול</option>
+            </select>
+          </label>
       {/* Direction Control */}
       <label>
         כיוון התנועה:
@@ -127,12 +142,12 @@ const styles = {
     border: "2px solid #000",
     backgroundColor: "#fff",
     overflow: "hidden",
-    marginBottom: "20px", // Add some space between the box and controls
-  },
-  dot: {
-    backgroundColor: "red",
+    // Add some space between the box and controls
+    },
+    dot: {
     borderRadius: "50%",
     position: "absolute",
+    border: "2px solid black", // Adding white border to the dot
   },
 };
 

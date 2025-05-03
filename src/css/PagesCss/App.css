@@ -234,4 +234,16 @@ select option {
 
 
 
-
+/* saccade game box */
+.square-game-circle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 900px;
+  height: 900px; /* Made equal to width for perfect circle */
+  border: 3px solid #333;
+  border-radius: 50%; /* Makes it circular */
+  margin: 20px auto;
+  position: relative;
+  background-color: #f9f9f9;
+}
