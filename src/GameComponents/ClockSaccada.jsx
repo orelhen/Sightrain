@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAuth, onAuthStateChanged, doc, getDoc, setDoc, firestore } from '../firebase.js';
+import ConfirmDialog from '../Components/ConfirmDialog.jsx'; 
+
 
 const symbolSets = {
   numbers: '0123456789'.split(''),
@@ -7,7 +9,7 @@ const symbolSets = {
   symbols: '!@#$%^&*'.split('')
 };
 
-const SaccadeClockGame = () => {
+const SaccadeClockGame = ({activeUser}) => {
   const [stage, setStage] = useState('start');
   const [displayDuration, setDisplayDuration] = useState(1000);
   const [symbolSetType, setSymbolSetType] = useState('numbers');
@@ -23,7 +25,9 @@ const SaccadeClockGame = () => {
   const [customHours, setCustomHours] = useState([9, 3]); // Initialize with default horizontal positions
   const inputRef = useRef(null);
   const roundStartTime = useRef(null);
-  const auth = getAuth();
+  const auth = getAuth(); 
+  const [showConfirmReset, setShowConfirmReset] = useState(false);
+  const [circleSize, setCircleSize] = useState(600); // Initialize with default value
 
   useEffect(() => {
     if (stage === 'results') setInputReady(false);
@@ -84,59 +88,96 @@ const SaccadeClockGame = () => {
   useEffect(() => {
     if (stage === 'SaveResults') {
       const saveResults = async () => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-          if (!user) {
+        try {
+          const currentUser = auth.currentUser;
+          if (activeUser === "" && !currentUser) {
             alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
+            setStage('start');
             return;
           }
-          const userDoc = doc(firestore, "users", user.uid);
-          const userSnapshot = await getDoc(userDoc);
+          
           const sessionKey = `Session (${new Date().toLocaleDateString()})`;
           const newResults = results.map(r => ({
             ...r,
             displayDuration,
             symbolSetType,
             startSide,
-            fontSize
+            fontSize,
+            timestamp: new Date().toISOString()
           }));
-          const updatedResults = {
-            [sessionKey]: {
-              SaccadeClockGame: newResults
+
+          if (activeUser !== "") {
+            // Save to patient document
+            const patientDoc = doc(firestore, "patients", activeUser);
+            const patientSnapshot = await getDoc(patientDoc);
+            
+            if (!patientSnapshot.exists()) {
+              await setDoc(patientDoc, { gameResults: {} });
             }
-          };
-          const mergedResults = userSnapshot.exists() && userSnapshot.data().gameResults
-            ? {
-              ...userSnapshot.data().gameResults,
-              [sessionKey]: {
-                ...(userSnapshot.data().gameResults[sessionKey] || {}),
-                SaccadeClockGame: [
-                  ...(userSnapshot.data().gameResults[sessionKey]?.SaccadeClockGame || []),
-                  ...newResults
-                ]
+            
+            const patientData = patientSnapshot.exists() ? patientSnapshot.data() : { gameResults: {} };
+            const existingGames = patientData.gameResults?.[sessionKey]?.["SaccadeClockGame"] || [];
+            
+            const patientResults = {
+              gameResults: {
+                ...patientData.gameResults,
+                [sessionKey]: {
+                  ...(patientData.gameResults?.[sessionKey] || {}),
+                  "SaccadeClockGame": [...existingGames, ...newResults]
+                }
+              }
+            };
+            
+            await setDoc(patientDoc, patientResults, { merge: true });
+            console.log("Patient results saved successfully!");
+          } else {
+            // Save to user document
+            if (currentUser) {
+              const userDoc = doc(firestore, "users", currentUser.uid);
+              const userSnapshot = await getDoc(userDoc);
+              
+              if (userSnapshot.exists()) {
+                const userData = userSnapshot.data();
+                const existingResults = userData.gameResults?.[sessionKey]?.SaccadeClockGame || [];
+                
+                const userResults = {
+                  gameResults: {
+                    ...userData.gameResults,
+                    [sessionKey]: {
+                      ...(userData.gameResults?.[sessionKey] || {}),
+                      "SaccadeClockGame": [...existingResults, ...newResults]
+                    }
+                  }
+                };
+                
+                await setDoc(userDoc, userResults, { merge: true });
+                console.log("Results saved successfully!");
               }
             }
-            : updatedResults;
-
-          await setDoc(userDoc, { gameResults: mergedResults }, { merge: true });
+          }
+          
           setResults([]);
           setStage('start');
-        });
-        return () => unsubscribe();
+        } catch (error) {
+          console.error("Error saving results:", error);
+          alert("אירעה שגיאה בשמירת התוצאות.");
+          setStage('start');
+        }
       };
+
       saveResults();
     }
-  }, [stage]);
+  }, [stage, activeUser, results, displayDuration, symbolSetType, startSide, fontSize]);
 
   
   return (
     <div className="game">
       <h2>סקאדת שעון</h2>
-   
       {stage === 'start' && (
         <div>
-             <div className="gamedesc">
+        <div className="gamedesc">
          <h3>
-                    <></>
+          <></>
           המשחק מדמה תרגילי סקאדה עם סימבולים המוצגים בשעון דמיוני. הסימבולים יופיעו במקומות שונים על השעון בהתאם לבחירתך.<br/>
           יוצגו בפניך {symbolLength} סימבולים בזה אחר זה. עליך לזכור את הסימבולים שהוצגו בסדר הופעתם ולהקליד אותם בתיבת הטקסט.<br/>
           ניתן לשנות את מהירות התצוגה, סוג הסימבולים, גודל הגופן ומיקום התצוגה על השעון.
@@ -184,8 +225,12 @@ const SaccadeClockGame = () => {
           <label>מספר סמלים: {symbolLength}</label>
           <input type="range" min="2" max="5" step="1" value={symbolLength} onChange={e => setSymbolLength(Number(e.target.value))} />
           <label>גודל גופן: {fontSize}</label>
-          <input type="range" min="1" max="10" step="1" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
-          <label>צליל ביפ:          <input type="checkbox" checked={beepSound} onChange={() => setBeepSound(prev => !prev)} />
+          <input type="range" min="1" max="7" step="1" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
+          <label>גודל מעגל: {circleSize}px</label>
+          <input type="range" min="300" max="1200" step="50" value={circleSize} onChange={e => setCircleSize(Number(e.target.value))} />
+
+
+          <label>צליל ביפ:<input type="checkbox" checked={beepSound} onChange={() => setBeepSound(prev => !prev)} />
           </label>
         
           </div>
@@ -193,8 +238,8 @@ const SaccadeClockGame = () => {
         </div>
       )}
 
-      {stage === 'play' && (
-        <div className="square-game-circle">
+      {stage === 'play' && !inputReady && (
+          <div className="square-game-circle" style={{ width: `${circleSize}px`, height: `${circleSize}px` }}>
           {Array.from({ length: symbolLength }).map((_, index) => {
             let symbolStyle = {
               fontSize: `${fontSize}rem`,
@@ -252,12 +297,13 @@ const SaccadeClockGame = () => {
 
       {inputReady && (
         <div className="answer_input">
-          <h2>מה ראית?</h2>
+          <h2>הכנסת את התווית שראית</h2>
           <input
             ref={inputRef}
             value={userInput}
-            onChange={e => setUserInput(e.target.value)}
+            onChange={e => setUserInput(e.target.value.slice(0, 5))}
             onKeyDown={e => e.key === 'Enter' && handleInput()}
+            maxLength={5}
           />
           <button onClick={handleInput}>שלח</button>
         </div>
@@ -274,6 +320,19 @@ const SaccadeClockGame = () => {
             ))}
           </ul>
           <button onClick={() => setStage('start')}>נשחק שוב</button>
+          <button onClick={() => {
+            setShowConfirmReset(true);
+            }}>אפס תוצאות</button>
+            {showConfirmReset && (
+            <ConfirmDialog 
+              message="האם אתה בטוח שברצונך לאפס את התוצאות מבלי לשמור אותן?"
+              onConfirm={() => {
+              setResults([]);
+              setShowConfirmReset(false);
+              }}
+              onCancel={() => setShowConfirmReset(false)}
+            />
+            )}
           <button onClick={() => setStage('SaveResults')}>שמור תוצאות</button>
         </div>
       )}

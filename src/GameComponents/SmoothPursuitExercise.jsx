@@ -3,7 +3,7 @@ import '../css/GamesCss/Games.scss';
 
 
 const SmoothPursuitExercise = () => {
-  const boxSize = { width: 1800, height: 800 }; // Box dimensions
+  const boxSize = { width: 1600, height: 600 }; // Box dimensions
   const [dotSize, setDotSize] = useState(50); // Initial dot size
   const [speed, setSpeed] = useState(3); // Initial speed
   const [movementDirection, setMovementDirection] = useState("diagonal"); // Default direction
@@ -56,12 +56,13 @@ const SmoothPursuitExercise = () => {
   }, [direction, speed, dotSize]);
 
   return (
-    <div className="game" style={styles.container}>
+    <div className="game">
         <h2>אימון תנועה חלקה</h2>
       <div className="gamedesc"> 
       <p>הסתכלו למרכז המסך ועקבו אחרי הכדור עם העיניים.</p>
-      </div>
 
+      </div>
+      
       <div class="smoothbox" style={{ ...styles.box, width: boxSize.width, height: boxSize.height }}>
         <div
           style={{
@@ -139,14 +140,17 @@ const styles = {
     justifyContent: "center",
   },
   box: {
-    border: "2px solid #000",
+    border: "5px solid #000",
     backgroundColor: "#fff",
     overflow: "hidden",
+    margin: "20px auto", // Center the box horizontally
+    padding: "20px", // Add some padding inside the box
+    width: "80%", // Set a width for the box
+    height: "80%", // Set a height for the box
     // Add some space between the box and controls
     },
     dot: {
     borderRadius: "50%",
-    position: "absolute",
     border: "2px solid black", // Adding white border to the dot
   },
 };

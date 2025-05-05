@@ -15,20 +15,25 @@ import Timer from '../Components/Timer';
 import Manual from '../Components/manual.jsx';
 import CgHomepage from '../Components/CgHomepage.jsx';
 import PatientManagement from '../Components/PatientManagment.jsx';
-
 import { getAuth, onAuthStateChanged ,firestore,doc, getDoc} from "../firebase.js";
+import MyStats from '../Components/MyStats.jsx';
+import { useLocation } from 'react-router-dom';
+
+
 
 const MainFrame = () => {
-    const [activeComponent, setActiveComponent] = useState('HomePage'); // TODO: navigate to home page based on use.
+    const location = useLocation();
+    const [activeComponent, setActiveComponent] = useState(''); // TODO: navigate to home page based on use.
     const [theme, setTheme] = useState('light');  // light, dark, high-contrast
+    const [activeUser, setActiveUser] = useState(location.state.patientId); // TODO: get the active user from the firebase.
+    const [user, setUser] = useState(null);
+
 
     const toggleTheme = () => {
         setTheme((prevTheme) => 
             prevTheme === 'light' ? 'dark' : prevTheme === 'dark' ? 'high-contrast' : 'light'
         );
     };
-
-    const [user, setUser] = useState(null);
 
     useEffect(() => {
         document.body.className = `main_frame ${theme}`;
@@ -46,11 +51,15 @@ const MainFrame = () => {
                     createdAt: userData.createdAt,
                     email: userData.email,
                     patients: userData.patients || [],
-                    hospital: userData.hospital,
                     name: userData.name,
                     role: userData.role,
                     gameResults: userData.gameResults || {},
+                    department: userData.department || null,
                 });
+                if(userData.role === "caregiver")
+                    setActiveComponent('cgHomePage');
+                else 
+                    setActiveComponent('HomePage');
             } else {
                 console.error("No such user document!");
             }
@@ -59,11 +68,14 @@ const MainFrame = () => {
         const auth = getAuth();
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log("Logged in user:", user.displayName || user.email);
+                console.log("Logged in user:", user.displayName || user.email );
                 fetchUserData(user.uid);
+        
             } else {
                 console.log("No user is logged in.");
+                console.log(activeUser);
                 setUser(null);
+                setActiveComponent('HomePage'); // Set default component to HomePage when no user is logged in
             }
         });
 
@@ -82,25 +94,29 @@ const MainFrame = () => {
                 <Timer />
             </div>
 
-            <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} /> 
+            <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} activeUser={activeUser} setActiveUser={setActiveUser}  /> 
 
             <main>
                 <h1 className="main_logo">SighTrain</h1>
+                <h3 >
+                    {activeUser !== "" ? `ברוכים הבאים משתמש מספר ${activeUser}` : ""}
+                </h3>
+
                 {activeComponent === 'profile' && <UserProfile Loggedinuserdata={user}/>}
-                {activeComponent === 'patientManagment' && <PatientManagement/>}
+                {activeComponent === 'patientManagment' && <PatientManagement setActiveUser={setActiveUser} ComponentClick={setActiveComponent} Loggedinuserdata={user}/>}
                 {activeComponent === 'HomePage' && <HomePage/>}
                 {activeComponent === 'cgHomePage' && <CgHomepage/>}
                 {activeComponent === 'manual' && <Manual />}
-                {activeComponent === 'Catch5Game' && <Catch5Game />}
-                {activeComponent === 'RedSquareGame' && <RedSquareGame />}
-                {activeComponent === 'QuickMemoryGame' && <QuickMemoryGame />}
+                {activeComponent === 'Catch5Game' && <Catch5Game activeUser={activeUser} />}
+                {activeComponent === 'RedSquareGame' && <RedSquareGame  />}
+                {activeComponent === 'QuickMemoryGame' && <QuickMemoryGame  activeUser={activeUser} />}
                 {activeComponent === 'MatrixGame' && <MatrixGame />}
-                {activeComponent === 'SmoothPursuitExercise' && <SmoothPursuitExercise />}
-                {activeComponent === 'ColorShadeGame' && <ColorShadeGame />}
-                {activeComponent === 'ClockSaccada' && <ClockSaccada/>} 
-                {activeComponent === 'Scanning' && <Scanning/>} 
-
+                {activeComponent === 'SmoothPursuitExercise' && <SmoothPursuitExercise  activeUser={activeUser} />}
+                {activeComponent === 'ColorShadeGame' && <ColorShadeGame  activeUser={activeUser} />}
+                {activeComponent === 'ClockSaccada' && <ClockSaccada  activeUser={activeUser}/>} 
+                {activeComponent === 'Scanning' && <Scanning  activeUser={activeUser}/>} 
                 {activeComponent === 'videos' && <VideoGallery />}
+                {activeComponent === 'Statistics' && <MyStats Loggedinuserdata={user} activeUser={activeUser} />}
             </main>
         </div>
     );

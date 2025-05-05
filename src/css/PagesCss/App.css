@@ -33,6 +33,104 @@ li{
   font-family: "Heebo";
   list-style-type: none;
 }
+/* Responsive styles */
+@media screen and (max-width: 1200px) {
+  body {
+    padding: 3em;
+  }
+  
+  h1 {
+    font-size: 48px;
+  }
+  
+  h2 {
+    font-size: 42px;
+  }
+  
+  p, li, li:before {
+    font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    padding: 2em;
+  }
+  
+  h1 {
+    font-size: 36px;
+  }
+  
+  h2 {
+    font-size: 30px;
+  }
+  
+  p, li, li:before {
+    font-size: 20px;
+  }
+  
+  button {
+    padding: 12px 30px;
+    font-size: 18px;
+  }
+  
+  .controllers {
+    position: relative;
+    left: auto;
+    top: auto;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .reminder {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 20px auto;
+  }
+  
+  .square-game-circle {
+    width: 90%;
+    height: auto;
+    aspect-ratio: 1/1;
+    max-width: 500px;
+  }
+  
+  .theme-toggle-btn {
+    position: relative;
+    left: auto;
+    top: auto;
+    margin: 10px auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body {
+    padding: 1em;
+  }
+  
+  h1 {
+    font-size: 28px;
+  }
+  
+  h2 {
+    font-size: 24px;
+  }
+  
+  p, li, li:before {
+    font-size: 18px;
+  }
+  
+  textarea {
+    width: 95%;
+  }
+  
+  .controllers .timer-container .timer {
+    width: 120px;
+    font-size: 22px;
+  }
+}
 
 li:before{
   font-size: 30px;
@@ -57,7 +155,6 @@ button{
     color: #000;
   }
 }
-
 .controllers{
   position: absolute;
   left: 20px;
@@ -83,7 +180,14 @@ button{
       margin-right: 10px;
       justify-content: center;
     }
-  }}
+  }
+}
+
+@media screen and (max-width: 759px) {
+  .controllers {
+    display: none;
+  }
+}
 
 .reminder {
   position: absolute;
@@ -246,4 +350,77 @@ select option {
   margin: 20px auto;
   position: relative;
   background-color: #f9f9f9;
+}
+
+
+
+/*confirm dialog*/
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-card {
+  background-color: #fff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  width: 360px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.confirm-message {
+  font-size: 18px;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+
+
+
+/** alert dialog */ 
+.alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.alert-card {
+  background-color: #fff;
+  padding: 24px 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  width: 360px;
+  text-align: center;
+  direction: rtl; /* for Hebrew text */
+  font-family: Arial, sans-serif;
+}
+
+.alert-message {
+  font-size: 18px;
+  margin-bottom: 24px;
 }

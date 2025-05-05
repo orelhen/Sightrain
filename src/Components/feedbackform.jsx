@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { firestore, addDoc, collection } from '../firebase.js';
+import AlertDialog from './Alert.jsx';    
 
 const FeedbackForm = ({ onClose, collectionName = 'feedback' }) => {
     const [feedback, setFeedback] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
 
     const handleFeedbackSubmit = async () => {
         try {
@@ -13,7 +15,10 @@ const FeedbackForm = ({ onClose, collectionName = 'feedback' }) => {
             });
             console.log('Feedback submitted successfully');
             setFeedback('');
-            onClose();
+            setShowAlert(true);
+           
+           
+            // Reset the form fields after showing the alert
         } catch (error) {
             console.error('Error submitting feedback:', error);
         }
@@ -31,7 +36,24 @@ const FeedbackForm = ({ onClose, collectionName = 'feedback' }) => {
                 />
                 <div className="button-group">
                     <button onClick={onClose}>סגור</button>
-                    <button onClick={handleFeedbackSubmit}>שלח משוב</button>
+
+                    <button 
+                        onClick={handleFeedbackSubmit} 
+                        disabled={feedback.length <= 8}
+                    >
+                        שלח משוב
+                    </button>
+
+                    
+                    {showAlert && (
+                        <AlertDialog
+                            message="תודה רבה! המשוב שלך נקלט בהצלחה"
+                            onClose={() => {
+                                setShowAlert(false);
+                                onClose();
+                            }}
+                        />
+                    )}
                 </div>
             </form>
         </div>

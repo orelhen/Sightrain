@@ -1,33 +1,63 @@
 import React, { useState } from 'react';
 import '../css/PagesCss/LoginPage.css';
-    
-import { getAuth,signInWithEmailAndPassword } from '../firebase'; // Ensure this path matches your project structure
+import { useNavigate } from 'react-router-dom'; 
+import AlertDialog from '../Components/Alert';
+
+import { getAuth,signInWithEmailAndPassword,getFirestore,where,collection,query,getDocs } from '../firebase'; // Ensure this path matches your project structure
 
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const navigate = useNavigate();
 
   
     function navigateToRegister() {
-        window.location.href = '/register';
+        navigate('/register');
     }
 
-    function navigateToHome(user) {
-        window.location.href = `/home`;
+    function navigateToHome() {
+        navigate('/home', { state: { patientId: "" } }); 
     }
 
     async function handleSubmit(event) {
         event.preventDefault();
+        // Check if user is a patient with special password
+        if (password === '1234') {
+            try {
+                const firestore = getFirestore();
+                const patientsRef = collection(firestore, "patients");
+                const q = query(patientsRef, where("id", "==", username));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    // Found the patient, navigate to home with the patient ID
+                    console.log("Patient found, navigating to home");
+                    const patientDoc = querySnapshot.docs[0];
+                    const patientId = patientDoc.id;
+                    // Navigate to home with patient info
+                    navigate('/home', { state: { patientId } });
+                    return; // Exit the function early
+                }
+                setMessage("שגיאה בהתחברות, אנא בדוק את פרטי ההתחברות שלך");
+            setShowAlert(true);
+                // If querySnapshot is empty, continue with normal authentication below
+            } catch (error) {
+                console.error("Error checking patient records:", error);
+                // Continue with normal authentication
+            }
+        } else {
         const auth = getAuth();
         try {
             const userCredential = await signInWithEmailAndPassword(auth, username, password);
             const user = userCredential.user;
             console.log("User ID:", user.uid); // Log the user ID
-            navigateToHome(user);
+            navigate('/home', { state: { patientId: "" } }); 
         } catch (error) {
-            setMessage(`Error: ${error.message}`);
-        }
+            setMessage("שגיאה בהתחברות, אנא בדוק את פרטי ההתחברות שלך");
+            setShowAlert(true);
+        }}
     }
     
     return (
@@ -51,11 +81,8 @@ function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    {message && <p>{message}</p>}
                     <button type="submit">התחבר</button>
                 </form>
-                
-              
                     אין לך משתמש?{' '}
                     <button onClick={navigateToRegister}>
                         הרשם
@@ -67,9 +94,9 @@ function LoginPage() {
             <div className="iframe_bg">
                   <iframe
                     className="main_iframe"
-                    src="https://yourdomain.com/eye-training-image.jpg"
                     title="Eye Training Image"
                     />
+                <div className="why_overlay_btn"></div>
                 <div className="why_overlay_btn">
                     <a href="#why">למה?</a>
                 </div>
@@ -80,6 +107,13 @@ function LoginPage() {
                     </p>
                 </div>
             </div>
+            {showAlert && (
+            <AlertDialog 
+                open={showAlert} 
+                title="שגיאת התחברות" 
+                message={message}
+                onClose={() => setShowAlert(false)}
+            />  )}
         </section>
     );
 }

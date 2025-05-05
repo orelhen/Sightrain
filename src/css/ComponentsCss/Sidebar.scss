@@ -31,22 +31,70 @@
 
 }
 
+@media screen and (max-width: 768px) {
+    .floating-menu {
+        width: 60px;
+        height: 60px;
+        top: 15px;
+        right: 15px;
+        
+        i {
+            font-size: 28px;
+        }
+    }
+    
+    .sidebar {
+        width: 100%;
+        right: -100%;
+        padding: 7em 2em;
+        
+        h3 {
+            font-size: 32px;
+        }
+        
+        button {
+            font-size: 28px;
+            padding: 8px 20px;
+        }
+        
+        .close_menu {
+            width: 60px;
+            height: 60px;
+            right: 15px;
+            top: 15px;
+            font-size: 28px;
+        }
+    }
+}
 
+@media screen and (max-width: 480px) {
+    .sidebar {
+        h3 {
+            font-size: 28px;
+        }
+        
+        button {
+            font-size: 22px;
+            padding: 6px 16px;
+        }
+    }
+}
 .sidebar {
     position: fixed;
     top: 0;
-    right: -300px; /* Initially hidden */
+    right: -500px; /* Initially hidden - match full width */
     height: 100%;
     width: 500px;
     background: #000;
-    padding: 20px;
-    transition: right 0.5s ease, opacity 0.5s ease;
+    z-index: 1000; /* High z-index to ensure it's above other elements */
+    padding: 7em 5em;
+    transition: 0.8s all;
     opacity: 0;
     visibility: hidden;
     flex-direction: column;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.02);
-    padding: 7em 5em;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.3); /* Increased shadow for better depth */
     color: #fff;
+    overflow-y: auto; /* Allow scrolling if content is too tall */
 
     h3{
         font-size: 42px;

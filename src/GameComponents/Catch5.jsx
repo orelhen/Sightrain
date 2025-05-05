@@ -4,7 +4,7 @@ import '../css/GamesCss/Games.scss';
 import { getAuth, firestore, doc, getDoc, setDoc, onAuthStateChanged } from '../firebase.js'; // Ensure Firebase is correctly configured and imported
 
 
-const Catch5Game = () => {
+const Catch5Game = ({activeUser}) => {
   const [currentNumber, setCurrentNumber] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [reactionTimes, setReactionTimes] = useState([]);
@@ -13,107 +13,139 @@ const Catch5Game = () => {
   const [missClicks, setMissClicks] = useState(0);
   const [timesFiveShown, setTimesFiveShown] = useState(0);
   const [gameEnd, setGameEnd] = useState(false);
-
+  const [isGamePaused, setIsGamePaused] = useState(false); 
   // Sliders state
-  const [boxSize, setBoxSize] = useState(300); // Default size
-  const [numberSpeed, setNumberSpeed] = useState(1000); // Default number speed
-
-
+  const [boxSize, setBoxSize] = useState(300); 
+  const [numberSpeed, setNumberSpeed] = useState(1000);
   // Box position state
   const [boxPosition, setBoxPosition] = useState("center");
+
+
+
+  const pauseGame = () => {
+    //setIsGamePaused(true); // Set the game to paused state
+    // Keep the current state visible but paused
+    // Don't set gameEnd to false to maintain the current game state
+  }
+  const resumeGame = () => {
+    //setIsGamePaused(false); 
+  }
+  const exitToManu = () => {
+   /* if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    setIsGameRunning(false);
+    setGameEnd(false);  
+    setIsGamePaused(false); 
+    setTimeRemaining(15000);*/
+  };
+  
 
   const saveResultsToDatabase = async () => {
     try {
       const auth = getAuth();
-      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-        if (currentUser) {
-          const userDoc = doc(firestore, "users", currentUser.uid);
-          const userSnapshot = await getDoc(userDoc);
-          if (userSnapshot.exists()) {
-            const userData = userSnapshot.data();
-            const sessionKey = `Session (${new Date().toLocaleDateString()})`;
-            const updatedResults = {
-              [sessionKey]: {
-              "Catch5Game": [
-                ...(Array.isArray(userData.gameResults?.[sessionKey]?.Catch5Game) ? userData.gameResults[sessionKey].Catch5Game : []),
-                {
-                correctClicks,
-                missClicks,
-                timesFiveShown,
-                reactionTimes,
-                averageReactionTime: reactionTimes.length > 0
-                  ? (reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length).toFixed(2)
-                  : null,
-                boxPosition, // Add the box position to the results
-                difficulty: numberSpeed, // Add difficulty level
-                boxSize, // Add box size
-                timestamp: new Date().toISOString() // Add timestamp for each result
-                }
-              ]
-              }
-            };
-            const mergedResults = userData.gameResults
-              ? {
-                  ...userData.gameResults,
-                  [sessionKey]: {
-                    ...(userData.gameResults[sessionKey] || {}),
-                    "Catch5Game": updatedResults[sessionKey]["Catch5Game"]
-                  }
-                }
-              : updatedResults;
-
-            await setDoc(userDoc, { gameResults: mergedResults }, { merge: true });
-            console.log("Results saved successfully!");
-            setIsGameRunning(false);
-            setGameEnd(false);
-          } else {
-            console.error("No such user document!");
+      const currentUser = auth.currentUser;
+      if (activeUser == "" && !currentUser) {
+        alert("Please log in to save your results.");
+      }
+     
+      const sessionKey = `Session (${new Date().toLocaleDateString()})`;
+      const gameData = {
+        correctClicks,
+        missClicks,
+        timesFiveShown,
+        reactionTimes,
+        averageReactionTime: reactionTimes.length > 0
+          ? (reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length).toFixed(2)
+          : null,
+        boxPosition,
+        difficulty: numberSpeed,
+        boxSize,
+        timestamp: new Date().toISOString()
+      };
+      if(activeUser!== "") {
+      // Save to patient document
+      const patientDoc = doc(firestore, "patients", activeUser);
+      // If document doesn't exist, initialize it with empty gameResults
+      const patientSnapshot = await getDoc(patientDoc);
+      if (!patientSnapshot.exists()) {
+        await setDoc(patientDoc, { gameResults: {} });
+        console.log("Patient document created successfully!");
+      }
+      const patientData = patientSnapshot.exists() ? patientSnapshot.data() : { gameResults: {} };
+      const existingGames = patientData.gameResults?.[sessionKey]?.["Catch5Game"] || [];
+      const patientResults = {
+        gameResults: {
+          ...patientData.gameResults,
+          [sessionKey]: {
+        ...(patientData.gameResults?.[sessionKey] || {}),
+        "Catch5Game": [...existingGames, gameData]
           }
-        } else {
-          alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
-          console.error("No user is logged in!");
         }
-      });
-
-      return () => unsubscribe();
+      };
+      
+      await setDoc(patientDoc, patientResults, { merge: true });
+      console.log("Patient results saved successfully!");
+    }
+    else{
+      // Save to user document
+     
+      if (currentUser) {
+        const userDoc = doc(firestore, "users", currentUser.uid);
+        const userSnapshot = await getDoc(userDoc);
+        
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          const existingResults = userData.gameResults?.[sessionKey]?.Catch5Game || [];
+          
+          const userResults = {
+            gameResults: {
+              ...userData.gameResults,
+              [sessionKey]: {
+                ...(userData.gameResults?.[sessionKey] || {}),
+                "Catch5Game": [...existingResults, gameData]
+              }
+            }
+          };
+          
+          await setDoc(userDoc, userResults, { merge: true });
+          console.log("Results saved successfully!");
+        }
+      }
+    }
+      setIsGameRunning(false);
+      setGameEnd(false);
     } catch (error) {
       console.error("Error saving results:", error);
     }
-    handleStartGame(); // Restart the game after saving results
   };
 
   const handleSaveResults = () => {
     saveResultsToDatabase();
   };
 
+
   useEffect(() => {
     let interval;
     let lastNumber = null; // To ensure no two consecutive numbers are the same
     let fiveCount = 0; // To track the number of times 5 appears
-
-    if (isGameRunning) {
+    
+    // Only run the interval when the game is running and not paused
+    if (isGameRunning && !gameEnd) {
+     
       interval = setInterval(() => {
         let randomNum;
         do {
           randomNum = Math.floor(Math.random() * 10);
         } while (randomNum === lastNumber); // Ensure no two consecutive numbers are the same
-
         lastNumber = randomNum;
+        if(!isGamePaused)
         setCurrentNumber(randomNum);
 
         if (randomNum === 5) {
-          
           setStartTime(Date.now());
           setTimesFiveShown((prev) => prev + 1);
           fiveCount++;
-
-          if (fiveCount === 3) {
-            setTimeout(() => {
-              setIsGameRunning(false);
-              setGameEnd(true);
-            }, 2000); // End the game 2 seconds after the second 5 appears
-          }
-
           setTimeout(() => {
             if (currentNumber === 5) {
               setCurrentNumber(0);
@@ -122,26 +154,12 @@ const Catch5Game = () => {
         }
       }, numberSpeed);
     }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isGameRunning, numberSpeed, currentNumber, gameEnd]);
 
-  //   setTimeout(() => {
-  //     let randomNum;
-  //     do {
-  //       randomNum = Math.floor(Math.random() * 10);
-  //     } while (randomNum === lastNumber); // Ensure no two consecutive numbers are the same
-
-  //     lastNumber = randomNum;
-
-  //     // Ensure the number 5 is shown at least twice
-  //     if (timesFiveShown < 2 && Math.random() < 0.5) {
-  //       randomNum = 5;
-  //     }
-
-  //     setCurrentNumber(randomNum);
-  //   }, Math.min(numberSpeed + 300, 500));
-  // }
-
-    return () => clearInterval(interval);
-  }, [isGameRunning, numberSpeed, currentNumber]);
 
   useEffect(() => {
     const handleKeyPress = (event) => {
@@ -154,7 +172,11 @@ const Catch5Game = () => {
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, [isGameRunning, currentNumber]);
 
- 
+
+  // Timer state and ref at component level
+  const [timeRemaining, setTimeRemaining] = useState(15000); // 15 seconds
+  const timerRef = React.useRef(null);
+
 
   const handleStartGame = () => {
     setIsGameRunning(true);
@@ -163,11 +185,28 @@ const Catch5Game = () => {
     setMissClicks(0);
     setTimesFiveShown(0);
     setReactionTimes([]);
-    setTimeout(() => {
-      setIsGameRunning(false);
-      setGameEnd(true);
-    }, 20000); // Game duration of 20 seconds
+    setTimeRemaining(15000); // Reset timer
+  
+    if (timerRef.current) {
+      clearInterval(timerRef.current); // Clear any existing timers
+    }
+  
+    timerRef.current = setInterval(() => {
+      setTimeRemaining(prev => {
+        if (!isGamePaused) {
+          if (prev <= 100) {
+            clearInterval(timerRef.current);
+            setIsGameRunning(false);
+            setGameEnd(true);
+            return 0;
+          }
+          return prev - 100;
+        }
+        return prev; // Do not decrement time if paused
+      });
+    }, 100);
   };
+  
 
   const handleClick = () => {
     if (currentNumber === 5 && startTime) {
@@ -191,7 +230,25 @@ const Catch5Game = () => {
   return (
     <div className="game" style={{ textAlign: "center", marginTop: "20px" }}>
       <h1>תפסו את ה 5</h1>
-      {!isGameRunning && !gameEnd && (
+            {/* 
+
+            <div >
+                      <button onClick={pauseGame}>
+                        <i className="fa-solid fa-pause"></i> השהה
+                      </button>
+                      <button c onClick={resumeGame}>
+                        <i className="fa-solid fa-play"></i> המשך
+                      </button>
+                      <button  onClick={exitToManu}>
+                        <i className="fa-solid fa-arrow-left"></i> חזרה לתפריט
+                      </button>
+                    </div>
+
+
+
+            */ }
+                
+      {!isGameRunning && !gameEnd && !isGamePaused && (
         <div>
          <div className="gamedesc">
          <h3>

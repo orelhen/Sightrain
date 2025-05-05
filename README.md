@@ -77,3 +77,5 @@ npm install jspdf
 
 npm install sass --save-dev
 
+npm install @mui/x-charts
+npm install @emotion/react @emotion/styled

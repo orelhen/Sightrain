@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import '../css/PagesCss/Register.css';
 import { getAuth, createUserWithEmailAndPassword } from "../firebase.js";
+import { useNavigate } from 'react-router-dom'; 
+import AlertDialog from '../Components/Alert';
 
 const RegisterPage = () => {
     const [userId, setUserId] = useState('');
     const [role, setRole] = useState('normal');
-    const [hospital, setHospital] = useState('');
+    const [department, setDepartment] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
     const [errors, setErrors] = useState({});
     const [serverMessage, setServerMessage] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const navigate = useNavigate();
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -19,7 +23,8 @@ const RegisterPage = () => {
     };
 
     const validatePassword = (password) => {
-        return password.length >= 8;
+        // Check if password is at least 8 characters and contains at least 1 letter
+        return password.length >= 8 && /[a-zA-Z]/.test(password);
     };
 
     
@@ -39,7 +44,8 @@ const RegisterPage = () => {
             console.error('Firebase registration error:', errorCode, errorMessage);
         }
     };
-    const saveUserToFirestore = async (userId, name, age, email, role, hospital) => {
+
+    const saveUserToFirestore = async (userId, name, age, email, role, department) => {
         try {
             const { firestore } = await import('../firebase'); // Import Firestore from your firebase.js
             const { doc, setDoc } = await import('firebase/firestore'); // Import Firestore methods
@@ -50,7 +56,7 @@ const RegisterPage = () => {
                 age,
                 email,
                 role,
-                hospital: role === 'caregiver' ? hospital : null,
+                department: role === 'caregiver' ? department : null,
                 createdAt: new Date(),
             });
             console.log('User saved to Firestore');
@@ -78,7 +84,7 @@ const RegisterPage = () => {
 
         try {
             await handleFirebaseRegistration();
-            await saveUserToFirestore(userId, name, age, email, role, hospital);
+            await saveUserToFirestore(userId, name, age, email, role, department);
         } catch (error) {
             console.error('Error during registration:', error);
         }
@@ -126,8 +132,15 @@ const RegisterPage = () => {
                             </label>
 
                             {role === 'caregiver' && (
-                                <label htmlFor="hospital">בית חולים
-                                    <input type="text" id="hospital" value={hospital} onChange={(e) => setHospital(e.target.value)} required />
+                                <label htmlFor="department">בית חולים
+                                    <select id="department" value={department} onChange={(e) => setDepartment(e.target.value)} required>
+                                        <option value="">בחר בית חולים</option>
+                                        <option value="סורוקה-עיניים">בית חולים סורוקה-מחלקת עיניים</option>
+                                        <option value="סורוקה-ריפוי">בית חולים סורוקה - מחלקת ריפוי בעיסוק</option>
+                                        <option value="איכילוב-עיניים">בית חולים איכילוב - מחלקת עיניים</option>
+                                        <option value="רמבם-עיניים">בית חולים רמב״ם - מחלקת עיניים</option>
+                                        <option value="שיבא-עיניים">בית חולים שיבא - מחלקת עיניים</option>
+                                    </select>
                                 </label>
                             )}
                         </div>
@@ -135,14 +148,26 @@ const RegisterPage = () => {
                         <div className="reg_btn_container">
                             <button type="submit">הירשם</button>
                             {serverMessage && <p className="server-message">{serverMessage}</p>}
-                            <p>
-                                כבר יש לך חשבון?
-                                <a href="/login" className="register-link"> התחבר</a>
-                            </p>
+                            <h3>כבר יש לך חשבון?</h3>
+                                <button 
+                                    type="button" 
+                                    className="register-link" 
+                                    onClick={() =>  navigate('/login')}
+                                >
+                                    התחבר
+                                </button>
+                           
                         </div>
                     </form>
                 </div>
             </div>
+            {showAlert && (
+                        <AlertDialog 
+                            open={showAlert} 
+                            title="שגיאת התחברות" 
+                            message={serverMessage}
+                            onClose={() => setShowAlert(false)}
+                        />  )}
         </section>
     );
 };

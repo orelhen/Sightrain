@@ -9,7 +9,7 @@ const symbolSets = {
   symbols: '!@#$%^&*'.split(''),
 };
 
-const ScanningGame = () => {
+const ScanningGame = ({activeUser}) => {
   const [stage, setStage] = useState('start');
   const [displayTime, setDisplayTime] = useState(1000);
   const [charactersPerRow, setCharactersPerRow] = useState(10);
@@ -139,48 +139,85 @@ const ScanningGame = () => {
   }, [stage, startTime]);
 
   const saveResultsToDatabase = async () => {
-    if (!user) {
-      alert('Please log in to save your results.');
-      return;
-    }
-
-    const userDoc = doc(firestore, 'users', user.uid);
-    const userSnapshot = await getDoc(userDoc);
-    const sessionKey = `Session (${new Date().toLocaleDateString()})`;
-
-    const newResults = {
-      correctDetections,
-      totalTargets,
-      reactionTimes,
-      averageReactionTime:
-        reactionTimes.length > 0
-          ? (
-              reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length
-            ).toFixed(2)
+    try {
+      if (activeUser === "" && !user) {
+        alert("Please log in to save your results.");
+        return;
+      }
+      
+      const sessionKey = `Session (${new Date().toLocaleDateString()})`;
+      const gameData = {
+        correctDetections,
+        totalTargets,
+        reactionTimes,
+        averageReactionTime: reactionTimes.length > 0
+          ? (reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length).toFixed(2)
           : null,
-      displayTime,
-      charactersPerRow,
-      spacing,
-      fontSize,
-      symbolSetType,
-      scanDirection,
-      targetChar,
-      numberOfLines,
-      timestamp: new Date().toISOString(),
-    };
+        displayTime,
+        charactersPerRow,
+        spacing,
+        fontSize,
+        symbolSetType,
+        scanDirection,
+        targetChar,
+        numberOfLines,
+        timestamp: new Date().toISOString()
+      };
 
-    const existing = userSnapshot.exists()
-      ? userSnapshot.data().gameResults?.[sessionKey]?.ScanningGame || []
-      : [];
-
-    const merged = {
-      [sessionKey]: {
-        ScanningGame: [...existing, newResults],
-      },
-    };
-
-    await setDoc(userDoc, { gameResults: merged }, { merge: true });
-    alert('Results saved successfully!');
+      if (activeUser !== "") {
+        // Save to patient document
+        const patientDoc = doc(firestore, "patients", activeUser);
+        // If document doesn't exist, initialize it with empty gameResults
+        const patientSnapshot = await getDoc(patientDoc);
+        if (!patientSnapshot.exists()) {
+          await setDoc(patientDoc, { gameResults: {} });
+          console.log("Patient document created successfully!");
+        }
+        const patientData = patientSnapshot.exists() ? patientSnapshot.data() : { gameResults: {} };
+        const existingGames = patientData.gameResults?.[sessionKey]?.["ScanningGame"] || [];
+        const patientResults = {
+          gameResults: {
+            ...patientData.gameResults,
+            [sessionKey]: {
+              ...(patientData.gameResults?.[sessionKey] || {}),
+              "ScanningGame": [...existingGames, gameData]
+            }
+          }
+        };
+        
+        await setDoc(patientDoc, patientResults, { merge: true });
+        console.log("Patient results saved successfully!");
+        alert('Results saved successfully!');
+      } else {
+        // Save to user document
+        if (user) {
+          const userDoc = doc(firestore, "users", user.uid);
+          const userSnapshot = await getDoc(userDoc);
+          
+          if (userSnapshot.exists()) {
+            const userData = userSnapshot.data();
+            const existingResults = userData.gameResults?.[sessionKey]?.ScanningGame || [];
+            
+            const userResults = {
+              gameResults: {
+                ...userData.gameResults,
+                [sessionKey]: {
+                  ...(userData.gameResults?.[sessionKey] || {}),
+                  "ScanningGame": [...existingResults, gameData]
+                }
+              }
+            };
+            
+            await setDoc(userDoc, userResults, { merge: true });
+            console.log("Results saved successfully!");
+            alert('Results saved successfully!');
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error saving results:", error);
+      alert('Error saving results. Please try again.');
+    }
   };
 
   return (

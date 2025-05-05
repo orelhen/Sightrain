@@ -40,7 +40,6 @@
     font-family: 'Varela Round';
     font-size: 58px;
     font-weight: 900;
-    color: #2c2c2c;
     text-align: left;
   }
   
@@ -58,7 +57,6 @@
   
   .registration-form-container label {
     font-size: 16px;
-    color: #2c2c2c;
     font-weight: bold;
     display: inline-grid;
     width: 50%;
@@ -75,7 +73,6 @@
     margin-top: 5px;
     margin-bottom: 0 !important;
     background: #f5f6f8;
-    color: black;
     transition: 0.4s all;
     border: none;
   }
@@ -98,7 +95,6 @@
         margin: 0;
         margin-right: 10px;
         width: 30px;
-        accent-color: #fff;
       }
     }
   }
@@ -136,8 +132,6 @@
     width: 400px;
     height: 60px;
     padding: 0.75em;
-    background-color: #2c2c2c;
-    color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 16px;
@@ -146,8 +140,6 @@
   }
   
   .registration-form-container button:hover {
-    background-color: #fff;
-    color: #2c2c2c;
   }
   
   .registration-form-container p {
@@ -157,7 +149,6 @@
   }
   
   .registration-form-container .register-link {
-    color: #2c2c2c;
     text-decoration: none;
     font-weight: bold;
   }
@@ -208,7 +199,6 @@
       margin: 5px;
       border: 1px solid transparent;
       transition: border-color 0.3s;
-      background: #f5f6f8;
       border-radius: 50%;
       padding: 15px;
       margin: 5px 10px;

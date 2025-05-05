@@ -1,26 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth, firestore, doc, getDoc, setDoc, onAuthStateChanged } from '../firebase.js'; // Ensure Firebase is correctly configured and imported
+import { getAuth, firestore, doc, getDoc, setDoc } from '../firebase.js';
+import '../css/GamesCss/Games.scss'; // Make sure to import the styles
 
-
-const ColorShadeGame = () => {
+const ColorShadeGame = ({activeUser}) => {
   const [balls, setBalls] = useState([]);
   const [targetBall, setTargetBall] = useState(null);
   const [score, setScore] = useState(0);
   const [ballCount, setBallCount] = useState(10);
   const [isGameActive, setIsGameActive] = useState(false);
   const [feedback, setFeedback] = useState('');
-  const [color, setColor] = useState('blue'); // Default blue
-  const [difficulty, setDifficulty] = useState(5); // Default difficulty (shade difference)
-  const [ballSize, setBallSize] = useState(3); // Default ball size
+  const [color, setColor] = useState('blue');
+  const [difficulty, setDifficulty] = useState(5);
+  const [ballSize, setBallSize] = useState(3);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [backgroundColor, setBackgroundColor] = useState('black');
+  const [shape, setShape] = useState('circle');
+  
+  // Test mode states
+  const [isTestMode, setIsTestMode] = useState(false);
+  const [testLevel, setTestLevel] = useState(1);
+  const [testComplete, setTestComplete] = useState(false);
+  const [finalLevel, setFinalLevel] = useState(0);
 
   const colors = {
     blue: ['#0080ff', '#007cff'],
     orange: ['#ff8000', '#ff7c00'],
     red: ['#ff0000', '#fc0000'],
     white: ['#ffffff', '#f0f0f0'],
+    green: ['#00ff00', '#00fc00'],
+    yellow: ['#ffff00', '#fcfc00'],
   };
+
+  // Test mode configuration
+  const testConfig = [
+    { level: 1, difficulty: 1, ballCount: 5, ballSize: 5, color: 'blue', shape: 'circle' },
+    { level: 2, difficulty: 2, ballCount: 7, ballSize: 4, color: 'blue', shape: 'square' },
+    { level: 3, difficulty: 3, ballCount: 10, ballSize: 3.5, color: 'red', shape: 'circle' },
+    { level: 4, difficulty: 4, ballCount: 12, ballSize: 3, color: 'green', shape: 'triangle' },
+    { level: 5, difficulty: 5, ballCount: 14, ballSize: 2.5, color: 'orange', shape: 'square' },
+    { level: 6, difficulty: 6, ballCount: 16, ballSize: 3, color: 'yellow', shape: 'star' },
+    { level: 7, difficulty: 6, ballCount: 18, ballSize: 2, color: 'white', shape: 'circle' },
+    { level: 8, difficulty: 7, ballCount: 20, ballSize: 1.8, color: 'blue', shape: 'triangle' },
+    { level: 9, difficulty: 7, ballCount: 22, ballSize: 1.3, color: 'yellow', shape: 'square' },
+    { level: 10, difficulty: 8, ballCount: 25, ballSize: 1, color: 'green', shape: 'star' },
+  ];
 
   // Function to generate balls with one target ball
   const generateBalls = () => {
@@ -59,6 +83,19 @@ const ColorShadeGame = () => {
     setScore(0);
     setCorrectAnswers(0);
     setIncorrectAnswers(0);
+    
+    if (isTestMode) {
+      setTestLevel(1);
+      setTestComplete(false);
+      setFinalLevel(0);
+      // Apply first level configuration
+      const config = testConfig[0];
+      setDifficulty(config.difficulty);
+      setBallCount(config.ballCount);
+      setBallSize(config.ballSize);
+      setColor(config.color);
+    }
+    
     generateBalls();
   };
 
@@ -67,164 +104,298 @@ const ColorShadeGame = () => {
     if (!isGameActive) return;
     const correct = id === targetBall;
     setFeedback(correct ? 'מצויין!' : 'נסו שוב!');
+    
     if (correct) {
       setScore(score + 1);
       setCorrectAnswers(correctAnswers + 1);
+      
+      if (isTestMode) {
+        // Move to next level if available
+        if (testLevel < testConfig.length) {
+          const newTestLevel = testLevel + 1;
+          setTestLevel(newTestLevel);
+          
+          // Apply next level configuration after the feedback timeout
+          // This prevents immediate visual change of shape and size
+          setTimeout(() => {
+            if (newTestLevel <= testConfig.length) {
+              const nextConfig = testConfig[newTestLevel - 1];
+              setDifficulty(nextConfig.difficulty);
+              setBallCount(nextConfig.ballCount);
+              setBallSize(nextConfig.ballSize);
+              setColor(nextConfig.color);
+              setShape(nextConfig.shape);
+            }
+          }, 1000);
+        } else {
+          // Completed all test levels
+          setFinalLevel(testLevel);
+          setTestComplete(true);
+          setIsGameActive(false);
+        }
+      }
     } else {
       setIncorrectAnswers(incorrectAnswers + 1);
+      
+      if (isTestMode) {
+        // Test failed at current level
+        setFinalLevel(testLevel - 1);
+        setTestComplete(true);
+        setIsGameActive(false);
+      }
     }
+    
     setTimeout(() => {
       setFeedback('');
-      generateBalls();
+      if (isGameActive && (!isTestMode || (isTestMode && !testComplete))) {
+        generateBalls();
+      }
     }, 1000);
   };
 
   // Function to finish the game
   const finishGame = () => {
     setIsGameActive(false);
+    setScore(0);
   };
-
 
   const saveResultsToDatabase = async () => {
     try {
       const auth = getAuth();
-      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      const currentUser = auth.currentUser;
+      
+      if (activeUser === "" && !currentUser) {
+        alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
+        return;
+      }
+      
+      const sessionKey = `Session (${new Date().toLocaleDateString()})`;
+      const gameData = {
+        correctAnswers,
+        incorrectAnswers,
+        ballCount,
+        difficulty,
+        ballSize,
+        color,
+        timestamp: new Date().toISOString(),
+        isTestMode,
+        ...(isTestMode && { finalLevel }),
+      };
+
+      if (activeUser !== "") {
+        // Save to patient document
+        const patientDoc = doc(firestore, "patients", activeUser);
+        // If document doesn't exist, initialize it with empty gameResults
+        const patientSnapshot = await getDoc(patientDoc);
+        if (!patientSnapshot.exists()) {
+          await setDoc(patientDoc, { gameResults: {} });
+          console.log("Patient document created successfully!");
+        }
+        
+        const patientData = patientSnapshot.exists() ? patientSnapshot.data() : { gameResults: {} };
+        const existingGames = patientData.gameResults?.[sessionKey]?.["ColorShadeGame"] || [];
+        const patientResults = {
+          gameResults: {
+            ...patientData.gameResults,
+            [sessionKey]: {
+              ...(patientData.gameResults?.[sessionKey] || {}),
+              "ColorShadeGame": [...existingGames, gameData]
+            }
+          }
+        };
+        
+        await setDoc(patientDoc, patientResults, { merge: true });
+        console.log("Patient results saved successfully!");
+        setScore(0); // Reset score after saving
+      } else {
+        // Save to user document
         if (currentUser) {
           const userDoc = doc(firestore, "users", currentUser.uid);
           const userSnapshot = await getDoc(userDoc);
+          
           if (userSnapshot.exists()) {
             const userData = userSnapshot.data();
-            const sessionKey = `Session (${new Date().toLocaleDateString()})`;
-            const updatedResults = {
-              [sessionKey]: {
-                "ColorShadeGame": [
-                  ...(Array.isArray(userData.gameResults?.[sessionKey]?.ColorShadeGame) ? userData.gameResults[sessionKey].ColorShadeGame : []),
-                  {
-                    correctAnswers,
-                    incorrectAnswers,
-                    ballCount,
-                    difficulty,
-                    ballSize
-                  }
-                ]
+            const existingResults = userData.gameResults?.[sessionKey]?.ColorShadeGame || [];
+            
+            const userResults = {
+              gameResults: {
+                ...userData.gameResults,
+                [sessionKey]: {
+                  ...(userData.gameResults?.[sessionKey] || {}),
+                  "ColorShadeGame": [...existingResults, gameData]
+                }
               }
             };
-            const mergedResults = userData.gameResults
-              ? {
-                  ...userData.gameResults,
-                  [sessionKey]: {
-                    ...(userData.gameResults[sessionKey] || {}),
-                    "ColorShadeGame": updatedResults[sessionKey]["ColorShadeGame"]
-                  }
-                }
-              : updatedResults;
-
-            await setDoc(userDoc, { gameResults: mergedResults }, { merge: true });
+            
+            await setDoc(userDoc, userResults, { merge: true });
             console.log("Results saved successfully!");
             setScore(0); // Reset score after saving
-          } else {
-            console.error("No such user document!");
           }
-        } else {
-          alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
-          console.error("No user is logged in!");
         }
-      });
-
-      return () => unsubscribe();
+      }
     } catch (error) {
       console.error("Error saving results:", error);
     }
   };
 
-
   useEffect(() => {
-    if (isGameActive) {
+    if (isGameActive && !feedback) {
       generateBalls();
     }
-  }, [isGameActive, ballCount, color, difficulty, ballSize]);
+  }, [isGameActive]);
+  
+  // Re-generate balls when game settings change, but only if not in the middle of showing feedback
+  useEffect(() => {
+    if (isGameActive && !feedback) {
+      generateBalls();
+    }
+  }, [ballCount, color, difficulty, ballSize]);
 
   useEffect(() => {
-    if (score === 5) {
-      finishGame();
+    if (!isTestMode && score === 5) {
+      setIsGameActive(false);
     }
-  }, [score]);
+  }, [score, isTestMode]);
 
   return (
-    <div className="game" style={styles.container}>
+    <div className="game">
       <h2>משחק צבעים</h2>
+      {!isGameActive &&( 
       <div className="gamedesc">
-        <h3>מצאו את הכדור הכהה יותר!</h3>
-      </div>
-      {!isGameActive && score === 0 && (
-        <div className="settings" style={styles.settings}>
+        <h3>
+        במשחק זה יופיעו אובייקטים על המסך בצבע דומה. עליכם לאתר ולבחור את האובייקט הכהה ביותר מביניהם.
+        <br/>ככל שרמת הקושי גבוהה יותר, כך ההבדל בין הצבעים יהיה קטן יותר ומאתגר יותר לזיהוי.
+        <br/>ניתן לשנות את צבע האובייקטים, כמותם וגודלם בהגדרות המשחק.
+        <br/>המטרה היא לאתר בהצלחה את האובייקט הכהה בכל סיבוב ולשפר את יכולת ההבחנה הויזואלית.
+        <br/>השחק מסתיים לאחר 5 סיבובים, בהצחקה!
+        </h3>
+        
+        <button onClick={() => { setIsTestMode((prev) => !prev); setScore(0); }}>
+          {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>  
+        </button>
+      </div>)}
+
+      {!isGameActive && score === 0 && !isTestMode && (
+        <div className="settings">
             <h3>הגדרות משחק:</h3>
-               
-          <label>
-            כמות כדורים:
-            <input
-              type="range"
-              min="5"
-              max="25"
-              value={ballCount}
-              onChange={(e) => setBallCount(Number(e.target.value))}
-              disabled={isGameActive} // Disable when game is active
-            />
-            {ballCount}
-          </label>
-          <label>
-            צבע הכדור:
-            <select
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              disabled={isGameActive} // Disable when game is active
-            >
-              <option value="blue">כחול</option>
-              <option value="orange">כתום</option>
-              <option value="red">אדום</option>
-              <option value="white">לבן</option>
-            </select>
-          </label>
-          <label>
-            רמת קושי :
-            <input
-              type="range"
-              min="1"
-              max="8"
-              value={difficulty}
-              onChange={(e) => setDifficulty(Number(e.target.value))}
-              disabled={isGameActive} // Disable when game is active
-            />
-            {difficulty}
-          </label>
-          <label>
-            גודל הכדור:
-            <input
-              type="range"
-              min="2"
-              max="5"
-              value={ballSize}
-              onChange={(e) => setBallSize(Number(e.target.value))}
-              disabled={isGameActive} // Disable when game is active
-            />
-            {ballSize}
-          </label>
+
+            <label>
+              רמת קושי:
+              <input
+                type="range"
+                min="1"
+                max="8"
+                value={difficulty}
+                onChange={(e) => setDifficulty(Number(e.target.value))}
+                disabled={isGameActive}
+              />
+              {difficulty}
+            </label>
+              
+            <label>
+              כמות אובייקטים:
+              <input
+                type="range"
+                min="5"
+                max="25"
+                value={ballCount}
+                onChange={(e) => setBallCount(Number(e.target.value))}
+                disabled={isGameActive}
+              />
+              {ballCount}
+            </label>
+              
+            <label>
+              גודל האובייקט:
+              <input
+                type="range"
+                min="2"
+                max="5"
+                value={ballSize}
+                onChange={(e) => setBallSize(Number(e.target.value))}
+                disabled={isGameActive}
+              />
+              {ballSize}
+            </label>
+            
+            <label>
+              צבע האובייקט:
+              <select
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                disabled={isGameActive}
+              >
+                <option value="blue">כחול</option>
+                <option value="orange">כתום</option>
+                <option value="red">אדום</option>
+                <option value="white">לבן</option>
+                <option value="green">ירוק</option>
+                <option value="yellow">צהוב</option>
+              </select>
+            </label>
+            
+            <label>
+              צבע רקע:
+              <select
+                value={backgroundColor}
+                onChange={(e) => setBackgroundColor(e.target.value)}
+                disabled={isGameActive}
+              >
+                <option value="black">שחור</option>
+                <option value="gray">אפור</option>
+                <option value="blue">כחול</option>
+                <option value="navy">כחול כהה</option>
+                <option value="purple">סגול</option>
+                <option value="green">ירוק</option>
+              </select>
+            </label>
+            
+            <label>
+              צורת האובייקט:
+              <select
+                value={shape}
+                onChange={(e) => setShape(e.target.value)}
+                disabled={isGameActive}
+              >
+                <option value="circle">עיגול</option>
+                <option value="square">ריבוע</option>
+                <option value="triangle">משולש</option>
+                <option value="star">כוכב</option>
+              </select>
+            </label>
+        </div>
+      )}
+      
+      {!isGameActive && score === 0 && isTestMode && (
+        <div className="test-mode-info">
+          <h2>מצב מבדק</h2>
+          <h3>המבדק יתחיל עם אובייקטים גדולים ורמה קלה ויהפוך לאתגר בהדרגה</h3>
+          <h3>המבדק יכלול 10 רמות קושי שונות</h3>
+          <h3>המבדק נועד לבדוק מה רמת הקושי המומלץ עבורך!</h3>
+         
+        </div>
+      )}
+
+      {isTestMode && isGameActive && (
+        <div className="test-level-indicator">
+          <h3>רמה {testLevel}/{testConfig.length}</h3>
         </div>
       )}
 
       {isGameActive && (
-        <div style={styles.gameBox}>
+        <div style={{...styles.gameBox, backgroundColor: backgroundColor}}>
           {balls.map((ball) => (
             <div
               key={ball.id}
               style={{
                 ...styles.ball,
+                ...styles[shape],
                 left: ball.x,
                 top: ball.y,
                 backgroundColor: ball.color,
                 width: `${ballSize * 20}px`,
                 height: `${ballSize * 20}px`,
-                border: '2px solid white', // Adding white border to each ball
+                border: '2px solid black',
               }}
               onClick={() => handleBallClick(ball.id)}
             />
@@ -232,30 +403,52 @@ const ColorShadeGame = () => {
           <div style={styles.score}>תוצאה: {score}</div>
         </div>
       )}
-      <div style={styles.feedback}>{feedback}</div>
+      {!isGameActive && score==0 &&(
+      <button className='start_game' onClick={startGame}>
+            {isTestMode ? 'התחל מבדק' : 'התחל משחק'} <i className="fa-solid fa-play"></i>
+          </button>)}
 
-      {!isGameActive && (
+      {!isGameActive &&(
         <>
-         <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
+          
 
-          {score > 0 && (
+          {(score > 0 ) && (
             <div className="results">
               <h2>המשחק נגמר! אלו הן התוצאות:</h2>
-             
+              
+              {isTestMode && testComplete && (
+                <div className="test-results">
+                  <h3>
+                    {finalLevel > 0 
+                      ? `כל הכבוד! הגעת לרמה ${finalLevel} מתוך ${testConfig.length}` 
+                      : 'נסה שוב את המבדק'}
+                  </h3>
+                </div>
+              )}
+              
               <p>נכונים: {correctAnswers}</p>
               <p>שגויים: {incorrectAnswers}</p>
+              
+              {isTestMode && testComplete && (
+                <h3>אפשרויות המשחק המומלצות עבורך:</h3>
+              )}
+              {!isTestMode && <h3>אפשרויות המשחק:</h3>}
+              
               <p>רמת קושי: {difficulty} מתוך 8</p>
-              <p>כמות כדורים: {ballCount}</p>
-              <p>גודל כדורים: {ballSize}</p>
+              <p>כמות אובייקטים: {ballCount}</p>
+              <p>גודל אובייקט: {ballSize}</p>
+              <p>צבע: {color}</p>
               <p>כמות סיבובים: {correctAnswers + incorrectAnswers}</p>
-              <button onClick={saveResultsToDatabase} style={styles.button}>שמור תוצאות</button>
+              <button onClick={finishGame}>בחזרה לתפריט</button>
+              <button onClick={startGame}>שחק שוב</button>
+              <button onClick={saveResultsToDatabase}>שמור תוצאות</button>
             </div>
           )}
         </>
       )}
 
       {isGameActive && (
-        <button onClick={finishGame} style={styles.button}>סיים משחק</button>
+        <button onClick={finishGame}>סיים משחק</button>
       )}
     </div>
   );
@@ -284,24 +477,30 @@ const styles = {
     position: 'relative',
     width: '1500px',
     height: '700px',
-    border: '4px solid #FFF',
     backgroundColor: 'black',
     marginBottom: '20px',
     overflow: 'hidden',
-
   },
   ball: {
     position: 'absolute',
-    borderRadius: '50%',
     cursor: 'pointer',
+  },
+  circle: {
+    borderRadius: '50%',
+  },
+  square: {
+    // No border radius for square
+  },
+  triangle: {
+    clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+  },
+  star: {
+    clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
   },
   button: {
     padding: '10px 20px',
     fontSize: '18px',
     cursor: 'pointer',
-    marginBottom: '20px',
-  },
-  settings: {
     marginBottom: '20px',
   },
 };

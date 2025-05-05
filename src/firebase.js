@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword ,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "firebase/auth";
-import {addDoc, doc, setDoc, getDocs, query, collection, where ,getDoc,updateDoc,deleteField} from "firebase/firestore";
+import {addDoc, doc, setDoc, getDocs, query, collection, where ,getDoc,updateDoc,deleteField,deleteDoc} from "firebase/firestore";
 
 
 const firebaseConfig = {
@@ -22,4 +22,4 @@ const analytics = getAnalytics(app);
 const firestore = getFirestore(app);
 
 export { app, analytics, firestore, getAuth, createUserWithEmailAndPassword, doc, setDoc, signInWithEmailAndPassword,
-   onAuthStateChanged, signOut, getDocs, query, collection, where, getDoc,updateDoc,deleteField,addDoc };
+   onAuthStateChanged, signOut, getDocs, query, collection, where, getDoc,updateDoc,deleteField,addDoc,deleteDoc,getFirestore };
