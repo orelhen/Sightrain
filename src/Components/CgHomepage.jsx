@@ -10,7 +10,7 @@ const CgHomepage = () => {
    
     return (
         <div className="caregiver-home-container" id="caregiver-home">
-            <section className="hero-section">
+            <section >
                 <h2>ברוכים הבאים ל-SighTrain למטפלים</h2>
                 <p>
                     תודה שאתם כאן. הנוכחות שלכם יוצרת הבדל אמיתי.<br />
@@ -18,7 +18,7 @@ const CgHomepage = () => {
                 </p>
             </section>
 
-            <section className="hero-section" id="caregiver-features">
+            <section  id="caregiver-features">
                 <h2>מה תמצאו כאן:</h2>
                 <ul className="caregiver-benefits-list">
                     <li>✅ הדרכה קצרה על תהליך השימוש בפלטפורמה</li>
@@ -28,7 +28,7 @@ const CgHomepage = () => {
                 </ul>
             </section>
 
-            <section className="hero-section" id="caregiver-role">
+            <section  id="caregiver-role">
                 <h2>התפקיד שלכם חשוב</h2>
                 <p>
                     אתם לא רק תומכים טכנית – אתם שותפים למסע האישי של המטופל. תפקידכם לעודד, להעצים, ולוודא שהחוויה חיובית ומותאמת אישית.
@@ -40,7 +40,6 @@ const CgHomepage = () => {
                 <div className="cta-buttons">
                     <button className="cta-button">מעבר להדרכה המקוצרת</button>
                     <button className="cta-button" >עיון בכלים למטפלים</button>
-                    <button className="cta-button" >כניסה למרכז המשאבים</button>
                 </div>
             </section>
             <button onClick={() => setShowFeedback(true)}>שלח משוב על האתר</button>
