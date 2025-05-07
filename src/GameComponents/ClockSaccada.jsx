@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getAuth, onAuthStateChanged, doc, getDoc, setDoc, firestore } from '../firebase.js';
 import ConfirmDialog from '../Components/ConfirmDialog.jsx'; 
+import AlertDialog from '../Components/Alert';
+
 
 
 const symbolSets = {
@@ -28,6 +30,10 @@ const SaccadeClockGame = ({activeUser}) => {
   const auth = getAuth(); 
   const [showConfirmReset, setShowConfirmReset] = useState(false);
   const [circleSize, setCircleSize] = useState(600); // Initialize with default value
+  const [message, setMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+
+
 
   useEffect(() => {
     if (stage === 'results') setInputReady(false);
@@ -91,8 +97,9 @@ const SaccadeClockGame = ({activeUser}) => {
         try {
           const currentUser = auth.currentUser;
           if (activeUser === "" && !currentUser) {
-            alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
-            setStage('start');
+            setMessage("אנא התחבר כדי לשמור את התוצאות שלך"); 
+            setShowAlert(true);
+            setStage('results');
             return;
           }
           
@@ -336,6 +343,13 @@ const SaccadeClockGame = ({activeUser}) => {
           <button onClick={() => setStage('SaveResults')}>שמור תוצאות</button>
         </div>
       )}
+         {showAlert && (
+                <AlertDialog 
+                    open={showAlert} 
+                  title="דרוש משתמש מחובר"
+              message={message}
+               onClose={() => setShowAlert(false)}
+          />  )}
     </div>
   );
 };

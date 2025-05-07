@@ -16,6 +16,10 @@ const RegisterPage = () => {
     const [serverMessage, setServerMessage] = useState('');
     const [showAlert, setShowAlert] = useState(false);
     const navigate = useNavigate();
+    const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+    const [showRegistrationType, setShowRegistrationType] = useState(true);
+
+
 
     const validateEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -98,23 +102,59 @@ const RegisterPage = () => {
     return (
         <section className="registration-section">
             <div className="registration-container">
+                {showRegistrationType && (
+                <div className="registration-options">
+                    <h1 className="main_logo">SighTrain</h1>
+                     <button type="button" className="register-link" onClick={() =>  navigate('/login')}>חזור לדף התחברות</button>
+                <h1 className="registration-title">בחר סוג הרשמה</h1>
+                <div className="registration-cards">
+                    <div 
+                        className="registration-card patient-card"
+                        onClick={() => {
+                            setRole('normal');
+                            setShowRegistrationForm(true);
+                            setShowRegistrationType(false);
+                        }}
+                    >
+                        <div className="card-icon">👨</div>
+                        <h2>הרשמה כמשתמש</h2>
+                        <p>אם אתה מעוניין להשתמש באתר לאימון ראייה</p>
+                        <h3>בעזרת משתמש זה תוכל לשמור את תוצאות האימונים שלך ותוכל לעקוב אחרי הפעילות שלך באתר</h3>
+                        <button className="card-button">הרשם</button>
+                    </div>
+                    
+                    <div 
+                        className="registration-card caregiver-card"
+                        onClick={() => {
+                            setRole('caregiver');
+                            setShowRegistrationForm(true);
+                            setShowRegistrationType(false);
+                        }}
+                    >
+                        <div className="card-icon">👨‍⚕️</div>
+                        <h2>הרשמה כמטפל</h2>
+                        <p>אם אתה איש מקצוע רפואי שמלווה מטופלים</p>
+                        <h3>בעזרת משתמש זה תוכל לעקוב אחרי כל המטופלים שלך במחלקה ולתת להם להשתמש באתר </h3>
+                        <button className="card-button">הרשם</button>
+                    </div>
+                </div>
+            </div>)}
                 <div className="registration-form-container">
+                    {showRegistrationForm && (
                     <form onSubmit={handleSubmit}>
                         <div className="reg_main">
-                            <h2>הרשמה</h2>
-                            <label htmlFor="userId">תעודת זהות
-                                <input type="text" id="userId" value={userId} onChange={(e) => setUserId(e.target.value)} required />
-                            </label>
+                        <h1 className="main_logo">SighTrain</h1>
 
+                            <h2>דף הרשמה</h2>
                             <label htmlFor="name">שם מלא
                                 <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
                             </label>
 
-                            <label htmlFor="age">גיל
-                                <input type="text" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
+                            <label htmlFor="age">תאריך לידה
+                                <input type="date" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
                             </label>
 
-                            <label htmlFor="email">אימייל
+                            <label htmlFor="email">כתובת דואר אלקטרוני
                                 <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                                 {errors.email && <p className="error-message">{errors.email}</p>}
                             </label>
@@ -124,13 +164,7 @@ const RegisterPage = () => {
                                 {errors.password && <p className="error-message">{errors.password}</p>}
                             </label>
 
-                            <label htmlFor="role">תפקיד
-                                <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
-                                    <option value="normal">משתמש רגיל</option>
-                                    <option value="caregiver">מטפל</option>
-                                </select>
-                            </label>
-
+                          
                             {role === 'caregiver' && (
                                 <label htmlFor="department">בית חולים
                                     <select id="department" value={department} onChange={(e) => setDepartment(e.target.value)} required>
@@ -143,23 +177,17 @@ const RegisterPage = () => {
                                     </select>
                                 </label>
                             )}
-                        </div>
-
-                        <div className="reg_btn_container">
-                            <button type="submit">הירשם</button>
-                            {serverMessage && <p className="server-message">{serverMessage}</p>}
-                            <h3>כבר יש לך חשבון?</h3>
-                                <button 
-                                    type="button" 
-                                    className="register-link" 
-                                    onClick={() =>  navigate('/login')}
-                                >
-                                    התחבר
-                                </button>
-                           
-                        </div>
-                    </form>
-                </div>
+                            </div>
+    
+                            <div className="reg_btn_container">
+                                <button type="submit">הירשם</button>
+                                {serverMessage && <p className="server-message">{serverMessage}</p>}
+                                <h3>כבר יש לך חשבון?</h3>
+                                    <button type="button" onClick={() =>  navigate('/login')}>   התחבר
+                                    </button>
+                            </div>
+                        </form>)}
+                    </div>
             </div>
             {showAlert && (
                         <AlertDialog 

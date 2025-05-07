@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getAuth, firestore, doc, getDoc, setDoc } from '../firebase.js';
 import '../css/GamesCss/Games.scss'; // Make sure to import the styles
+import AlertDialog from '../Components/Alert';
+
+
 
 const ColorShadeGame = ({activeUser}) => {
   const [balls, setBalls] = useState([]);
@@ -16,7 +19,9 @@ const ColorShadeGame = ({activeUser}) => {
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [backgroundColor, setBackgroundColor] = useState('black');
   const [shape, setShape] = useState('circle');
-  
+  const [message, setMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+
   // Test mode states
   const [isTestMode, setIsTestMode] = useState(false);
   const [testLevel, setTestLevel] = useState(1);
@@ -165,7 +170,8 @@ const ColorShadeGame = ({activeUser}) => {
       const currentUser = auth.currentUser;
       
       if (activeUser === "" && !currentUser) {
-        alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
+        setMessage("אנא התחבר כדי לשמור את התוצאות שלך"); 
+        setShowAlert(true);
         return;
       }
       
@@ -445,11 +451,20 @@ const ColorShadeGame = ({activeUser}) => {
             </div>
           )}
         </>
+        
+            
       )}
-
+          {showAlert && (
+                    <AlertDialog 
+                      open={showAlert} 
+                      title="דרוש משתמש מחובר"
+                 message={message}
+                 onClose={() => setShowAlert(false)}
+                        />  )}
       {isGameActive && (
         <button onClick={finishGame}>סיים משחק</button>
       )}
+      
     </div>
   );
 };

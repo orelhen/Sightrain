@@ -7,8 +7,8 @@ const Timer = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setSeconds((prev) => prev + 1);
-      if ((seconds + 1) % 120 === 0) { 
-        setShowReminder(true); // Show the reminder every 120 seconds
+      if ((seconds + 1) % 300 === 0) { 
+        setShowReminder(true); // Show reminder every 5 minutes (300 seconds)
       }
     }, 1000);
 
@@ -27,7 +27,7 @@ const Timer = () => {
   };
 
   const handleReminderClick = () => {
-    setShowReminder(false); // Hide the reminder when OK is clicked
+    setShowReminder(false); 
   };
 
   return (

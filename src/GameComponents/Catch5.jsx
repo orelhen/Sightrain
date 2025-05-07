@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import '../css/GamesCss/Games.scss';
-
 import { getAuth, firestore, doc, getDoc, setDoc, onAuthStateChanged } from '../firebase.js'; // Ensure Firebase is correctly configured and imported
+import AlertDialog from '../Components/Alert';
+
 
 
 const Catch5Game = ({activeUser}) => {
@@ -19,6 +20,8 @@ const Catch5Game = ({activeUser}) => {
   const [numberSpeed, setNumberSpeed] = useState(1000);
   // Box position state
   const [boxPosition, setBoxPosition] = useState("center");
+  const [message, setMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
 
 
@@ -46,7 +49,9 @@ const Catch5Game = ({activeUser}) => {
       const auth = getAuth();
       const currentUser = auth.currentUser;
       if (activeUser == "" && !currentUser) {
-        alert("Please log in to save your results.");
+        setMessage("אנא התחבר כדי לשמור את התוצאות שלך"); 
+        setShowAlert(true);
+        return;
       }
      
       const sessionKey = `Session (${new Date().toLocaleDateString()})`;
@@ -309,7 +314,7 @@ const Catch5Game = ({activeUser}) => {
       
       {isGameRunning && (
         <div style={{ ...gameBoxStyle, position: "absolute", ...positionStyles[boxPosition], width: `${boxSize}px`, height: `${boxSize}px`, fontSize: `${boxSize / 3}px` }}>
-          <h2>{currentNumber}</h2>
+          <h2 >{currentNumber}</h2>
         </div>
       )}
 
@@ -333,6 +338,13 @@ const Catch5Game = ({activeUser}) => {
           <button onClick={() => {handleSaveResults();}}>שמור תוצאות</button>
         </div>
       )}
+         {showAlert && (
+           <AlertDialog 
+          open={showAlert} 
+         title="דרוש משתמש מחובר"
+           message={message}
+          onClose={() => setShowAlert(false)}
+           />  )}
     </div>
   );
 };
@@ -350,15 +362,5 @@ const gameBoxStyle = {
   fontWeight: "bold",
 };
 
-const buttonStyle = {
-  padding: "10px 20px",
-  fontSize: "16px",
-  margin: "10px",
-  backgroundColor: "#007BFF",
-  color: "#fff",
-  border: "none",
-  borderRadius: "5px",
-  cursor: "pointer",
-};
 
 export default Catch5Game;

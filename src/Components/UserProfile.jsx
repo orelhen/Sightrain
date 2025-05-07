@@ -2,8 +2,6 @@ import '../css/ComponentsCss/UserProfile.css';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, onAuthStateChanged, signOut ,firestore,doc, getDoc,setDoc} from "../firebase.js";
-import PatientManagement from './PatientManagment.jsx';
-import MyStats from './MyStats.jsx';
 
 const UserProfile = ({Loggedinuserdata}) => {
   //**********add dinamic user db 
@@ -11,8 +9,6 @@ const UserProfile = ({Loggedinuserdata}) => {
 
   const navigate = useNavigate();
   const auth = getAuth();
-  const [showSummary, setShowSummary] = useState(false);
-  const [selectedSession, setSelectedSession] = useState(null);
 
   const handleLogout = async () => {
     try {
@@ -46,9 +42,7 @@ const UserProfile = ({Loggedinuserdata}) => {
         />
       )}
 
-      <p className="profile-info">
-        <strong>תעודת זהות:</strong> {user?.id}
-      </p>
+      
       <p className="profile-info">
         <strong>שם מלא:</strong> {user?.name}
       </p>
@@ -56,16 +50,14 @@ const UserProfile = ({Loggedinuserdata}) => {
         <strong>כתובת מייל:</strong> {user?.email}
       </p>
       <p className="profile-info">
-        <strong>גיל:</strong> {user?.age}
+        <strong>תאריך לידה:</strong> {user?.age}
       </p>
       {user?.role === "caregiver" && (
         <>
           <p className="profile-info">
-            <strong>בה"ח:</strong> {user?.hospital}
+            <strong>מחלקה:</strong> {user?.department}
           </p>
-          <p className="profile-info">
-            <strong>תפקיד:</strong> {user?.role}
-          </p>
+         
         </>
       )}
       <button onClick={handleLogout}>התנתק</button>

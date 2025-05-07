@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../css/GamesCss/Games.scss';
-
 import { getAuth, firestore, doc, getDoc, setDoc } from '../firebase.js';
+import AlertDialog from '../Components/Alert';
+
+
+
+
 
 const QuickMemoryGame = ({activeUser}) => {
 
@@ -14,7 +18,9 @@ const QuickMemoryGame = ({activeUser}) => {
     const [round, setRound] = useState(1);
     const [results, setResults] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
-    
+    const [message, setMessage] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+
 
     const [isTestMode, setIsTestMode] = useState(false); // Test mode state variable
 
@@ -228,12 +234,15 @@ const QuickMemoryGame = ({activeUser}) => {
                                 
                                 await setDoc(userDoc, userResults, { merge: true });
                                 console.log("Results saved successfully!");
+                                setStage('start');
                             }
                         } else {
-                            alert("אנא התחבר למשתמש על מנת לשמור נתונים.");
+                            setMessage("אנא התחבר כדי לשמור את התוצאות שלך"); 
+                            setShowAlert(true);
+                            setStage('results');
                         }
                     }
-                    setStage('start');
+                   
                 } catch (error) {
                     console.error("Error saving results:", error);
                     alert("שגיאה בשמירת הנתונים, אנא נסה שנית.");
@@ -398,6 +407,13 @@ const QuickMemoryGame = ({activeUser}) => {
                     <button onClick={() => setStage('SaveResults')}>שמור תוצאות</button>
                 </div>
             )}
+             {showAlert && (
+                        <AlertDialog 
+                          open={showAlert} 
+                          title="דרוש משתמש מחובר"
+                     message={message}
+                     onClose={() => setShowAlert(false)}
+                            />  )}
         </div>
     );
 };

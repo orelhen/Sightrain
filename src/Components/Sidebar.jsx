@@ -40,9 +40,6 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
                   onClick={() => { ComponentClick('HomePage'); handleSetLastClicked('HomePage'); }}>
                   דף הבית <i className="fa-solid fa-house"></i>
                 </button>
-              <button 
-                className={lastclicked === 'videos' ? 'active' : ''} onClick={() => { ComponentClick('videos'); handleSetLastClicked('videos'); }}>סרטונים <i className="fa-solid fa-film"></i>
-              </button>
               </>
             )}
 
@@ -67,9 +64,6 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
                 className={lastclicked === 'Statistics' ? 'active' : ''} 
                onClick={() => { ComponentClick('Statistics'); handleSetLastClicked('Statistics'); }}>סטטיסטיקה 
                </button>
-               <button 
-                className={lastclicked === 'videos' ? 'active' : ''} onClick={() => { ComponentClick('videos'); handleSetLastClicked('videos'); }}>סרטונים <i className="fa-solid fa-film"></i>
-                </button>
                 </>
             )}
 
@@ -90,9 +84,7 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
               className={lastclicked === 'Statistics' ? 'active' : ''} 
               onClick={() => { ComponentClick('Statistics'); handleSetLastClicked('Statistics'); }}>סטטיסטיקה 
               </button>
-              <button 
-                className={lastclicked === 'videos' ? 'active' : ''} onClick={() => { ComponentClick('videos'); handleSetLastClicked('videos'); }}>סרטונים <i className="fa-solid fa-film"></i>
-              </button>
+              
 
            </> )}
 
@@ -139,6 +131,9 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
               <h3>אימון ראיה <i className="fa-regular fa-eye"></i></h3>
               <button 
                 className={lastclicked === 'SmoothPursuitExercise' ? 'active' : ''} onClick={() => { ComponentClick('SmoothPursuitExercise'); handleSetLastClicked('SmoothPursuitExercise'); }}>תנועה חלקה <i></i>
+              </button>
+              <button 
+                className={lastclicked === 'videos' ? 'active' : ''} onClick={() => { ComponentClick('videos'); handleSetLastClicked('videos'); }}>סרטונים <i className="fa-solid fa-film"></i>
               </button>
             </div>  
           </>

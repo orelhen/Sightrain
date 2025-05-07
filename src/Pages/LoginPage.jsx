@@ -62,13 +62,16 @@ function LoginPage() {
     
     return (
         <section className="form-container">
+            
             <div className="form-content">
-                <h2>התחברות</h2>
+            <h1 className="main_logo">SighTrain</h1>
+                
                 <form onSubmit={handleSubmit}>
+                <h2>התחברות</h2>
                     <input
                         type="text"
                         id="username"
-                        placeholder="כתובת דואר אלקטרוני"
+                        placeholder="כתובת דואר אלקטרוני/מספר משתמש"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
@@ -83,7 +86,7 @@ function LoginPage() {
                     />
                     <button type="submit">התחבר</button>
                 </form>
-                    אין לך משתמש?{' '}
+                <p>אין לך משתמש?</p>
                     <button onClick={navigateToRegister}>
                         הרשם
                     </button>
@@ -92,19 +95,23 @@ function LoginPage() {
                     </button>
             </div>
             <div className="iframe_bg">
-                  <iframe
-                    className="main_iframe"
-                    title="Eye Training Image"
-                    />
+            <iframe
+  className="main_iframe"
+  title="Eye Training Image"
+  
+/>
+
                 <div className="why_overlay_btn"></div>
                 <div className="why_overlay_btn">
-                    <a href="#why">למה?</a>
+                    <a href="#why">למה אנחנו?</a>
                 </div>
+                
                 <div className="why_overlay">
-                    <p>
-                    ההרשמה לאתר SighTrain מאפשרת לכל משתמש לקבל חוויית אימון אישית וממוקדת. כאשר משתמשים רשומים ומחוברים, המערכת שומרת את כל נתוני ההתקדמות, התוצאות מהאימונים והסטטיסטיקות האישיות שלהם. נתונים אלה מאפשרים למשתמשים ולעוסקים בתחום הרפואה לעקוב מקרוב אחרי השיפור ביכולות הראייה לאורך זמן ולהתאים את תכנית השיקום לפי הצורך.
-                    בנוסף, משתמשים מחוברים נהנים מגישה מותאמת אישית, אפשרות להמשכיות בין מפגשי האימון, שמירת ההעדפות האישיות, ומעקב רציף שמסייע בקידום תהליך השיקום בצורה מדויקת ויעילה יותר.
-                    </p>
+                    
+                    ההרשמה לאתר SighTrain מאפשרת לכל משתמש לקבל חוויית אימון אישית וממוקדת.<br />
+                     כאשר משתמשים רשומים ומחוברים, המערכת שומרת את כל נתוני ההתקדמות, התוצאות מהאימונים והסטטיסטיקות האישיות שלהם.<br /> נתונים אלה מאפשרים למשתמשים ולעוסקים בתחום הרפואה לעקוב מקרוב אחרי השיפור ביכולות הראייה לאורך זמן ולהתאים את תכנית השיקום לפי הצורך.<br />
+                    בנוסף, משתמשים מחוברים נהנים מגישה מותאמת אישית, אפשרות להמשכיות בין מפגשי האימון, שמירת ההעדפות האישיות, ומעקב רציף שמסייע בקידום תהליך השיקום בצורה מדויקת ויעילה יותר.<br />
+                    
                 </div>
             </div>
             {showAlert && (

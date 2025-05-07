@@ -30,11 +30,11 @@
   }
   
   .reg_main {
-    max-width: 60%;
-    width: -webkit-fill-available;
-    text-align: right;
-    direction: rtl;
-  }
+      width: 100%;
+      text-align: right;
+      direction: rtl;
+      padding: 0 15px;
+    }
   
   .reg_main h2 {
     font-family: 'Varela Round';
@@ -46,29 +46,31 @@
   .registration-form-container h2 {
     font-size: 36px;
     margin-bottom: 1em;
+    text-align: right;
   }
   
   .registration-form-container form {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    gap: 1em;
-  }
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      gap: 1em;
+    }
   
   .registration-form-container label {
-    font-size: 16px;
-    font-weight: bold;
-    display: inline-grid;
-    width: 50%;
-    padding: 0 15px;
-  }
+      font-size: 16px;
+      font-weight: bold;
+      display: block;
+      width: 100%;
+      padding: 0 15px;
+      margin-bottom: 10px;
+    }
   
   .registration-form-container input,
   .registration-form-container select {
     height: 50px;
     border-radius: 8px;
     font-size: 14px;
-    width: 100%;
+    width: 90%;
     padding: 15px;
     margin-top: 5px;
     margin-bottom: 0 !important;
@@ -116,32 +118,31 @@
       }
     }
   }
-  
   .reg_btn_container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  
-    p {
-      font-size: 20px !important;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px;
+      text-align: center;
     }
+    
+  .reg_btn_container p {
+      font-size: 20px !important;
   }
   
-  .registration-form-container button {
-    width: 400px;
-    height: 60px;
-    padding: 0.75em;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  
+  .reg_btn_container .register-link {
+      border: none;
+      height: auto;
+      padding: 5px;
   }
   
-  .registration-form-container button:hover {
+  .reg_btn_container .register-link:hover {
+      background-color: transparent;
+      color: #004499;
   }
-  
+
   .registration-form-container p {
     margin-top: 1em;
     font-size: 14px;
@@ -167,41 +168,48 @@
     color: #ff0000;
     font-size: 12px;
   }
-  
-  .icon-selector {
+ 
+  .registration-cards {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 2em;
+    margin: 2em 0;
+    width: 100%;
   }
-  
-  .selected-icon {
-    width: fit-content;
-    border-radius: 50%;
-    padding: 20px;
-    border: 0;
+
+  .registration-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  
-    img {
-      width: 50px;
-      height: 50px;
-    }
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    width: 360px;
+    text-align: center;
   }
-  
-  .icon-list {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 5px;
-    align-items: center;
-  
-    .icon-item {
-      margin: 5px;
-      border: 1px solid transparent;
-      transition: border-color 0.3s;
-      border-radius: 50%;
-      padding: 15px;
-      margin: 5px 10px;
-    }
+
+  .registration-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
+
+  .card-icon {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+  }
+
+  .registration-card h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+  }
+
+  .registration-card p {
+    margin-bottom: 1.5em;
+    color: black;
+  }
+
   

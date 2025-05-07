@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
+import AlertDialog from '../Components/Alert';
+
 
 const symbolSets = {
   numbers: '0123456789'.split(''),
@@ -10,15 +12,19 @@ const symbolSets = {
 };
 
 const ScanningGame = ({activeUser}) => {
+
+  const [message, setMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
+
   const [stage, setStage] = useState('start');
   const [displayTime, setDisplayTime] = useState(1000);
   const [charactersPerRow, setCharactersPerRow] = useState(10);
-  const [spacing, setSpacing] = useState(10);
-  const [fontSize, setFontSize] = useState(24);
-  const [symbolSetType, setSymbolSetType] = useState('letters');
+  const [spacing, setSpacing] = useState(30);
+  const [fontSize, setFontSize] = useState(30);
+  const [symbolSetType, setSymbolSetType] = useState('symbols');
   const [scanDirection, setScanDirection] = useState('ltr');
   const [beepSound, setBeepSound] = useState(false);
-  const [targetChar, setTargetChar] = useState('a');
+  const [targetChar, setTargetChar] = useState('X');
   const [rows, setRows] = useState([]);
   const [currentRowIndex, setCurrentRowIndex] = useState(-1);
   const [visibleChars, setVisibleChars] = useState([]);
@@ -28,7 +34,7 @@ const ScanningGame = ({activeUser}) => {
   const [totalTargets, setTotalTargets] = useState(0);
   const [gameEnd, setGameEnd] = useState(false);
   const [user, setUser] = useState(null);
-  const [numberOfLines, setNumberOfLines] = useState(3);
+  const [numberOfLines, setNumberOfLines] = useState(5);
 
   const auth = getAuth();
   const charIntervalRef = useRef(null);
@@ -39,15 +45,28 @@ const ScanningGame = ({activeUser}) => {
     });
     return () => unsubscribe();
   }, []);
-
   const generateRow = () => {
     const symbols = symbolSets[symbolSetType];
     const row = [];
-    const targetPosition = Math.floor(Math.random() * charactersPerRow);
-    for (let i = 0; i < charactersPerRow; i++) {
-      if (i === targetPosition) {
-        row.push(targetChar);
-      } else {
+    const shouldIncludeTarget = Math.random() <= 0.5; // 50% chance of including target
+    
+    if (shouldIncludeTarget) {
+      // Include target character at random position
+      const targetPosition = Math.floor(Math.random() * charactersPerRow);
+      for (let i = 0; i < charactersPerRow; i++) {
+        if (i === targetPosition) {
+          row.push(targetChar);
+        } else {
+          let randomChar;
+          do {
+            randomChar = symbols[Math.floor(Math.random() * symbols.length)];
+          } while (randomChar === targetChar);
+          row.push(randomChar);
+        }
+      }
+    } else {
+      // Don't include target character
+      for (let i = 0; i < charactersPerRow; i++) {
         let randomChar;
         do {
           randomChar = symbols[Math.floor(Math.random() * symbols.length)];
@@ -55,6 +74,7 @@ const ScanningGame = ({activeUser}) => {
         row.push(randomChar);
       }
     }
+    
     return row;
   };
 
@@ -74,10 +94,7 @@ const ScanningGame = ({activeUser}) => {
         return updated;
       });
 
-      if (beepSound && row[initial + index * direction] === targetChar) {
-        const audio = new Audio('/Sounds/beep.mp3');
-        audio.play().catch(() => {});
-      }
+      
 
       if (row[initial + index * direction] === targetChar) {
         setStartTime(Date.now());
@@ -106,7 +123,12 @@ const ScanningGame = ({activeUser}) => {
     const newRow = generateRow();
     setRows((prev) => [...prev, newRow]);
     setCurrentRowIndex(index);
-    setTotalTargets((prev) => prev + 1);
+    
+    // Only increment totalTargets if the row contains the targetChar
+    if (newRow.includes(targetChar)) {
+      setTotalTargets((prev) => prev + 1);
+    }
+    
     revealRowCharacters(newRow, index);
   };
 
@@ -141,7 +163,8 @@ const ScanningGame = ({activeUser}) => {
   const saveResultsToDatabase = async () => {
     try {
       if (activeUser === "" && !user) {
-        alert("Please log in to save your results.");
+        setMessage("אנא התחבר כדי לשמור את התוצאות שלך"); 
+        setShowAlert(true);
         return;
       }
       
@@ -238,8 +261,8 @@ const ScanningGame = ({activeUser}) => {
             זמן באלפיות שנייה:  {displayTime}: 
               <input
                 type="range"
-                min="50" 
-                max="1000"
+                min="500" 
+                max="2000"
                 step="50"
                 value={displayTime}
                 onChange={(e) => setDisplayTime(Number(e.target.value))}
@@ -319,14 +342,7 @@ const ScanningGame = ({activeUser}) => {
                 onChange={(e) => setTargetChar(e.target.value)}
               />
             </label>
-            <label>
-              השמע צליל:
-              <input
-                type="checkbox"
-                checked={beepSound}
-                onChange={() => setBeepSound((prev) => !prev)}
-              />
-            </label>
+        
           </div>
           
           <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
@@ -368,21 +384,29 @@ const ScanningGame = ({activeUser}) => {
       {stage === 'results' && (
         <div className="results">
           <h2>תוצאות</h2>
-          <p>תו: {targetChar}</p>
-          <p>סה"כ מטרות שהוצגו: {totalTargets}</p>
-          <p>זיהויים נכונים: {correctDetections}</p>
+          <p>התו :{targetChar} ,הוצג סך הכל  {totalTargets} פעמים.</p>
+          <p>כמות לחיצות נכונות: {correctDetections}</p>
           <p>
             זמן תגובה ממוצע:{' '}
             {reactionTimes.length > 0
               ? (
                   reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length
                 ).toFixed(2) + ' אלפיות שנייה'
-              : 'לא זמין'}
+              : 'לא נקלטו לחיצות'}
           </p>
           <button onClick={() => setStage('start')}>שחק שוב</button>
           <button onClick={saveResultsToDatabase}>שמור תוצאות</button>
+          
         </div>
+        
       )}
+      {showAlert && (
+            <AlertDialog 
+              open={showAlert} 
+              title="דרוש משתמש מחובר"
+         message={message}
+         onClose={() => setShowAlert(false)}
+                />  )}
     </div>
   );
 };
