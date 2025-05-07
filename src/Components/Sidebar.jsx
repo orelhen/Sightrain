@@ -25,6 +25,9 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
              className='close_menu' onClick={() => setIsSidebarVisible(false)}><i className="fa-solid fa-xmark"></i>
             </button>
 
+            <div className="sidebar-scroll"> 
+
+
             <div className='primary_btn'>
 
 
@@ -142,6 +145,7 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
             <p>תוכן למטפלים בלבד.</p>
           </div>
         )}
+      </div>
       </div>
     </>
   );
