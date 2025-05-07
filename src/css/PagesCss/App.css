@@ -234,9 +234,9 @@ input[type="range"]::-moz-range-thumb {
 
 /* Color Modes */
 /* Default Light Theme */
-.default{
+/* .default{
 
-}
+} */
 
 .light{
   background-color: white !important;
@@ -473,6 +473,7 @@ select option {
   margin-top: -100px; /* lift the card over the image */
 }
 
+
 .scroll-card {
   position: relative;
   top: -70px; /* lifts the card to overlap the image */
@@ -486,7 +487,8 @@ select option {
 
 .scroll-section {
   
-  padding: 80px 20px;
+  padding: 40px 20px 100px 30px;
+/*        top   right  bottom left */
   border-radius: 17px;
   max-width: 88%;
   margin: auto;
@@ -496,6 +498,7 @@ select option {
 .section-white {
   background-color: #ffffff;
   color: black;
+
 }
 
 .section-gray {
@@ -506,4 +509,95 @@ select option {
 .section-blue {
   background-color: #cbced2;
   color: black
+}
+
+/* DEMO DATA FOR HOMEPAGE */
+
+.stats-cards-row {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 20px 30px;
+  font-size: 20px;
+  font-weight: bold;
+  flex: 1 1 200px;
+  max-width: 250px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stats-charts-row {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 70px;
+}
+
+.chart-box {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  flex: 1 1 400px;
+  max-width: 900px;
+}
+
+
+.faq-list li {
+  margin-bottom: 22px;
+  font-size: 25px;
+  line-height: 1.5;
+}
+
+
+.site-footer {
+  background-color: #222;
+  color: #fff;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 80px;
+}
+
+.site-footer .footer-section p {
+  margin: 8px 0;
+}
+
+
+/* FOOTER */
+
+.site-footer {
+  background-color: #111;
+  color: white;
+  padding: 40px 20px;
+  direction: rtl;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.footer-text {
+  flex: 1;
+  text-align: center;
+  line-height: 1.8;
+  font-size: 12px;
+
+}
+
+.footer-logo {
+  width: 300px; /* Adjust as needed */
+  object-fit:contain;
 }
