@@ -210,7 +210,8 @@ const ScanningGame = ({activeUser}) => {
         
         await setDoc(patientDoc, patientResults, { merge: true });
         console.log("Patient results saved successfully!");
-        alert('Results saved successfully!');
+        
+        setStage('start')
       } else {
         // Save to user document
         if (user) {
@@ -233,7 +234,8 @@ const ScanningGame = ({activeUser}) => {
             
             await setDoc(userDoc, userResults, { merge: true });
             console.log("Results saved successfully!");
-            alert('Results saved successfully!');
+            
+            setStage('start')
           }
         }
       }

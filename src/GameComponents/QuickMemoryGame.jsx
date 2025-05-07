@@ -212,6 +212,7 @@ const QuickMemoryGame = ({activeUser}) => {
                         
                         await setDoc(patientDoc, patientResults, { merge: true });
                         console.log("Patient results saved successfully!");
+                        setStage('start');
                     } else {
                         const currentUser = auth.currentUser;
                         if (currentUser) {

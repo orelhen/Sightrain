@@ -56,10 +56,11 @@ const MainFrame = () => {
                     gameResults: userData.gameResults || {},
                     department: userData.department || null,
                 });
-                if(userData.role === "caregiver")
+                if(userData.role === "caregiver" && activeUser === "") {
                     setActiveComponent('cgHomePage');
-                else 
+                } else {
                     setActiveComponent('HomePage');
+                }
             } else {
                 console.error("No such user document!");
             }
@@ -105,7 +106,7 @@ const MainFrame = () => {
                 {activeComponent === 'profile' && <UserProfile Loggedinuserdata={user}/>}
                 {activeComponent === 'patientManagment' && <PatientManagement setActiveUser={setActiveUser} ComponentClick={setActiveComponent} Loggedinuserdata={user}/>}
                 {activeComponent === 'HomePage' && <HomePage/>}
-                {activeComponent === 'cgHomePage' && <CgHomepage/>}
+                {activeComponent === 'cgHomePage' && <CgHomepage ComponentClick={setActiveComponent} />}
                 {activeComponent === 'manual' && <Manual />}
                 {activeComponent === 'Catch5Game' && <Catch5Game activeUser={activeUser} />}
                 {activeComponent === 'RedSquareGame' && <RedSquareGame  />}

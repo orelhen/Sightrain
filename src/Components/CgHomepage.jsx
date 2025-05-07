@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import FeedbackForm from './feedbackform.jsx';
 
 
-const CgHomepage = () => {
+const CgHomepage = ({ComponentClick}) => {
     const navigate = useNavigate();
 
     const [showFeedback, setShowFeedback] = useState(false);
@@ -37,10 +37,8 @@ const CgHomepage = () => {
 
             <section>
                 <h2>התחילו כאן:</h2>
-                <div className="cta-buttons">
-                    <button className="cta-button">מעבר להדרכה המקוצרת</button>
-                    <button className="cta-button" >עיון בכלים למטפלים</button>
-                </div>
+                    <button className="cta-button" onClick={() => ComponentClick("manual")}>מעבר להדרכה המקוצרת</button>
+
             </section>
             <button onClick={() => setShowFeedback(true)}>שלח משוב על האתר</button>
 

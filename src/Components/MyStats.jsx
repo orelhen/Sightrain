@@ -104,13 +104,14 @@ Object.entries(user?.gameResults || {}).forEach(([date, session]) => {
                     <h3>סיכום תוצאות משחקים</h3>
                     {user?.gameResults ? (
                         <div>
-                            <h4>בחר תאריך:</h4>
+                            
                             <button
                                 onClick={() => setSelectedSession('all')}
                                 className={selectedSession === 'all' ? 'active' : ''}
                             >
                                 כל התאריכים
                             </button>
+                            <h4>בחר תאריך:</h4>
                             
                             <ul className="session-list">
                                 {Object.keys(user.gameResults).map((session) => (
@@ -131,7 +132,27 @@ Object.entries(user?.gameResults || {}).forEach(([date, session]) => {
                             {selectedSession && (
                                 <div>
                                     
-                                    <h4>תוצאות עבור תאריך: {selectedSession === 'all' ? 'כל התאריכים' : selectedSession.replace('Session (', '').replace(')', '')}</h4>
+                                    {(() => {
+                                        // Check if there are any game results
+                                        const hasAnyGameResults = user?.gameResults && 
+                                            Object.values(user.gameResults).some(session => 
+                                                ['QuickMemoryGame', 'Catch5Game', 'ColorShadeGame', 'SaccadeClockGame', 'ScanningGame']
+                                                .some(gameType => session[gameType] && session[gameType].length > 0)
+                                            );
+                                        
+                                        if (!hasAnyGameResults) {
+                                            return <div className="no-stats">לא קיימות סטטיסטיקות למשתמש זה.</div>;
+
+
+                                        }
+                                        
+                                        return (
+                                            <>
+                                                
+                                               
+                                            </>
+                                        );
+                                    })()}
                                     {(() => {
                                         const sessions = selectedSession === 'all' 
                                             ? Object.values(user.gameResults)
@@ -143,12 +164,23 @@ Object.entries(user?.gameResults || {}).forEach(([date, session]) => {
                                         const allSaccadeClockGames = sessions.flatMap(s => s.SaccadeClockGame || []);
                                         const allScanningGames = sessions.flatMap(s => s.ScanningGame || []);
                                     
+                                        // Define hasAnyGameResults here
+                                        const hasAnyGameResults = allQuickMemoryGames.length > 0 || 
+                                            allCatch5Games.length > 0 || 
+                                            allColorShadeGames.length > 0 || 
+                                            allSaccadeClockGames.length > 0 || 
+                                            allScanningGames.length > 0;
+                                            
                                         return (
                                             <>
-                                            <h3>המשחקים ששיחקת </h3>
-                                            <BasicPie QuickMemoryGame={allQuickMemoryGames.length} Catch5Game={allCatch5Games.length}
-                                            ColorShadeGame={allColorShadeGames.length} SaccadeClockGame={allSaccadeClockGames.length} ScanningGame={allScanningGames.length}
-                                            />
+                                            {hasAnyGameResults && ( 
+                                                <>
+                                                 <h3>המשחקים ששיחקת </h3>
+                                                <BasicPie QuickMemoryGame={allQuickMemoryGames.length} Catch5Game={allCatch5Games.length}
+                                                ColorShadeGame={allColorShadeGames.length} SaccadeClockGame={allSaccadeClockGames.length} ScanningGame={allScanningGames.length}
+                                                />
+                                                </>
+                                            )}
                                                 {allQuickMemoryGames.length > 0 && (
                                                     <div>
                                                         <h2>תוצאות משחק זיכרון מהיר:</h2>
@@ -246,8 +278,8 @@ Object.entries(user?.gameResults || {}).forEach(([date, session]) => {
                                                         <table>
                                                             <thead>
                                                                 <tr>
-                                                                    <th>מספר כדורים</th>
-                                                                    <th>גודל כדור</th>
+                                                                    <th>מספר אובייקטים</th>
+                                                                    <th>גודל אובייקט</th>
                                                                     <th>תשובות נכונות</th>
                                                                     <th>תשובות שגויות</th>
                                                                     <th>רמת קושי</th>
@@ -347,8 +379,7 @@ Object.entries(user?.gameResults || {}).forEach(([date, session]) => {
                         </div>
                     ) : (
                         <div>
-                            <p>אין תוצאות משחק להצגה</p>
-                            <p>עבור משתמש מספר {activeUser} </p>
+                          
                         </div>
                     )}
                 </div>
