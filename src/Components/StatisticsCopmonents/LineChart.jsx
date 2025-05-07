@@ -17,18 +17,17 @@ const values = sortedData.map(d => d.avgReaction);
 
 return (
     <div style={{ marginTop: "20px", padding: "20px", background: "#f8f9fa", borderRadius: "12px" }}>
-        <h4 style={{ marginBottom: "10px" }}>📈 זמן תגובה ממוצע למשחק (Catch5)</h4>
         <LineChart
             xAxis={[{
                 data: dates,
-                label: "תאריך",
+                label: "ךיראת",
                 scaleType: "band",
                 tickLabelStyle: { fontSize: 12 },
                 direction: 'ltr',
                 reverse: true
             }]}
             yAxis={[{
-                label: "זמן תגובה (ms)",
+                label: " ןמז",
                 min: 0,
                 tickLabelStyle: { fontSize: 12 }
             }]}
