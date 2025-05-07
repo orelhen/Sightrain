@@ -95,12 +95,11 @@ function LoginPage() {
                     </button>
             </div>
             <div className="iframe_bg">
-            <iframe
-  className="main_iframe"
-  title="Eye Training Image"
-  
-/>
-
+                            <iframe
+                        className="main_iframe"
+                        title="Eye Training Image"
+                        
+                    />          
                 <div className="why_overlay_btn"></div>
                 <div className="why_overlay_btn">
                     <a href="#why">למה אנחנו?</a>

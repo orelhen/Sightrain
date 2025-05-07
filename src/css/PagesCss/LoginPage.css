@@ -43,6 +43,7 @@
     background-size: cover;
     background-position: center;
     position: relative;
+    
   }
   
   .main_iframe {
@@ -52,11 +53,11 @@
     top: 0;
     left: 0;
     border: none;
+    background-image: url('../../assets/SighTrain.jpeg');  background-size: cover;
   }
   
   /* Why overlay styles */
   .why_overlay_btn {
-
     position: absolute;
     z-index: 10;
     top: 10px;
@@ -70,11 +71,12 @@
     background: #000;
     border-radius: 15px;
     transition: background-color 0.3s ease;
+    
   }
   
   .why_overlay_btn a:hover {
     background-color: #fff;
-    color: #000;
+    color: #000;  
   }
   
   .why_overlay {
@@ -84,7 +86,7 @@
     height: 100%;
     background: #000000d4;
     opacity: 0;
-    transition: opacity 0.5s;
+    transition: opacity 4s;
     display: flex;
     align-items: center;
     justify-content: center;

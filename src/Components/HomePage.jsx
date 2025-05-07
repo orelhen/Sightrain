@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  
 import FeedbackForm from './feedbackform.jsx';
-import sighTrainImage from '../assets/SighTrain.jpeg';
+import sighTrainImage from '../assets/SighTrain.jpeg'
+
+;
 const HomePage = () => {
     const navigate = useNavigate();
     const [showFeedback, setShowFeedback] = useState(false);
