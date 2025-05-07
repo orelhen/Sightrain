@@ -12,18 +12,18 @@ const Manual = () => {
                 <li>בנוסף תוכלו לראות תוצאות עבור כל מטופל במשתמש שלו באיזור הסטטיסטיקה.</li>
                 <h1>איך מתחילים?</h1>
                 <li>1.הכנסו לאיזור ניהול המטופלים בתפריט</li><br></br>     
-                <img src={`${process.env.PUBLIC_URL}/images/manu_patiant_managment.png`} alt="הוראות התחברות מטופל" />
+                <img src={"../images/manu_patiant_managment.png"} alt="הוראות התחברות מטופל" />
                 <br></br><br></br><li>2.לחצו על כפתור "הוסף מטופל חדש" עבור המטופל שלכם</li>
                 <li>הכנסו מספר זיהוי(חובה) עבור המטופל ואת שם המטופל(לא חובה)  ושמרו.</li>
-                <img src={`${process.env.PUBLIC_URL}/images/manu_save_new_patient.png`} alt="הוראות התחברות מטופל" />
+                <img src={"../images/manu_save_new_patient.png"} alt="הוראות התחברות מטופל" />
                 <li>3.לחצו על כפתור "התחבר" עבור המטופל הרצוי בטבלת המטופלים.</li>
-                <img src={`${process.env.PUBLIC_URL}/images/manu_login_patient.png`} alt="הוראות התחברות מטופל" />
+                <img src={"../images/manu_login_patient.png"} alt="הוראות התחברות מטופל" />
                 <li>בשלב זה, המערכת מחוברת למשתמש המטופל ומועברת בחזרה לאתר עם גישה לכלל המשחקים.</li>
                 <br></br>
                 <li>4.הציגו למטופל את האתר והכווינו אותו למשחקים הרלוונטיים, <br></br> חשוב לזכור לשמור את תוצאות המשחק לאחר כל משחק.</li>
                 <br></br>
                 <li>5.לאחר סיום הסשן עם המטופל, תוכלו ללחוץ על "התנתק" בתפריט ולחזור לאיזור ניהול המטופלים.</li>
-                <img src={`${process.env.PUBLIC_URL}/images/manu_logout_patient.png`} alt="הוראות התחברות מטופל" />
+                <img src={"../images/manu_logout_patient.png"} alt="הוראות התחברות מטופל" />
                 <li>כלל המטופלים יוכלו להתחבר למערכת מהבית דרך קישור האינטרנט.</li>
                 <li>על מנת שמטופל יתחבר מהבית יש לספק לו את מספר המשתמש שלו, וקוד הכניסה (כרגע 1234) </li>
             </ol>
