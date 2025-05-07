@@ -84,7 +84,7 @@
     top: 0;
     right: -500px; /* Initially hidden - match full width */
     height: 100%;
-    width: 500px;
+    width: 450px;
     background: #000;
     z-index: 1000; /* High z-index to ensure it's above other elements */
     padding: 7em 5em;
@@ -164,8 +164,15 @@
 
 .sidebar.visible {
     right: 0;
-    opacity: 1;
+    opacity: 0.9;
     visibility: visible;
-    transition: 0.8s all;
+    transition: 1.1s all;
+
+}
+
+.sidebar-scroll {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 15em; // add padding to the bottom to prevent content from being cut off
 
 }

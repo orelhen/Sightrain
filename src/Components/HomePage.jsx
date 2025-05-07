@@ -1,72 +1,70 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  
 import FeedbackForm from './feedbackform.jsx';
-
+import sighTrainImage from '../assets/SighTrain.jpeg';
 const HomePage = () => {
     const navigate = useNavigate();
     const [showFeedback, setShowFeedback] = useState(false);
    
     return (
+
+        
         <div className="home-container" id="home">
             {/* Original sections remain the same */}
             {/* Original sections remain the same */}
-            <section className="hero-section">
-                <h2>ברוכים הבאים ל-SighTrain</h2>
+
+            <section className="hero-fullscreen">
+            <div className="overlay">
+                <h2> תרגול יומי לשינוי מהותי - משקמים את הראיה</h2>
+            </div>
+            </section>
+            
+            {/* <section className="hero-section">
+                <h2> ברוכים הבאים</h2>
                 <p>
-                    ב-SighTrain, אנחנו ממציאים מחדש את הדרך שבה המוח והעיניים עובדים יחד. <br /> 
+                    אנחנו ממציאים מחדש את הדרך שבה המוח והעיניים עובדים יחד. <br /> 
                     הפלטפורמה שלנו משלבת מדע, טכנולוגיה וחוויות מהנות כדי ליצור מרחב שבו ההתקדמות לא רק אפשרית אלא גם מהנה. <br /> 
                     בין אם אתם חוקרים משחקים אינטראקטיביים או משתתפים בסשנים מונחים בוידאו, SighTrain כאן כדי לעזור לחזק קשרים ולעורר צמיחה.<br /> 
                 </p>
+            </section> */}
+            <div className="scroll-card-wrapper">
+            <section className="scroll-section section-white">
+                <h2>ברוכים הבאים</h2>
+                <p>אנחנו ממציאים מחדש את הדרך שבה המוח והעיניים עובדים יחד...</p>
+                <li>משחקי אימון עיניים דינמיים שמאתגרים ומהנים</li>
+                <li>סשנים מונחים בוידאו לשיפור הריכוז והתיאום</li>
+                <li>מעקב התקדמות בזמן אמת עם נתונים מעמיקים</li>
+                <li>נגיש מכל מקום עם עיצוב ידידותי למשתמש</li>
+                
             </section>
-            
-            {/* תכונות המערכת */}
-            <section className="hero-section" id="features">
+
+            <section className="scroll-section section-gray">
                 <h2>מה הופך את SighTrain לייחודית?</h2>
-                <ul className="benefits-list">
-                    <li>משחקי אימון עיניים דינמיים שמאתגרים ומהנים</li>
-                    <li>סשנים מונחים בוידאו לשיפור הריכוז והתיאום</li>
-                    <li>מעקב התקדמות בזמן אמת עם נתונים מעמיקים</li>
-                    <li>נגיש מכל מקום עם עיצוב ידידותי למשתמש</li>
+                <ul>
+                <li>🎮 משחקים דינמיים</li>
+                <li>📊 מעקב מדויק</li>
+                <li>📺 סשנים מודרכים</li>
                 </ul>
             </section>
 
-            {/* קטע קריאה לפעולה */}
-
-            <section className="hero-section" id="about-visual-field-loss">
-                <h2>אודות אובדן שדה ראייה</h2>
-                <h3>מהו אובדן שדה ראייה?</h3>
-                <p>
-                    שדה הראייה הוא כל המרחב שאדם יכול לראות סביבו מבלי להזיז את עיניו. אם אזורים במוח המעורבים בעיבוד ראייה אינם מתפתחים כרגיל או נפגעים עקב מצב רפואי, אזי יכול להתרחש אובדן שדה ראייה. 
-                    האובדן יכול להיות מלא או חלקי. אם יש לכם אובדן כזה, סביר להניח שלא תראו אותו כאזור חשוך בשדה הראייה שלכם. במקום זאת, שדה הראייה החסר פשוט אינו קיים, כמו שאיננו רואים בדרך כלל מאחורינו מבלי להזיז את הראש והעיניים.
-                </p>
-                <h3>מהי המיאנופיה?</h3>
-                <p>
-                    אובדן של מחצית משדה הראייה הרגיל, כפי שנראה דרך שתי העיניים, נקרא המיאנופיה. זה יכול להתרחש אם רק צד אחד של מערכת עיבוד הראייה במוח אינו פועל כרגיל. 
-                    זה יכול לקרות לאחר שבץ. מערכת עיבוד הראייה במוח מאורגנת בדרך כלל כך שניתן לחזות דפוסי אובדן שדה ראייה ממיקום הפגיעה במוח. לדוגמה, פגיעה נרכשת בצד השמאלי של מערכת עיבוד הראייה במוח יכולה להוביל להמיאנופיה בצד ימין, ולהפך. 
-                    חשוב לציין שהמיאנופיה אינה תמיד מלאה וחלק מהחצי הפגוע של שדה הראייה עשוי עדיין לתפקד.
-                </p>
-                <h3>מהי פגיעה מוחית בראייה?</h3>
-                <p>
-                    פגיעה מוחית בראייה (CVI) היא מונח כולל המשמש לתיאור ספקטרום של קשיי ראייה שמקורם במוח. עד 1 מתוך 30 ילדים סובלים מקשיי ראייה הקשורים ל-CVI. 
-                    כ-1 מתוך 6 ילדים המאובחנים עם CVI סובלים מהמיאנופיה, ועד 1 מתוך 2 ילדים המאובחנים עם CVI סובלים מצורות אחרות של אובדן שדה ראייה כגון שדות ראייה מצומצמים או אובדן שדה ראייה תחתון.
-                </p>
+            <section className="scroll-section section-blue">
+                <h2>אובדן שדה ראייה</h2>
+                <p>שדה הראייה הוא כל המרחב שאדם יכול לראות סביבו...</p>
             </section>
+            </div>
 
-            <section className="hero-section video">
+        
+            {/* <section className="hero-section video">
                 <h2>ראו את SighTrain בפעולה</h2>
                 <video controls className="highlight-video">...</video>
-            </section>
+            </section> */}
 
-            <section className="hero-section faq">
-                <h2>שאלות נפוצות</h2>
-                <div className="faq-item">...</div>
-            </section>
-            <section className="hero-section call-to-action">
+            {/* <section className="hero-section call-to-action">
                 <h2>הצטרפו למסע עם SighTrain</h2>
                 <p>
                     הצטרפו למסע לחיזוק הקשרים. עם SighTrain אתם מנצלים את הפוטנציאל של העיניים שלכם.
                 </p>
-            </section>
+            </section> */}
             
             {/* Other sections remain the same */}
 
