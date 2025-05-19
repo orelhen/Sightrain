@@ -126,6 +126,16 @@ const RegisterPage = () => {
                     <div 
                         className="registration-card caregiver-card"
                         onClick={() => {
+                            // Show prompt for caregiver code
+                            
+                            const caregiverCode = prompt("אנא הזן קוד מטפל:");
+                            // Check if code is correct - use a proper validation in production
+                            if (caregiverCode !== "TOM") { // Replace with your actual verification logic
+                                alert("קוד שגוי. רק מטפלים מורשים יכולים להירשם.");
+                                return; // Stop the registration process if code is incorrect
+                            }
+
+                            // If code is correct, continue with registration
                             setRole('caregiver');
                             setShowRegistrationForm(true);
                             setShowRegistrationType(false);

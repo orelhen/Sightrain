@@ -116,21 +116,24 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
           <>
             <h3>משחקים <i className="fa-solid fa-brain"></i></h3>
             <div className='games_btn'>
-              <button
-               className={lastclicked === 'Catch5Game' ? 'active' : ''} onClick={() => { ComponentClick('Catch5Game'); handleSetLastClicked('Catch5Game'); }}>לתפוס 5
-              </button>
+              
               <button 
                 className={lastclicked === 'QuickMemoryGame' ? 'active' : ''} onClick={() => { ComponentClick('QuickMemoryGame'); handleSetLastClicked('QuickMemoryGame'); }}>משחק זכרון
               </button>
               <button 
                 className={lastclicked === 'ColorShadeGame' ? 'active' : ''} onClick={() => { ComponentClick('ColorShadeGame'); handleSetLastClicked('ColorShadeGame'); }}>צבעים
               </button>
-              <button 
-                className={lastclicked === 'ClockSaccada' ? 'active' : ''} onClick={() => { ComponentClick('ClockSaccada'); handleSetLastClicked('ClockSaccada'); }}>סאקדת שעון
-              </button>
+            
               <button 
                 className={lastclicked === 'Scanning' ? 'active' : ''} onClick={() => { ComponentClick('Scanning'); handleSetLastClicked('Scanning'); }}> סריקה
               </button>
+              <button 
+                className={lastclicked === 'ClockSaccada' ? 'active' : ''} onClick={() => { ComponentClick('ClockSaccada'); handleSetLastClicked('ClockSaccada'); }}>סאקדת שעון
+              </button>
+              <button
+               className={lastclicked === 'Catch5Game' ? 'active' : ''} onClick={() => { ComponentClick('Catch5Game'); handleSetLastClicked('Catch5Game'); }}>לתפוס 5
+              </button>
+
               <h3>אימון ראיה <i className="fa-regular fa-eye"></i></h3>
               <button 
                 className={lastclicked === 'SmoothPursuitExercise' ? 'active' : ''} onClick={() => { ComponentClick('SmoothPursuitExercise'); handleSetLastClicked('SmoothPursuitExercise'); }}>תנועה חלקה <i></i>

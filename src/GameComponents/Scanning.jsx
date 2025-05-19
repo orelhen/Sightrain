@@ -4,7 +4,6 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
 import AlertDialog from '../Components/Alert';
 
-
 const symbolSets = {
   numbers: '0123456789'.split(''),
   letters: 'abcdefghijklmnopqrstuvwxyz'.split(''),
@@ -12,10 +11,8 @@ const symbolSets = {
 };
 
 const ScanningGame = ({activeUser}) => {
-
   const [message, setMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
-
   const [stage, setStage] = useState('start');
   const [displayTime, setDisplayTime] = useState(1000);
   const [charactersPerRow, setCharactersPerRow] = useState(10);
@@ -35,6 +32,27 @@ const ScanningGame = ({activeUser}) => {
   const [gameEnd, setGameEnd] = useState(false);
   const [user, setUser] = useState(null);
   const [numberOfLines, setNumberOfLines] = useState(5);
+  
+  // Test mode variables
+  const [isTestMode, setIsTestMode] = useState(false);
+  const [testLevel, setTestLevel] = useState(1);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [testComplete, setTestComplete] = useState(false);
+  const [finalLevel, setFinalLevel] = useState(0);
+
+  // Test configuration levels
+  const testConfig = [
+    { level: 1, charactersPerRow: 10, displayTime: 1500, spacing: 15, fontSize: 40, numberOfLines: 5, scanDirection: 'rtl', symbolSetType: 'numbers' },
+    { level: 2, charactersPerRow: 10, displayTime: 1300, spacing: 15, fontSize: 38, numberOfLines: 5, scanDirection: 'ltr', symbolSetType: 'letters' },
+    { level: 3, charactersPerRow: 12, displayTime: 1200, spacing: 17, fontSize: 36, numberOfLines: 5, scanDirection: 'rtl', symbolSetType: 'symbols' },
+    { level: 4, charactersPerRow: 12, displayTime: 1100, spacing: 18, fontSize: 34, numberOfLines: 5, scanDirection: 'ltr', symbolSetType: 'numbers' },
+    { level: 5, charactersPerRow: 14, displayTime: 1000, spacing: 20, fontSize: 32, numberOfLines: 6, scanDirection: 'rtl', symbolSetType: 'letters' },
+    { level: 6, charactersPerRow: 15, displayTime: 900, spacing: 22, fontSize: 30, numberOfLines: 6, scanDirection: 'ltr', symbolSetType: 'symbols' },
+    { level: 7, charactersPerRow: 16, displayTime: 800, spacing: 25, fontSize: 28, numberOfLines: 7, scanDirection: 'rtl', symbolSetType: 'numbers' },
+    { level: 8, charactersPerRow: 18, displayTime: 700, spacing: 30, fontSize: 26, numberOfLines: 7, scanDirection: 'ltr', symbolSetType: 'letters' },
+    { level: 9, charactersPerRow: 19, displayTime: 600, spacing: 35, fontSize: 24, numberOfLines: 8, scanDirection: 'rtl', symbolSetType: 'symbols' },
+    { level: 10, charactersPerRow: 20, displayTime: 500, spacing: 40, fontSize: 22, numberOfLines: 8, scanDirection: 'ltr', symbolSetType: 'numbers' },
+  ];
 
   const auth = getAuth();
   const charIntervalRef = useRef(null);
@@ -45,6 +63,21 @@ const ScanningGame = ({activeUser}) => {
     });
     return () => unsubscribe();
   }, []);
+
+  // Apply test configuration based on current level
+  useEffect(() => {
+    if (isTestMode && testLevel <= testConfig.length) {
+      const config = testConfig[testLevel - 1];
+      setCharactersPerRow(config.charactersPerRow);
+      setDisplayTime(config.displayTime);
+      setSpacing(config.spacing);
+      setFontSize(config.fontSize);
+      setNumberOfLines(config.numberOfLines);
+      setScanDirection(config.scanDirection);
+      setSymbolSetType(config.symbolSetType);
+    }
+  }, [testLevel, isTestMode]);
+
   const generateRow = () => {
     const symbols = symbolSets[symbolSetType];
     const row = [];
@@ -94,8 +127,6 @@ const ScanningGame = ({activeUser}) => {
         return updated;
       });
 
-      
-
       if (row[initial + index * direction] === targetChar) {
         setStartTime(Date.now());
       }
@@ -132,18 +163,6 @@ const ScanningGame = ({activeUser}) => {
     revealRowCharacters(newRow, index);
   };
 
-  const startGame = () => {
-    setStage('play');
-    setRows([]);
-    setVisibleChars([]);
-    setCurrentRowIndex(-1);
-    setReactionTimes([]);
-    setCorrectDetections(0);
-    setTotalTargets(0);
-    setGameEnd(false);
-    setStartTime(null);
-    showNextRow(0);
-  };
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -153,12 +172,57 @@ const ScanningGame = ({activeUser}) => {
           const reactionTime = now - startTime;
           setReactionTimes((prev) => [...prev, reactionTime]);
           setCorrectDetections((prev) => prev + 1);
+          setStartTime(null);
+          
+          if (isTestMode) {
+            setCorrectAnswers((prev) => prev + 1);
+          }
         }
       }
     };
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [stage, startTime]);
+  }, [stage, startTime, isTestMode]);
+
+  // Handle test level progression
+  useEffect(() => {
+    if (isTestMode && gameEnd) {
+      // If success rate is acceptable, move to next level
+      const successRate = correctDetections / totalTargets;
+      
+      if (successRate >= 0.7 && testLevel < testConfig.length) {
+        // Progress to next level
+        setFinalLevel(testLevel);
+        setTestLevel((prev) => prev + 1);
+        // Reset for next level
+        setTimeout(() => {
+          setRows([]);
+          setVisibleChars([]);
+          setCurrentRowIndex(-1);
+          setReactionTimes([]);
+          setCorrectDetections(0);
+          setTotalTargets(0);
+          setGameEnd(false);
+          setStartTime(null);
+          setStage('play');
+          showNextRow(0);
+        }, 700);
+      } else {
+        // End test
+        setFinalLevel(testLevel);
+        setTestComplete(true);
+          // Apply level 1 settings immediately
+        const config = testConfig[0];
+        setCharactersPerRow(config.charactersPerRow);
+        setDisplayTime(config.displayTime);
+        setSpacing(config.spacing);
+        setFontSize(config.fontSize);
+        setNumberOfLines(config.numberOfLines);
+        setScanDirection(config.scanDirection);
+        setSymbolSetType(config.symbolSetType);
+      }
+    }
+  }, [gameEnd, isTestMode, correctDetections, totalTargets]);
 
   const saveResultsToDatabase = async () => {
     try {
@@ -184,6 +248,8 @@ const ScanningGame = ({activeUser}) => {
         scanDirection,
         targetChar,
         numberOfLines,
+        isTestMode,
+        ...(isTestMode && { finalLevel, testLevel }),
         timestamp: new Date().toISOString()
       };
 
@@ -245,114 +311,258 @@ const ScanningGame = ({activeUser}) => {
     }
   };
 
+  // Ensure test settings are applied properly before starting the game
+  const startGame = () => {
+     // For test mode, reset to level 1 and apply level 1 settings immediately
+     if (isTestMode) {
+      setTestLevel(1);
+      setCorrectAnswers(0);
+      setTestComplete(false);
+      setFinalLevel(0);
+      
+      // Apply level 1 settings immediately
+      const config = testConfig[0];
+      setCharactersPerRow(config.charactersPerRow);
+      setDisplayTime(config.displayTime);
+      setSpacing(config.spacing);
+      setFontSize(config.fontSize);
+      setNumberOfLines(config.numberOfLines);
+      setScanDirection(config.scanDirection);
+      setSymbolSetType(config.symbolSetType);
+      // Give settings time to apply before starting the game
+      setTimeout(() => {
+        setStage('play');
+        showNextRow(0);
+      }, 100);
+    } else {
+      // For regular mode, start immediately
+      setStage('play');
+      showNextRow(0);
+    }
+    // Reset game state
+    setRows([]);
+    setVisibleChars([]);
+    setCurrentRowIndex(-1);
+    setReactionTimes([]);
+    setCorrectDetections(0);
+    setTotalTargets(0);
+    setGameEnd(false);
+    setStartTime(null);
+  
+  };
+
+
+  // Define difficulty presets
+  const difficultyPresets = [
+    { 
+      name: "קל מאוד", 
+      displayTime: 2000, 
+      charactersPerRow: 8, 
+      spacing: 15, 
+      fontSize: 42,
+      numberOfLines: 4,
+      symbolSetType: 'numbers',
+      scanDirection: 'ltr'
+    },
+    { 
+      name: "קל", 
+      displayTime: 1500, 
+      charactersPerRow: 10, 
+      spacing: 20, 
+      fontSize: 38,
+      numberOfLines: 5,
+      symbolSetType: 'numbers',
+      scanDirection: 'ltr'
+    },
+    { 
+      name: "בינוני", 
+      displayTime: 1200, 
+      charactersPerRow: 12, 
+      spacing: 30, 
+      fontSize: 34,
+      numberOfLines: 5,
+      symbolSetType: 'letters',
+      scanDirection: 'rtl'
+    },
+    { 
+      name: "קשה", 
+      displayTime: 900, 
+      charactersPerRow: 15, 
+      spacing: 40, 
+      fontSize: 30,
+      numberOfLines: 6,
+      symbolSetType: 'letters',
+      scanDirection: 'ltr'
+    },
+    { 
+      name: "קשה מאוד", 
+      displayTime: 700, 
+      charactersPerRow: 18, 
+      spacing: 45, 
+      fontSize: 26,
+      numberOfLines: 8,
+      symbolSetType: 'symbols',
+      scanDirection: 'rtl'
+    }
+  ];
+
+  // Function to apply preset
+  const applyPreset = (preset) => {
+    setDisplayTime(preset.displayTime);
+    setCharactersPerRow(preset.charactersPerRow);
+    setSpacing(preset.spacing);
+    setFontSize(preset.fontSize);
+    setNumberOfLines(preset.numberOfLines);
+    setSymbolSetType(preset.symbolSetType);
+    setScanDirection(preset.scanDirection);
+  };
+
   return (
     <div className="game">
       {stage === 'start' && (
         <div>
-          <h2>סריקה</h2>
+          <h2>סריקה לרוחב</h2>
           <div className="gamedesc">
-         <h3>
-          <></>
-         משחק זה נועד לשפר את מהירות הסריקה החזותית, זיהוי דפוסים ותגובה מהירה.<br/>
-        בכל סבב מופיעה שורת תווים, כאשר כל תו נחשף אחד אחרי השני, בהתאם לכיוון שנבחר (מימין לשמאל או משמאל לימין).<br/>
-        המטרה היא לזהות תו מטרה שהוגדר מראש – ברגע שהמשתמש מזהה את התו, עליו ללחוץ על מקש הרווח במהירות האפשרית.<br/>
-         </h3>
-         </div> 
-          <div className="settings">
-            <label>
-            זמן באלפיות שנייה:  {displayTime}: 
-              <input
-                type="range"
-                min="500" 
-                max="2000"
-                step="50"
-                value={displayTime}
-                onChange={(e) => setDisplayTime(Number(e.target.value))}
-              />
-            </label>
-            <label>
-              מספר שורות: {numberOfLines}
-              <input
-                type="range"
-                min="3"
-                max="25"
-                step="1"
-                value={numberOfLines}
-                onChange={(e) => setNumberOfLines(Number(e.target.value))}
-              />
-            </label>
-            <label>
-              מספר סמלים בכל שורה:{charactersPerRow}
-              <input
-                type="range"
-                min="5"
-                max="20"
-                step="1"
-                value={charactersPerRow}
-                onChange={(e) => setCharactersPerRow(Number(e.target.value))}
-              />
-            </label>
-            <label>
-               רווח בין סמלים : {spacing}
-              <input
-                type="range"
-                min="5"
-                max="120"
-                step="1"
-                value={spacing}
-                onChange={(e) => setSpacing(Number(e.target.value))}
-              />
-            </label>
-            <label>
-              גודל הגופן: {fontSize}
-              <input
-                type="range"
-                min="12"
-                max="48"
-                step="1"
-                value={fontSize}
-                onChange={(e) => setFontSize(Number(e.target.value))}
-              />
-            </label>
-            <label>
-             סוגי סמלים:
-              <select
-                value={symbolSetType}
-                onChange={(e) => setSymbolSetType(e.target.value)}
-              >
-                <option value="numbers">מספרים</option>
-                <option value="letters">אותיות</option>
-                <option value="symbols">סמלים</option>
-              </select>
-            </label>
-            <label>
-              כיוון סריקה:
-              <select
-                value={scanDirection}
-                onChange={(e) => setScanDirection(e.target.value)}
-              >
-                <option value="ltr"> מימין לשמאל</option> 
-                <option value="rtl">משמאל לימין </option>
-              </select>
-            </label>
-            <label>
-              חפש את הסמל:
-              <input
-                type="text"
-                maxLength="1"
-                value={targetChar}
-                onChange={(e) => setTargetChar(e.target.value)}
-              />
-            </label>
-        
+            <h3>
+              משחק זה נועד לשפר את מהירות הסריקה החזותית, זיהוי דפוסים ותגובה מהירה.<br/>
+              בכל סבב מופיעה שורת תווים, כאשר כל תו נחשף אחד אחרי השני, בהתאם לכיוון שנבחר (מימין לשמאל או משמאל לימין).<br/>
+              המטרה היא לזהות תו מטרה שהוגדר מראש – ברגע שהמשתמש מזהה את התו, עליו ללחוץ על מקש הרווח במהירות האפשרית.<br/>
+            </h3>
+            <button onClick={() => setIsTestMode((prev) => !prev)}>
+            {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>
+          </button>
           </div>
           
-          <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
+        
+          
+          {!isTestMode && (
+            <div className="settings">
+         
+              <div className="presets">
+              <h4>בחר רמת קושי:</h4>
+              {difficultyPresets.map((preset, index) => (
+                <button 
+                  key={index} 
+                  className="preset-button" 
+                  onClick={() => applyPreset(preset)}
+                >
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+            <div class="divider"></div>
+            <div  className="settings-controls">
+            <h3>הגדרות משחק:</h3>
+              <label>
+                זמן באלפיות שנייה: {displayTime}:
+                <input
+                  type="range"
+                  min="500" 
+                  max="2000"
+                  step="50"
+                  value={displayTime}
+                  onChange={(e) => setDisplayTime(Number(e.target.value))}
+                />
+              </label>
+              <label>
+                מספר שורות: {numberOfLines}
+                <input
+                  type="range"
+                  min="3"
+                  max="25"
+                  step="1"
+                  value={numberOfLines}
+                  onChange={(e) => setNumberOfLines(Number(e.target.value))}
+                />
+              </label>
+              <label>
+                מספר סמלים בכל שורה:{charactersPerRow}
+                <input
+                  type="range"
+                  min="5"
+                  max="20"
+                  step="1"
+                  value={charactersPerRow}
+                  onChange={(e) => setCharactersPerRow(Number(e.target.value))}
+                />
+              </label>
+              <label>
+                רווח בין סמלים : {spacing}
+                <input
+                  type="range"
+                  min="5"
+                  max="120"
+                  step="1"
+                  value={spacing}
+                  onChange={(e) => setSpacing(Number(e.target.value))}
+                />
+              </label>
+              <label>
+                גודל הגופן: {fontSize}
+                <input
+                  type="range"
+                  min="12"
+                  max="48"
+                  step="1"
+                  value={fontSize}
+                  onChange={(e) => setFontSize(Number(e.target.value))}
+                />
+              </label>
+              <label>
+                סוגי סמלים:
+                <select
+                  value={symbolSetType}
+                  onChange={(e) => setSymbolSetType(e.target.value)}
+                >
+                  <option value="numbers">מספרים</option>
+                  <option value="letters">אותיות</option>
+                  <option value="symbols">סמלים</option>
+                </select>
+              </label>
+              <label>
+                כיוון סריקה:
+                <select
+                  value={scanDirection}
+                  onChange={(e) => setScanDirection(e.target.value)}
+                >
+                  <option value="ltr">מימין לשמאל</option> 
+                  <option value="rtl">משמאל לימין</option>
+                </select>
+              </label>
+              <label>
+                חפש את הסמל:
+                <input
+                  type="text"
+                  maxLength="1"
+                  value={targetChar}
+                  onChange={(e) => setTargetChar(e.target.value)}
+                />
+              </label>
+            </div>
+            </div>
+          )}
+          
+          {isTestMode && (
+            <div className="test-mode-info">
+              <h2>מצב מבדק</h2>
+              <h3>המבדק יתחיל עם מהירות איטית יותר ומעט סימנים, והקושי יגבר בהדרגה</h3>
+              <h3>המבדק יימשך עד 10 שלבים</h3>
+              <h3>המבדק נועד לבדוק מה רמת הקושי המומלץ עבורך!</h3>
+            </div>
+          )}
+          
+          <button className='start_game' onClick={startGame}>
+            {isTestMode ? 'התחל מבדק' : 'התחל משחק'} <i className="fa-solid fa-play"></i>
+          </button>
         </div>
       )}
 
       {stage === 'play' && (
         <div className="game-area">
+          <div className="target-display">
+            <h3>לחץ על מקש הרווח בכל פעם שמופיע התו: <span>{targetChar}</span></h3>
+            {isTestMode && <h3>רמה {testLevel}/{testConfig.length}</h3>}
+          </div>
           {visibleChars.map((row, i) => (
             <div
               key={i}
@@ -368,8 +578,8 @@ const ScanningGame = ({activeUser}) => {
                   key={j}
                   style={{
                     display: 'inline-block',
-                    width: `${fontSize * 0.6 }px`,  
-                    height: `${fontSize* 1.2 }px`,
+                    width: `${fontSize * 0.6}px`,  
+                    height: `${fontSize * 1.2}px`,
                     marginRight: `${spacing}px`,
                     fontSize: `${fontSize}px`,  
                     textAlign: 'center',
@@ -383,10 +593,18 @@ const ScanningGame = ({activeUser}) => {
         </div>
       )}
 
-      {stage === 'results' && (
+      {stage === 'results' && (!isTestMode || (isTestMode && testComplete)) && (
         <div className="results">
           <h2>תוצאות</h2>
-          <p>התו :{targetChar} ,הוצג סך הכל  {totalTargets} פעמים.</p>
+          
+          {isTestMode && testComplete && (
+            <div className="test-results">
+              <h3>כל הכבוד! הגעת לרמה {finalLevel} מתוך {testConfig.length}</h3>
+              <p>תשובות נכונות: {correctAnswers}</p>
+            </div>
+          )}
+          
+          <p>התו :{targetChar} ,הוצג סך הכל {totalTargets} פעמים.</p>
           <p>כמות לחיצות נכונות: {correctDetections}</p>
           <p>
             זמן תגובה ממוצע:{' '}
@@ -396,19 +614,30 @@ const ScanningGame = ({activeUser}) => {
                 ).toFixed(2) + ' אלפיות שנייה'
               : 'לא נקלטו לחיצות'}
           </p>
-          <button onClick={() => setStage('start')}>שחק שוב</button>
-          <button onClick={saveResultsToDatabase}>שמור תוצאות</button>
           
+          {isTestMode && testComplete && (<h3>אפשרויות המשחק המומלצות עבורך:</h3>)}
+          {!isTestMode && <h3>אפשרויות המשחק:</h3>}
+          <ul>
+            <li>זמן תצוגה: {displayTime} מ"ש</li>
+            <li>מספר שורות: {numberOfLines}</li>
+            <li>סמלים בשורה: {charactersPerRow}</li>
+            <li>רווח בין סמלים: {spacing}</li>
+            <li>גודל הגופן: {fontSize}</li>
+          </ul>
+          <button onClick={() => setStage('start')}>בחזרה לתפריט</button>
+          <button onClick={startGame}>שחק שוב</button>
+          <button onClick={saveResultsToDatabase}>שמור תוצאות</button>
         </div>
-        
       )}
+      
       {showAlert && (
-            <AlertDialog 
-              open={showAlert} 
-              title="דרוש משתמש מחובר"
-         message={message}
-         onClose={() => setShowAlert(false)}
-                />  )}
+        <AlertDialog 
+          open={showAlert} 
+          title="דרוש משתמש מחובר"
+          message={message}
+          onClose={() => setShowAlert(false)}
+        />
+      )}
     </div>
   );
 };

@@ -106,7 +106,7 @@ const QuickMemoryGame = ({activeUser}) => {
 
     const handleInputSubmit = () => {
         if (userInput.length !== currentNumber.length || isNaN(userInput)) {
-            setErrorMessage(`Please enter a valid ${numberOfDigits}-digit number.`);
+            setErrorMessage(`אנא הכנס מספר בן  ${numberOfDigits} ספרות.`);
             return;
         }
         setErrorMessage('');
@@ -255,6 +255,24 @@ const QuickMemoryGame = ({activeUser}) => {
         return () => clearTimeout(timer);
     }, [stage, countdown, difficulty, gameLength, Spacing]);
 
+    // Define presets
+    const difficultyPresets = [
+        { name: "קל מאוד", difficulty: 2400, numberOfDigits: 2, gameLength: 3, fontSize: 6, spacing: 0 },
+        { name: "קל", difficulty: 2000, numberOfDigits: 3, gameLength: 3, fontSize: 5, spacing: 1 },
+        { name: "בינוני", difficulty: 1500, numberOfDigits: 4, gameLength: 4, fontSize: 4, spacing: 2 },
+        { name: "קשה", difficulty: 1000, numberOfDigits: 5, gameLength: 4, fontSize: 3, spacing: 4 },
+        { name: "קשה מאוד", difficulty: 600, numberOfDigits: 6, gameLength: 5, fontSize: 2, spacing: 6 }
+    ];
+    
+    // Function to apply preset
+    const applyPreset = (preset) => {
+        setDifficulty(preset.difficulty);
+        setNumberOfDigits(preset.numberOfDigits);
+        setGameLength(preset.gameLength);
+        setFontSize(preset.fontSize);
+        setSpacing(preset.spacing);
+    };
+
     return (
         <div className="game">
             {stage === 'start' && (
@@ -263,7 +281,7 @@ const QuickMemoryGame = ({activeUser}) => {
 
                     <div className="gamedesc">
                         <h3>
-                        במשחק הזה, יהיה לך זמן מוגבל לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית
+                        במשחק הזה, יהיה לך זמן מוגבל לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית.
                         </h3>
                         <button onClick={() => setIsTestMode((prev) => !prev)}>
                             {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>  
@@ -272,9 +290,22 @@ const QuickMemoryGame = ({activeUser}) => {
 
                     {!isTestMode && (
                         <div className="settings"> 
+                            <div className="presets">
+                                <h4>בחר רמת קושי:</h4>
+                                    {difficultyPresets.map((preset, index) => (
+                                        <button 
+                                            key={index} 
+                                            onClick={() => applyPreset(preset)}
+                                            className="preset-button"
+                                        >
+                                            {preset.name}
+                                        </button>
+                                    ))}
+                            </div>
+                            <div class="divider"></div>
+                            <div className="settings-controls">
                             <h3>הגדרות משחק:</h3>
-
-                            <label>רמת קושי (זמן הצגת המספר): {difficulty}מ"ש</label>
+                            <label>רמת קושי: {difficulty}מ"ש</label>
                             <input
                                 type="range"
                                 min="150"
@@ -327,6 +358,7 @@ const QuickMemoryGame = ({activeUser}) => {
                                     onChange={toggleBeep}
                                 />
                             </label>
+                            </div>
                         </div>
                     )}
 
@@ -404,11 +436,13 @@ const QuickMemoryGame = ({activeUser}) => {
                         <li>מרווח בין המספרים: {Spacing}</li>
                         <li>מספר ספרות: {numberOfDigits}</li>
                     </ul>
-                    <button onClick={() => setStage('start')}>חזרה להתחלה</button>
+                    <button onClick={() => setStage('start')}>בחזרה לתפריט</button>
+                    <button onClick={() => startGame()}>שחק שוב</button>
                     <button onClick={() => setStage('SaveResults')}>שמור תוצאות</button>
+                    
                 </div>
             )}
-             {showAlert && (
+            {showAlert && (
                         <AlertDialog 
                           open={showAlert} 
                           title="דרוש משתמש מחובר"

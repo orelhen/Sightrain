@@ -16,7 +16,7 @@ const SaccadeClockGame = ({activeUser}) => {
   const [displayDuration, setDisplayDuration] = useState(1000);
   const [symbolSetType, setSymbolSetType] = useState('numbers');
   const [fontSize, setFontSize] = useState(3);
-  const [beepSound, setBeepSound] = useState(false);
+  const [beepSound, setBeepSound] = useState(true);
   const [startSide, setStartSide] = useState('left');
   const [currentSymbols, setCurrentSymbols] = useState([]);
   const [showIndex, setShowIndex] = useState(null);
@@ -176,7 +176,58 @@ const SaccadeClockGame = ({activeUser}) => {
     }
   }, [stage, activeUser, results, displayDuration, symbolSetType, startSide, fontSize]);
 
+  const difficultyPresets = [
+    { 
+      name: "קל מאוד", 
+      displayDuration: 2000, 
+      symbolLength: 2, 
+      fontSize: 6, 
+      circleSize: 800, 
+      symbolSetType: "numbers"
+    },
+    { 
+      name: "קל", 
+      displayDuration: 1600, 
+      symbolLength: 3, 
+      fontSize: 5, 
+      circleSize: 700, 
+      symbolSetType: "numbers"
+    },
+    { 
+      name: "בינוני", 
+      displayDuration: 1200, 
+      symbolLength: 3, 
+      fontSize: 4, 
+      circleSize: 600, 
+      symbolSetType: "letters"
+    },
+    { 
+      name: "קשה", 
+      displayDuration: 800, 
+      symbolLength: 4, 
+      fontSize: 3, 
+      circleSize: 500, 
+      symbolSetType: "letters"
+    },
+    { 
+      name: "קשה מאוד", 
+      displayDuration: 500, 
+      symbolLength: 5, 
+      fontSize: 2, 
+      circleSize: 400, 
+      symbolSetType: "symbols"
+    }
+  ];
   
+  // Add this function inside your component
+  const applyPreset = (preset) => {
+    setDisplayDuration(preset.displayDuration);
+    setSymbolLength(preset.symbolLength);
+    setFontSize(preset.fontSize);
+    setCircleSize(preset.circleSize);
+    setSymbolSetType(preset.symbolSetType);
+  };
+
   return (
     <div className="game">
       <h2>סקאדת שעון</h2>
@@ -192,9 +243,32 @@ const SaccadeClockGame = ({activeUser}) => {
          </h3>
          </div> 
         <div className="settings">
+        <div className="presets">
+              <h4>בחר רמת קושי:</h4>
+                    {difficultyPresets.map((preset, index) => (
+                         <button 
+                              key={index} 
+                              onClick={() => applyPreset(preset)}
+                              className="preset-button"
+                              >
+                              {preset.name}
+                              </button>
+                          ))}
+                  </div>
+                  <div class="divider"></div>
+        <div  className="settings-controls">
+        <h3>הגדרות משחק:</h3>
           <label>משך תצוגה (אלפיות שנייה): {displayDuration}</label>
           <input type="range" min="300" max="2000" step="100" value={displayDuration} onChange={e => setDisplayDuration(Number(e.target.value))} />
           
+
+
+          <label>מספר סמלים: {symbolLength}</label>
+          <input type="range" min="2" max="5" step="1" value={symbolLength} onChange={e => setSymbolLength(Number(e.target.value))} />
+          <label>גודל גופן: {fontSize}</label>
+          <input type="range" min="1" max="7" step="1" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
+          <label>גודל מעגל: {circleSize}px</label>
+          <input type="range" min="300" max="1200" step="50" value={circleSize} onChange={e => setCircleSize(Number(e.target.value))} />
           <label>קבוצת סמלים: <select value={symbolSetType} onChange={e => setSymbolSetType(e.target.value)}>
             <option value="numbers">מספרים</option>
             <option value="letters">אותיות</option>
@@ -229,17 +303,9 @@ const SaccadeClockGame = ({activeUser}) => {
             </div>
           )}
 
-          <label>מספר סמלים: {symbolLength}</label>
-          <input type="range" min="2" max="5" step="1" value={symbolLength} onChange={e => setSymbolLength(Number(e.target.value))} />
-          <label>גודל גופן: {fontSize}</label>
-          <input type="range" min="1" max="7" step="1" value={fontSize} onChange={e => setFontSize(Number(e.target.value))} />
-          <label>גודל מעגל: {circleSize}px</label>
-          <input type="range" min="300" max="1200" step="50" value={circleSize} onChange={e => setCircleSize(Number(e.target.value))} />
-
-
           <label>צליל ביפ:<input type="checkbox" checked={beepSound} onChange={() => setBeepSound(prev => !prev)} />
           </label>
-        
+          </div> 
           </div>
           <button className='start_game' onClick={startGame}>התחל משחק <i class="fa-solid fa-play"></i></button>
         </div>
@@ -326,7 +392,8 @@ const SaccadeClockGame = ({activeUser}) => {
                 </li>
             ))}
           </ul>
-          <button onClick={() => setStage('start')}>נשחק שוב</button>
+          <button onClick={() => setStage('start')}>בחזרה לתפריט</button>
+          <button onClick={startGame}>שחק שוב</button>
           <button onClick={() => {
             setShowConfirmReset(true);
             }}>אפס תוצאות</button>

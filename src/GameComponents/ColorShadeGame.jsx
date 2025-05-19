@@ -263,6 +263,68 @@ const ColorShadeGame = ({activeUser}) => {
     }
   }, [score, isTestMode]);
 
+
+
+
+// Define difficulty presets
+const difficultyPresets = [
+  { 
+    name: "קל מאוד", 
+    difficulty: 1, 
+    ballCount: 5, 
+    ballSize: 5, 
+    color: 'blue',
+    backgroundColor: 'black',
+    shape: 'circle'
+  },
+  { 
+    name: "קל", 
+    difficulty: 3, 
+    ballCount: 8, 
+    ballSize: 4, 
+    color: 'orange',
+    backgroundColor: 'black',
+    shape: 'circle'
+  },
+  { 
+    name: "בינוני", 
+    difficulty: 5, 
+    ballCount: 12, 
+    ballSize: 3, 
+    color: 'green',
+    backgroundColor: 'black', 
+    shape: 'square'
+  },
+  { 
+    name: "קשה", 
+    difficulty: 6, 
+    ballCount: 16, 
+    ballSize: 2, 
+    color: 'red',
+    backgroundColor: 'gray',
+    shape: 'triangle'
+  },
+  { 
+    name: "קשה מאוד", 
+    difficulty: 7, 
+    ballCount: 22, 
+    ballSize: 2, 
+    color: 'white',
+    backgroundColor: 'navy',
+    shape: 'star'
+  }
+];
+
+// Function to apply preset
+const applyPreset = (preset) => {
+  setDifficulty(preset.difficulty);
+  setBallCount(preset.ballCount);
+  setBallSize(preset.ballSize);
+  setColor(preset.color);
+  setBackgroundColor(preset.backgroundColor);
+  setShape(preset.shape);
+};
+
   return (
     <div className="game">
       <h2>משחק צבעים</h2>
@@ -273,7 +335,7 @@ const ColorShadeGame = ({activeUser}) => {
         <br/>ככל שרמת הקושי גבוהה יותר, כך ההבדל בין הצבעים יהיה קטן יותר ומאתגר יותר לזיהוי.
         <br/>ניתן לשנות את צבע האובייקטים, כמותם וגודלם בהגדרות המשחק.
         <br/>המטרה היא לאתר בהצלחה את האובייקט הכהה בכל סיבוב ולשפר את יכולת ההבחנה הויזואלית.
-        <br/>השחק מסתיים לאחר 5 סיבובים, בהצחקה!
+        <br/>השחק מסתיים לאחר 5 סיבובים, בהצלחה!
         </h3>
         
         <button onClick={() => { setIsTestMode((prev) => !prev); setScore(0); }}>
@@ -283,10 +345,25 @@ const ColorShadeGame = ({activeUser}) => {
 
       {!isGameActive && score === 0 && !isTestMode && (
         <div className="settings">
+          
+          <div className="presets">
+            <h4>בחר רמת קושי:</h4>
+                {difficultyPresets.map((preset, index) => (
+                  <button
+                    key={index}
+                    className="preset-button"
+                    onClick={() => applyPreset(preset)}
+                    disabled={isGameActive}
+                  >
+                    {preset.name}
+                  </button>
+                ))}
+            </div>
+            <div class="divider"></div>
+        <div  className="settings-controls">
             <h3>הגדרות משחק:</h3>
-
-            <label>
-              רמת קושי:
+            
+            <label>רמת קושי:  {difficulty} </label>
               <input
                 type="range"
                 min="1"
@@ -295,11 +372,11 @@ const ColorShadeGame = ({activeUser}) => {
                 onChange={(e) => setDifficulty(Number(e.target.value))}
                 disabled={isGameActive}
               />
-              {difficulty}
-            </label>
-              
+            
+          
             <label>
-              כמות אובייקטים:
+              כמות אובייקטים:  {ballCount}
+              </label>
               <input
                 type="range"
                 min="5"
@@ -308,11 +385,11 @@ const ColorShadeGame = ({activeUser}) => {
                 onChange={(e) => setBallCount(Number(e.target.value))}
                 disabled={isGameActive}
               />
-              {ballCount}
-            </label>
+            
               
             <label>
-              גודל האובייקט:
+              גודל האובייקט:    {ballSize}
+              </label>
               <input
                 type="range"
                 min="2"
@@ -321,8 +398,7 @@ const ColorShadeGame = ({activeUser}) => {
                 onChange={(e) => setBallSize(Number(e.target.value))}
                 disabled={isGameActive}
               />
-              {ballSize}
-            </label>
+          
             
             <label>
               צבע האובייקט:
@@ -369,6 +445,7 @@ const ColorShadeGame = ({activeUser}) => {
                 <option value="star">כוכב</option>
               </select>
             </label>
+            </div>
         </div>
       )}
       
@@ -521,3 +598,4 @@ const styles = {
 };
 
 export default ColorShadeGame;
+

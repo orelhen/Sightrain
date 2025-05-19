@@ -15,6 +15,59 @@
         margin-top: 30px;
     }
     
+    .settings {
+        display: flex;
+        gap: 0;
+        align-items: stretch; // makes children equal height
+        position: relative;
+      }
+      
+    
+      .presets {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        gap: 10px;
+        flex: 1;
+        position: relative;
+        .preset-button {
+            width: 140px; // fixed width ensures uniform size
+            padding: 10px 0;
+            font-size: 20px;
+            text-align: center;
+            cursor: pointer;
+          }
+          
+      }
+      
+      .divider {
+        width: 7px;
+        background-color: black;
+      }
+
+      .settings-controls {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; // center vertically
+        padding: 30px;
+        gap: 15px;
+      
+        label {
+          text-align: right; // or center if you prefer
+        }
+      
+        input[type="range"] {
+          width: 100%;
+        }
+      
+        input[type="checkbox"] {
+          margin-right: 10px;
+        }
+      }
+      
     .start_game{
         font-size: 32px;
         margin-top: 20px;

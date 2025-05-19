@@ -54,15 +54,38 @@ const SmoothPursuitExercise = () => {
     const interval = setInterval(moveDot, 20);
     return () => clearInterval(interval);
   }, [direction, speed, dotSize]);
+  // Define speed presets
+
+  const speedPresets = [
+    {
+      name: "תנועה איטית",
+      speed: 2,
+      dotSize: 80
+    },
+    {
+      name: "תנועה בינונית",
+      speed: 6,
+      dotSize: 50
+    },
+    {
+      name: "תנועה מהירה",
+      speed: 20,
+      dotSize: 30
+    }
+  ];
+
+  // Function to apply speed presets
+  const applySpeedPreset = (preset) => {
+    setSpeed(preset.speed);
+    setDotSize(preset.dotSize);
+  };
 
   return (
     <div className="game">
         <h2>אימון תנועה חלקה</h2>
       <div className="gamedesc"> 
       <p>הסתכלו למרכז המסך ועקבו אחרי הכדור עם העיניים.</p>
-
       </div>
-      
       <div class="smoothbox" style={{ ...styles.box, width: boxSize.width, height: boxSize.height }}>
         <div
           style={{
@@ -74,9 +97,24 @@ const SmoothPursuitExercise = () => {
           }}
         ></div>
       </div>
-
       {/* Speed Control */}
       <div className="settings">
+      <div className="presets">
+            <h4>בחר מהירות:</h4>
+                {speedPresets.map((preset, index) => (
+                  <button
+                    key={index}
+                    className="preset-button"
+                    onClick={() => applySpeedPreset(preset)}
+                  >
+                    {preset.name}
+                  </button>
+                ))}
+            </div>
+            <div class="divider"></div>
+
+      <div className="settings-controls">
+      <h3>הגדרות:</h3>
       <label>
         מהירות:
         <input
@@ -101,6 +139,18 @@ const SmoothPursuitExercise = () => {
         />
         {dotSize}
       </label>
+        {/* Direction Control */}
+        <label>
+        כיוון התנועה:
+        <select
+          value={movementDirection}
+          onChange={(e) => setMovementDirection(e.target.value)}
+        >
+          <option value="diagonal">אלכסון </option>
+          <option value="horizontal">לרוחב</option>
+          <option value="vertical">למעלה,למטה</option>
+        </select>
+      </label>
           <label>
             צבע הכדור:
             <select
@@ -115,18 +165,8 @@ const SmoothPursuitExercise = () => {
               <option value="blue">כחול</option>
             </select>
           </label>
-      {/* Direction Control */}
-      <label>
-        כיוון התנועה:
-        <select
-          value={movementDirection}
-          onChange={(e) => setMovementDirection(e.target.value)}
-        >
-          <option value="diagonal">אלכסון </option>
-          <option value="horizontal">לרוחב</option>
-          <option value="vertical">למעלה,למטה</option>
-        </select>
-      </label>
+    
+      </div>
       </div>
     </div>
   );
