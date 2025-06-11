@@ -196,7 +196,7 @@ const PatientManagement = ({setActiveUser,ComponentClick,Loggedinuserdata}) => {
 
     
     return (
-        <div >
+        <div style={{ maxWidth: '80%',textAlign: 'center', margin: '0 auto', padding: '20px' }} >
             <h2>ניהול מטופלים</h2>
                 <div>
                    

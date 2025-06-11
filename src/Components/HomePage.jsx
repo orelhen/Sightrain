@@ -19,7 +19,7 @@ const HomePage = () => {
 
 
         <div className="home-container" id="home">
-
+            <h1 className="main_logo">SighTrain</h1>
 
             <section className="hero-fullscreen">
                 <div className="overlay">

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Manual = () => {
     return (
-        <div style={{ direction: 'rtl', textAlign: 'right'}}>
+        <div style={{ direction: 'rtl', textAlign: 'center'}}>
             <h1>מדריך הפעלת האתר למטפלים</h1>
             <ol>
                 <li>על מנת לתת למטופל חדש להריץ את האתר הכנס לאיזור ניהול מטופלים וצור מטופל חדש עם מספר זיהוי עבורו.</li>

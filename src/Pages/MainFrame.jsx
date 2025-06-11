@@ -15,6 +15,7 @@ import Timer from '../Components/Timer';
 import Manual from '../Components/manual.jsx';
 import CgHomepage from '../Components/CgHomepage.jsx';
 import PatientManagement from '../Components/PatientManagment.jsx';
+import Test from '../GameComponents/Test';
 import { getAuth, onAuthStateChanged ,firestore,doc, getDoc} from "../firebase.js";
 import MyStats from '../Components/MyStats.jsx';
 import { useLocation } from 'react-router-dom';
@@ -84,24 +85,33 @@ const MainFrame = () => {
     }, []);
     
 
+    const [showControllers, setShowControllers] = useState(true);
+
+    const toggleControllers = () => {
+        setShowControllers(!showControllers);
+    };
+
     return (
         <div>
-            <div className="main_top_bar">
-                <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} activeUser={activeUser} setActiveUser={setActiveUser}  /> 
-                <h1 className="main_logo">SighTrain</h1>
-                <div className="controllers">
-                    <button onClick={toggleTheme}>
-                        {theme === 'light' && 'שנה תצוגה לחשוך'}
-                        {theme === 'dark' && 'שנה תצוגה לכחול'}
-                        {theme === 'high-contrast' && 'שנה תצוגה ללבן'}
-                    </button>
-                    <Timer />
-                </div>
-
+            <div className="main_top_bar"></div>
+            <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} activeUser={activeUser} setActiveUser={setActiveUser}  /> 
+    
+            <div className={`controllers ${showControllers ? '' : 'controllers-hidden'}`}>
+                <button onClick={toggleTheme}>
+                    {theme === 'light' && 'שנה תצוגה לחשוך'}
+                    {theme === 'dark' && 'שנה תצוגה לכחול'}
+                    {theme === 'high-contrast' && 'שנה תצוגה ללבן'}
+                </button>
+                <Timer />
             </div>
+            <button className="controllers_toggle-button"
+                onClick={toggleControllers}
+                aria-label={showControllers ? 'הסתר כלים' : 'הצג כלים'}>
+                {showControllers ? '◀' : <i class="fa-solid fa-gear"></i>}
+            </button>
             <main>
                 
-                <h3 >
+                <h3>
                     {activeUser !== "" ? `ברוכים הבאים משתמש מספר ${activeUser}` : ""}
                 </h3>
 
@@ -120,6 +130,7 @@ const MainFrame = () => {
                 {activeComponent === 'Scanning' && <Scanning  activeUser={activeUser}/>} 
                 {activeComponent === 'videos' && <VideoGallery />}
                 {activeComponent === 'Statistics' && <MyStats Loggedinuserdata={user} activeUser={activeUser} />}
+                {activeComponent === 'Test' && <Test Loggedinuserdata={user} activeUser={activeUser} />}
             </main>
         </div>
     );

@@ -46,13 +46,13 @@ const ColorShadeGame = ({activeUser, IsTest, onTestComplete}) => {
     { level: 1, difficulty: 1, ballCount: 5, ballSize: 5, color: 'blue', shape: 'circle' },
     { level: 2, difficulty: 2, ballCount: 7, ballSize: 4, color: 'blue', shape: 'square' },
     { level: 3, difficulty: 3, ballCount: 10, ballSize: 3.5, color: 'red', shape: 'circle' },
-    { level: 4, difficulty: 4, ballCount: 12, ballSize: 3, color: 'green', shape: 'triangle' },
-    { level: 5, difficulty: 5, ballCount: 14, ballSize: 2.5, color: 'orange', shape: 'square' },
-    { level: 6, difficulty: 6, ballCount: 16, ballSize: 3, color: 'yellow', shape: 'star' },
-    { level: 7, difficulty: 6, ballCount: 18, ballSize: 2, color: 'white', shape: 'circle' },
-    { level: 8, difficulty: 7, ballCount: 20, ballSize: 1.8, color: 'blue', shape: 'triangle' },
-    { level: 9, difficulty: 7, ballCount: 22, ballSize: 1.3, color: 'yellow', shape: 'square' },
-    { level: 10, difficulty: 8, ballCount: 25, ballSize: 1, color: 'green', shape: 'star' },
+    { level: 4, difficulty: 2, ballCount: 12, ballSize: 3, color: 'white', shape: 'triangle' },
+    { level: 5, difficulty: 3, ballCount: 14, ballSize: 2.5, color: 'orange', shape: 'square' },
+    { level: 6, difficulty: 4, ballCount: 16, ballSize: 3, color: 'yellow', shape: 'star' },
+    { level: 7, difficulty: 4, ballCount: 18, ballSize: 2, color: 'white', shape: 'circle' },
+    { level: 8, difficulty: 5, ballCount: 20, ballSize: 1.8, color: 'blue', shape: 'triangle' },
+    { level: 9, difficulty: 6, ballCount: 22, ballSize: 1.3, color: 'yellow', shape: 'square' },
+    { level: 10, difficulty: 7, ballCount: 25, ballSize: 1, color: 'blue', shape: 'star' },
   ];
 
   // Function to process the results for the test component
