@@ -22,7 +22,7 @@ const DemoStats = () => {
   ];
 
   return (
-    <section className="scroll-section section-gray">
+    <section className="stats_sec">
       <h2>נתונים לדוגמה - כך יראו הנתונים שלכם</h2>
       <div className="stats-cards-row">
         {demoData.map((item, index) => (

@@ -25,8 +25,8 @@ const FeedbackForm = ({ onClose, collectionName = 'feedback' }) => {
     };
 
     return (
-        <div>
-            <h3>טופס משוב</h3>
+        <div className="report_form">
+            <h2>טופס משוב</h2>
             <form onSubmit={(e) => e.preventDefault()}>
                 <textarea
                     value={feedback}

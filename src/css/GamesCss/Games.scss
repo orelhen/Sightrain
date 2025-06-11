@@ -1,101 +1,122 @@
-
 .game{
-    .gamedesc{
-        border-radius: 10px;
-        padding: 10px 20px;
-        border: 4px solid;
-        }
-    
-    .settings, .results{
-        font-size: 28px;
-        border-radius: 10PX;
-        padding: 20px;  
-        text-align: center;
-        border: 4px solid;
-        margin-top: 30px;
-    }
-    
-    .settings {
-        display: flex;
-        gap: 0;
-        align-items: stretch; // makes children equal height
-        position: relative;
-      }
-      
-    
-      .presets {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 30px;
-        gap: 10px;
-        flex: 1;
-        position: relative;
-        .preset-button {
-            width: 140px; // fixed width ensures uniform size
-            padding: 10px 0;
-            font-size: 20px;
-            text-align: center;
-            cursor: pointer;
-          }
-          
-      }
-      
-      .divider {
-        width: 7px;
-        background-color: black;
+display: flex;
+text-align: center;
+margin: 0 auto;
+flex-direction: column;
+align-items: center;
+
+  input[type="text"] {
+    font-family: 'Rubik';
+    font-size: 20px;
+    margin: 10px auto;
+    padding: 15px;
+    border: 4px solid #000;
+    border-radius: 8px;
+    background: #f5f6f8;
+    transition: 0.4s all;
+  }
+
+
+  .gamedesc{
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: 4px solid;
+    width: 50vw;
+  }
+
+  .settings, .results{
+  font-size: 28px;
+  border-radius: 10PX;
+  padding: 20px;  
+  text-align: center;
+  border: 4px solid;
+  margin-top: 30px;
+  }
+
+  .settings {
+  display: flex;
+  gap: 0;
+  align-items: stretch; // makes children equal height
+  position: relative;
+  width: 50vw;
+  }
+
+  .presets {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  gap: 10px;
+  flex: 1;
+  position: relative;
+  .preset-button {
+  width: 140px; // fixed width ensures uniform size
+  padding: 10px 0;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  }
+
+  }
+
+  .divider {
+    width: 7px;
+    background-color: black;
+  }
+
+  .settings-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; // center vertically
+    padding: 30px;
+    gap: 15px;
+
+      label {
+      text-align: right; // or center if you prefer
+      display: flex;
+      align-items: center;
+      gap: 10px;
       }
 
-      .settings-controls {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center; // center vertically
-        padding: 30px;
-        gap: 15px;
-      
-        label {
-          text-align: right; // or center if you prefer
-        }
-      
-        input[type="range"] {
-          width: 100%;
-        }
-      
-        input[type="checkbox"] {
-          margin-right: 10px;
-        }
+      input[type="range"] {
+      width: 100%;
       }
-      
-    .start_game{
-        font-size: 32px;
+
+      input[type="checkbox"] {
+      margin-right: 10px;
+      }
+  }
+
+  .start_game{
+    font-size: 32px;
+    margin-top: 20px;
+
+      i{
+      margin-right:10px;
+      }
+  }
+
+  .answer_input{
+    display: flex;
+    flex-direction: column;
+
+      input{
+        height: 60px;
+        border-radius:10px ;
+        padding: 0 15px;
+        font-size: 20px;
+      }
+
+      button{
         margin-top: 20px;
-    
-        i{
-            margin-right:10px;
-        }
-    }
+      }
+  }
 
-    .answer_input{
-        display: flex;
-        flex-direction: column;
-
-        input{
-            height: 60px;
-            border-radius:10px ;
-            padding: 0 15px;
-            font-size: 20px;
-        }
-
-        button{
-            margin-top: 20px;
-        }
-    }
-
-    .smoothbox{
-        direction: ltr;
-    }
+  .smoothbox{
+    direction: ltr;
+  }
 }
 
 

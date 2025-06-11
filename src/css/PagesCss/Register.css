@@ -1,26 +1,13 @@
 /* Register.css */
 
-.registration-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 2em;
-    background: #000000d4;
-    backdrop-filter: blur(20px);
-    border-radius: 25px;
-    box-shadow: 0 15px 60px #00000063;
-  }
-  
-  .registration-container {
+
+  .registration-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     background: #fff;
-    padding: 50px;
     border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    width: fit-content;
   }
   
   .registration-form-container {
@@ -30,7 +17,7 @@
   }
   
   .reg_main {
-      width: 100%;
+      width: 50%;
       text-align: right;
       direction: rtl;
       padding: 0 15px;
@@ -40,13 +27,14 @@
     font-family: 'Varela Round';
     font-size: 58px;
     font-weight: 900;
-    text-align: left;
+    text-align: center;
   }
   
   .registration-form-container h2 {
+    font-family: 'Rubik';
     font-size: 36px;
     margin-bottom: 1em;
-    text-align: right;
+    text-align: center;
   }
   
   .registration-form-container form {
@@ -54,6 +42,8 @@
       width: 100%;
       flex-direction: column;
       gap: 1em;
+      align-items: center;
+      color:black
     }
   
   .registration-form-container label {
@@ -63,6 +53,7 @@
       width: 100%;
       padding: 0 15px;
       margin-bottom: 10px;
+      color:black
     }
   
   .registration-form-container input,
@@ -77,6 +68,7 @@
     background: #f5f6f8;
     transition: 0.4s all;
     border: none;
+    
   }
   
   .registration-form-container input:focus,
@@ -125,10 +117,12 @@
       align-items: center;
       padding: 15px;
       text-align: center;
+      
     }
     
   .reg_btn_container p {
       font-size: 20px !important;
+      
   }
   
   
@@ -136,6 +130,7 @@
       border: none;
       height: auto;
       padding: 5px;
+      
   }
   
   .reg_btn_container .register-link:hover {
@@ -147,11 +142,13 @@
     margin-top: 1em;
     font-size: 14px;
     text-align: center;
+    color:black
   }
   
   .registration-form-container .register-link {
     text-decoration: none;
     font-weight: bold;
+    
   }
   
   .registration-form-container .register-link:hover {
@@ -175,16 +172,16 @@
     gap: 2em;
     margin: 2em 0;
     width: 100%;
+    color:black;
   }
 
   .registration-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: #fff;
+    background: #f5f6f8;
     padding: 2em;
     border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     width: 360px;
@@ -205,6 +202,7 @@
     font-size: 1.5em;
     margin-bottom: 0.5em;
     font-weight: 600;
+    
   }
 
   .registration-card p {

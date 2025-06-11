@@ -100,10 +100,9 @@ const RegisterPage = () => {
     };
 
     return (
-        <section className="registration-section">
-            <div className="registration-container">
+        <section className="registration-section main_section_prop">
                 {showRegistrationType && (
-                <div className="registration-options">
+                <div className="registration-options text-center">
                     <h1 className="main_logo">SighTrain</h1>
                      <button type="button" className="register-link" onClick={() =>  navigate('/login')}>חזור לדף התחברות</button>
                 <h1 className="registration-title">בחר סוג הרשמה</h1>
@@ -156,23 +155,20 @@ const RegisterPage = () => {
                         <h1 className="main_logo">SighTrain</h1>
 
                             <h2>דף הרשמה</h2>
-                            <label htmlFor="name">שם מלא
-                                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-                            </label>
+                            <label htmlFor="name">שם מלא</label>
+                            <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
 
-                            <label htmlFor="age">תאריך לידה
-                                <input type="date" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
-                            </label>
+                            <label htmlFor="age">תאריך לידה</label>
+                            <input type="date" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
 
-                            <label htmlFor="email">כתובת דואר אלקטרוני
-                                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                                {errors.email && <p className="error-message">{errors.email}</p>}
-                            </label>
+                            <label htmlFor="email">כתובת דואר אלקטרוני</label>
+                            <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                            {errors.email && <p className="error-message">{errors.email}</p>}
 
-                            <label htmlFor="password">סיסמה
-                                <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                                {errors.password && <p className="error-message">{errors.password}</p>}
-                            </label>
+
+                            <label htmlFor="password">סיסמה</label>
+                            <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                            {errors.password && <p className="error-message">{errors.password}</p>}
 
                           
                             {role === 'caregiver' && (
@@ -198,7 +194,7 @@ const RegisterPage = () => {
                             </div>
                         </form>)}
                     </div>
-            </div>
+
             {showAlert && (
                         <AlertDialog 
                             open={showAlert} 

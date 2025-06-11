@@ -61,12 +61,12 @@ function LoginPage() {
     }
     
     return (
-        <section className="form-container">
+        <section className="form-container main_section_prop">
             
             <div className="form-content">
             <h1 className="main_logo">SighTrain</h1>
                 
-                <form onSubmit={handleSubmit}>
+                <form className='login_form' onSubmit={handleSubmit}>
                 <h2>התחברות</h2>
                     <input
                         type="text"
@@ -84,33 +84,29 @@ function LoginPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
-                    <button type="submit">התחבר</button>
+                    <button type="submit">התחבר <i class="fa-solid fa-right-to-bracket"></i></button>
                 </form>
-                <p>אין לך משתמש?</p>
-                    <button onClick={navigateToRegister}>
-                        הרשם
-                    </button>
-                    <button onClick={navigateToHome} >
-                        המשך כאורח
-                    </button>
+                   <h3 className='text-center'>אין לך משתמש?</h3>
+                    <div class="login_page_btns">
+                        <button onClick={navigateToRegister}>
+                           <i class="fa-solid fa-user-plus"></i> הרשם
+                        </button>
+                        <button onClick={navigateToHome} >
+                           <i class="fa-solid fa-user-secret"></i> המשך כאורח
+                        </button>
+                    </div>
             </div>
             <div className="iframe_bg">
-                            <iframe
-                        className="main_iframe"
-                        title="Eye Training Image"
-                        
-                    />          
-                <div className="why_overlay_btn"></div>
-                <div className="why_overlay_btn">
-                    <a href="#why">למה אנחנו?</a>
-                </div>
-                
+
+                <iframe className="main_iframe" title="Eye Training Image"/>          
+        
                 <div className="why_overlay">
-                    
-                    ההרשמה לאתר SighTrain מאפשרת לכל משתמש לקבל חוויית אימון אישית וממוקדת.<br />
-                     כאשר משתמשים רשומים ומחוברים, המערכת שומרת את כל נתוני ההתקדמות, התוצאות מהאימונים והסטטיסטיקות האישיות שלהם.<br /> נתונים אלה מאפשרים למשתמשים ולעוסקים בתחום הרפואה לעקוב מקרוב אחרי השיפור ביכולות הראייה לאורך זמן ולהתאים את תכנית השיקום לפי הצורך.<br />
-                    בנוסף, משתמשים מחוברים נהנים מגישה מותאמת אישית, אפשרות להמשכיות בין מפגשי האימון, שמירת ההעדפות האישיות, ומעקב רציף שמסייע בקידום תהליך השיקום בצורה מדויקת ויעילה יותר.<br />
-                    
+                    <div className="why_overlay_btn"><a>למה אנחנו?</a></div>
+                    <p>
+                        ההרשמה לאתר SighTrain מאפשרת לכל משתמש לקבל חוויית אימון אישית וממוקדת.<br />
+                        כאשר משתמשים רשומים ומחוברים, המערכת שומרת את כל נתוני ההתקדמות, התוצאות מהאימונים והסטטיסטיקות האישיות שלהם.<br /> נתונים אלה מאפשרים למשתמשים ולעוסקים בתחום הרפואה לעקוב מקרוב אחרי השיפור ביכולות הראייה לאורך זמן ולהתאים את תכנית השיקום לפי הצורך.<br />
+                        בנוסף, משתמשים מחוברים נהנים מגישה מותאמת אישית, אפשרות להמשכיות בין מפגשי האימון, שמירת ההעדפות האישיות, ומעקב רציף שמסייע בקידום תהליך השיקום בצורה מדויקת ויעילה יותר.<br />
+                    </p>
                 </div>
             </div>
             {showAlert && (

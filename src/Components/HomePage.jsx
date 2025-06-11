@@ -28,24 +28,28 @@ const HomePage = () => {
             </section>
 
 
-            <div className="scroll-card-wrapper">
-                <section className="scroll-section section-white">
+            <div className="homepage_section_wrapper">
+                <section className="welcome_sec">
                     <h2>ברוכים הבאים</h2>
-                    <p>שיקום ראייה אפקטיבי מתחיל בהרגלים קטנים, יומיומיים. 
-                    <br></br>באמצעות סדרת תרגילים ממוקדים, אנחנו עוזרים למוח ללמוד מחדש כיצד לראות – בצורה אפקטיבית, מהנה ובגובה העיניים.</p>
-                    <li>משחקי אימון עיניים דינמיים שמאתגרים ומהנים</li>
-                    <li>סשנים מונחים בוידאו לשיפור הריכוז והתיאום</li>
-                    <li>מעקב התקדמות בזמן אמת עם נתונים מעמיקים</li>
-                    <li>נגיש מכל מקום עם עיצוב ידידותי למשתמש</li>
+
+                    <p>
+                        שיקום ראייה אפקטיבי מתחיל בהרגלים קטנים, יומיומיים. 
+                        <br></br>
+                        באמצעות סדרת תרגילים ממוקדים, אנחנו עוזרים למוח ללמוד מחדש כיצד לראות – בצורה אפקטיבית, מהנה ובגובה העיניים.
+                    </p>
+                    
+                    <ul>
+                        <li><i class="fa-solid fa-eye"></i> משחקי אימון עיניים דינמיים שמאתגרים ומהנים</li>
+                        <li><i class="fa-solid fa-video"></i> סשנים מונחים בוידאו לשיפור הריכוז והתיאום</li>
+                        <li><i class="fa-solid fa-signal"></i> מעקב התקדמות בזמן אמת עם נתונים מעמיקים</li>
+                        <li><i class="fa-solid fa-universal-access"></i> נגיש מכל מקום עם עיצוב ידידותי למשתמש</li>
+                    </ul>
 
                 </section>
         
-
-                <section className="scroll-section section-gray">
                 <DemoStats/>
-                </section>
 
-                <section className="scroll-section section-blue">
+                <section className="faq_sec">
                 <h2>שאלות נפוצות </h2>
                     <ul className="faq-list">
                         <li><strong>מה זה SighTrain?</strong> מערכת דיגיטלית לשיקום שדה הראייה בעזרת תרגולים יומיים.</li>
@@ -55,14 +59,12 @@ const HomePage = () => {
                         <li><strong>האם אני צריך ציוד מיוחד?</strong> לא, רק מחשב או טאבלט עם אינטרנט.</li>
                         <li><strong>הידעת?</strong> מחקרים מראים שאימון קבוע יכול להחזיר עד 60% מהשדה האבוד.</li>
                     </ul>
+                    <div className="button-group">
+                        <button onClick={() => navigate('/login')} >התחילו עכשיו</button>
+                        <button onClick={() => setShowFeedback(true)}>שלח משוב על האתר</button>
+                    </div>
                 </section>
-                <br></br>
-                <br></br>
             </div>      
-
-            <button onClick={() => navigate('/login')} >התחילו עכשיו</button>
-            <button onClick={() => setShowFeedback(true)}>שלח משוב על האתר</button>
-
             {showFeedback && (
                 <FeedbackForm onClose={() => setShowFeedback(false)} />
             )}

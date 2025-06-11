@@ -617,6 +617,9 @@ const styles = {
     backgroundColor: 'black',
     marginBottom: '20px',
     overflow: 'hidden',
+    borderRadius: '15px',
+    padding: '20px',
+    boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)'
   },
   ball: {
     position: 'absolute',

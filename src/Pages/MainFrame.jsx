@@ -18,7 +18,7 @@ import PatientManagement from '../Components/PatientManagment.jsx';
 import { getAuth, onAuthStateChanged ,firestore,doc, getDoc} from "../firebase.js";
 import MyStats from '../Components/MyStats.jsx';
 import { useLocation } from 'react-router-dom';
-import Test from '../GameComponents/Test.jsx';
+
 
 
 const MainFrame = () => {
@@ -85,24 +85,26 @@ const MainFrame = () => {
     
 
     return (
-        <div >
-            <div class="controllers">
-                <button onClick={toggleTheme}>
-                    {theme === 'light' && 'שנה תצוגה לחשוך'}
-                    {theme === 'dark' && 'שנה תצוגה לכחול'}
-                    {theme === 'high-contrast' && 'שנה תצוגה ללבן'}
-                </button>
-                <Timer />
-            </div>
-
-            <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} activeUser={activeUser} setActiveUser={setActiveUser}  /> 
-
-            <main>
+        <div>
+            <div className="main_top_bar">
+                <Sidebar ComponentClick={setActiveComponent} Loggedinuserdata={user} activeUser={activeUser} setActiveUser={setActiveUser}  /> 
                 <h1 className="main_logo">SighTrain</h1>
+                <div className="controllers">
+                    <button onClick={toggleTheme}>
+                        {theme === 'light' && 'שנה תצוגה לחשוך'}
+                        {theme === 'dark' && 'שנה תצוגה לכחול'}
+                        {theme === 'high-contrast' && 'שנה תצוגה ללבן'}
+                    </button>
+                    <Timer />
+                </div>
+
+            </div>
+            <main>
+                
                 <h3 >
                     {activeUser !== "" ? `ברוכים הבאים משתמש מספר ${activeUser}` : ""}
                 </h3>
-                
+
                 {activeComponent === 'profile' && <UserProfile Loggedinuserdata={user}/>}
                 {activeComponent === 'patientManagment' && <PatientManagement setActiveUser={setActiveUser} ComponentClick={setActiveComponent} Loggedinuserdata={user}/>}
                 {activeComponent === 'HomePage' && <HomePage/>}
@@ -118,7 +120,6 @@ const MainFrame = () => {
                 {activeComponent === 'Scanning' && <Scanning  activeUser={activeUser}/>} 
                 {activeComponent === 'videos' && <VideoGallery />}
                 {activeComponent === 'Statistics' && <MyStats Loggedinuserdata={user} activeUser={activeUser} />}
-                {activeComponent === 'Test' && <Test Loggedinuserdata={user} activeUser={activeUser} />}
             </main>
         </div>
     );
