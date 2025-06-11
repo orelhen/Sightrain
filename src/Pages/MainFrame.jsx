@@ -18,7 +18,7 @@ import PatientManagement from '../Components/PatientManagment.jsx';
 import { getAuth, onAuthStateChanged ,firestore,doc, getDoc} from "../firebase.js";
 import MyStats from '../Components/MyStats.jsx';
 import { useLocation } from 'react-router-dom';
-
+import Test from '../GameComponents/Test.jsx';
 
 
 const MainFrame = () => {
@@ -102,7 +102,7 @@ const MainFrame = () => {
                 <h3 >
                     {activeUser !== "" ? `ברוכים הבאים משתמש מספר ${activeUser}` : ""}
                 </h3>
-
+                
                 {activeComponent === 'profile' && <UserProfile Loggedinuserdata={user}/>}
                 {activeComponent === 'patientManagment' && <PatientManagement setActiveUser={setActiveUser} ComponentClick={setActiveComponent} Loggedinuserdata={user}/>}
                 {activeComponent === 'HomePage' && <HomePage/>}
@@ -118,6 +118,7 @@ const MainFrame = () => {
                 {activeComponent === 'Scanning' && <Scanning  activeUser={activeUser}/>} 
                 {activeComponent === 'videos' && <VideoGallery />}
                 {activeComponent === 'Statistics' && <MyStats Loggedinuserdata={user} activeUser={activeUser} />}
+                {activeComponent === 'Test' && <Test Loggedinuserdata={user} activeUser={activeUser} />}
             </main>
         </div>
     );

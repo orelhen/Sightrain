@@ -7,7 +7,9 @@ import AlertDialog from '../Components/Alert';
 
 
 
-const QuickMemoryGame = ({activeUser}) => {
+
+// Update the QuickMemoryGame component to receive and use onTestComplete prop
+const QuickMemoryGame = ({activeUser, IsTest, onTestComplete}) => {
 
     // Original state variables
     const [stage, setStage] = useState('start');
@@ -22,7 +24,7 @@ const QuickMemoryGame = ({activeUser}) => {
     const [showAlert, setShowAlert] = useState(false);
 
 
-    const [isTestMode, setIsTestMode] = useState(false); // Test mode state variable
+    const [isTestMode, setIsTestMode] = useState(IsTest); // Test mode state variable
 
     // Settings state variables
     const [difficulty, setDifficulty] = useState(1200);
@@ -38,6 +40,29 @@ const QuickMemoryGame = ({activeUser}) => {
     const [correctAnswers, setCorrectAnswers] = useState(0);
     const [testComplete, setTestComplete] = useState(false);
     const [finalLevel, setFinalLevel] = useState(0);
+    
+    const processResults = (results, finalLevel, settingsData) => {
+        // Process the game results to return a simplified object
+        // with the most important information for the test component
+        const processedResults = {
+            finalLevel: finalLevel || 0,
+            digits: settingsData.numberOfDigits || 0,
+            fontSize: settingsData.fontSize || 0,
+            difficulty: settingsData.difficulty || 0,
+            accuracy: calculateAccuracy(results),
+            details: results // Keep the full details if needed
+        };
+        
+        return processedResults;
+    };
+    
+    const calculateAccuracy = (results) => {
+        if (!results || results.length === 0) return 0;
+        
+        const correctAnswers = results.filter(result => result.isCorrect).length;
+        return Math.round((correctAnswers / results.length) * 100);
+    };
+
     
     // Configure test levels max="7"  max="10"
     const testConfig = [
@@ -130,12 +155,24 @@ const QuickMemoryGame = ({activeUser}) => {
                     setFinalLevel(testLevel);
                     setTestComplete(true);
                     setStage('results');
+                    
+                    // Call onTestComplete with processed results
+                    if (onTestComplete) {
+                        const settingsData = testConfig[testLevel - 1];
+                        onTestComplete(processResults(results, testLevel, settingsData));
+                    }
                 }
             } else {
                 // Failed - test ends at current level
                 setFinalLevel(testLevel - 1);
                 setTestComplete(true);
                 setStage('results');
+                
+                // Call onTestComplete with processed results
+                if (onTestComplete) {
+                    const settingsData = testConfig[Math.max(0, testLevel - 2)];
+                    onTestComplete(processResults(results, testLevel - 1, settingsData));
+                }
             }
         } else {
             // Normal gameplay logic
@@ -283,9 +320,12 @@ const QuickMemoryGame = ({activeUser}) => {
                         <h3>
                         במשחק הזה, יהיה לך זמן מוגבל לזכור את המספרים שאתה רואה על המסך, כאשר הזמן נגמר הזן את המספרים שראית.
                         </h3>
-                        <button onClick={() => setIsTestMode((prev) => !prev)}>
-                            {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>  
-                        </button>
+                        {!IsTest && ( 
+                                   <button onClick={() => setIsTestMode((prev) => !prev)}>
+                                   {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>  
+                               </button>
+                            )}
+                      
                     </div>
 
                     {!isTestMode && (

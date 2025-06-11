@@ -139,6 +139,9 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
                 className={lastclicked === 'SmoothPursuitExercise' ? 'active' : ''} onClick={() => { ComponentClick('SmoothPursuitExercise'); handleSetLastClicked('SmoothPursuitExercise'); }}>תנועה חלקה <i></i>
               </button>
               <button 
+                className={lastclicked === 'Test' ? 'active' : ''} onClick={() => { ComponentClick('Test'); handleSetLastClicked('Test'); }}>מבחן
+              </button>
+              <button 
                 className={lastclicked === 'videos' ? 'active' : ''} onClick={() => { ComponentClick('videos'); handleSetLastClicked('videos'); }}>סרטונים <i className="fa-solid fa-film"></i>
               </button>
             </div>  

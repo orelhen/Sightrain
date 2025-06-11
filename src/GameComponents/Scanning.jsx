@@ -10,7 +10,7 @@ const symbolSets = {
   symbols: '!@#$%^&*'.split(''),
 };
 
-const ScanningGame = ({activeUser}) => {
+const ScanningGame = ({activeUser, IsTest , onTestComplete}) => {
   const [message, setMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [stage, setStage] = useState('start');
@@ -34,7 +34,7 @@ const ScanningGame = ({activeUser}) => {
   const [numberOfLines, setNumberOfLines] = useState(5);
   
   // Test mode variables
-  const [isTestMode, setIsTestMode] = useState(false);
+  const [isTestMode, setisTestMode] = useState(IsTest);
   const [testLevel, setTestLevel] = useState(1);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [testComplete, setTestComplete] = useState(false);
@@ -63,6 +63,30 @@ const ScanningGame = ({activeUser}) => {
     });
     return () => unsubscribe();
   }, []);
+
+  // Process results for the test component
+  const processResults = (reactionTimes, correctDetections, totalTargets, finalLevel, settingsData) => {
+    // Calculate average reaction time
+    const avgReactionTime = reactionTimes.length > 0
+      ? (reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length).toFixed(2)
+      : 0;
+
+    // Calculate accuracy rate
+    const accuracyRate = totalTargets > 0 ? Math.round((correctDetections / totalTargets) * 100) : 0;
+
+    // Return formatted results for the test component
+    return {
+      finalLevel: finalLevel || 0,
+      speed: settingsData ? settingsData.displayTime : displayTime,
+      items: settingsData ? settingsData.charactersPerRow : charactersPerRow, 
+      spacing: settingsData ? settingsData.spacing : spacing,
+      fontSize: settingsData ? settingsData.fontSize : fontSize,
+      accuracy: accuracyRate,
+      avgReactionTime: avgReactionTime,
+      scanDirection: settingsData ? settingsData.scanDirection : scanDirection,
+      reactionTimes: reactionTimes // Keep full data for detailed analysis if needed
+    };
+  };
 
   // Apply test configuration based on current level
   useEffect(() => {
@@ -211,7 +235,22 @@ const ScanningGame = ({activeUser}) => {
         // End test
         setFinalLevel(testLevel);
         setTestComplete(true);
-          // Apply level 1 settings immediately
+        setStage('results');
+        
+        // Call onTestComplete with processed results if this is the integrated test mode
+        if (isTestMode && onTestComplete) {
+          const settingsData = testConfig[Math.max(0, testLevel - 1)];
+          const processedResults = processResults(
+            reactionTimes, 
+            correctDetections, 
+            totalTargets, 
+            finalLevel || testLevel, 
+            settingsData
+          );
+          onTestComplete(processedResults);
+        }
+          
+        // Apply level 1 settings immediately
         const config = testConfig[0];
         setCharactersPerRow(config.charactersPerRow);
         setDisplayTime(config.displayTime);
@@ -222,7 +261,7 @@ const ScanningGame = ({activeUser}) => {
         setSymbolSetType(config.symbolSetType);
       }
     }
-  }, [gameEnd, isTestMode, correctDetections, totalTargets]);
+  }, [gameEnd, isTestMode, correctDetections, totalTargets, isTestMode]);
 
   const saveResultsToDatabase = async () => {
     try {
@@ -248,7 +287,7 @@ const ScanningGame = ({activeUser}) => {
         scanDirection,
         targetChar,
         numberOfLines,
-        isTestMode,
+        isTestMode: isTestMode,
         ...(isTestMode && { finalLevel, testLevel }),
         timestamp: new Date().toISOString()
       };
@@ -428,9 +467,11 @@ const ScanningGame = ({activeUser}) => {
               בכל סבב מופיעה שורת תווים, כאשר כל תו נחשף אחד אחרי השני, בהתאם לכיוון שנבחר (מימין לשמאל או משמאל לימין).<br/>
               המטרה היא לזהות תו מטרה שהוגדר מראש – ברגע שהמשתמש מזהה את התו, עליו ללחוץ על מקש הרווח במהירות האפשרית.<br/>
             </h3>
-            <button onClick={() => setIsTestMode((prev) => !prev)}>
-            {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>
-          </button>
+            {!IsTest && ( 
+              <button onClick={() => setisTestMode((prev) => !prev)}>
+                {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>
+              </button>
+            )}
           </div>
           
         
@@ -438,20 +479,20 @@ const ScanningGame = ({activeUser}) => {
           {!isTestMode && (
             <div className="settings">
          
-              <div className="presets">
-              <h4>בחר רמת קושי:</h4>
-              {difficultyPresets.map((preset, index) => (
-                <button 
-                  key={index} 
-                  className="preset-button" 
-                  onClick={() => applyPreset(preset)}
-                >
-                  {preset.name}
-                </button>
-              ))}
+            <div className="presets">
+            <h4>בחר רמת קושי:</h4>
+            {difficultyPresets.map((preset, index) => (
+              <button 
+                key={index} 
+                className="preset-button" 
+                onClick={() => applyPreset(preset)}
+              >
+                {preset.name}
+              </button>
+            ))}
             </div>
-            <div class="divider"></div>
-            <div  className="settings-controls">
+            <div className="divider"></div>
+            <div className="settings-controls">
             <h3>הגדרות משחק:</h3>
               <label>
                 זמן באלפיות שנייה: {displayTime}:
@@ -538,7 +579,7 @@ const ScanningGame = ({activeUser}) => {
                   onChange={(e) => setTargetChar(e.target.value)}
                 />
               </label>
-            </div>
+              </div>
             </div>
           )}
           

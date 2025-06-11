@@ -5,7 +5,8 @@ import AlertDialog from '../Components/Alert';
 
 
 
-const ColorShadeGame = ({activeUser}) => {
+const ColorShadeGame = ({activeUser, IsTest, onTestComplete}) => {
+
   const [balls, setBalls] = useState([]);
   const [targetBall, setTargetBall] = useState(null);
   const [score, setScore] = useState(0);
@@ -23,10 +24,13 @@ const ColorShadeGame = ({activeUser}) => {
   const [showAlert, setShowAlert] = useState(false);
 
   // Test mode states
-  const [isTestMode, setIsTestMode] = useState(false);
+  const [isTestMode, setIsTestMode] = useState(IsTest);
   const [testLevel, setTestLevel] = useState(1);
   const [testComplete, setTestComplete] = useState(false);
   const [finalLevel, setFinalLevel] = useState(0);
+  // Track test results for accuracy calculation
+  const [testResults, setTestResults] = useState([]);
+
 
   const colors = {
     blue: ['#0080ff', '#007cff'],
@@ -50,6 +54,29 @@ const ColorShadeGame = ({activeUser}) => {
     { level: 9, difficulty: 7, ballCount: 22, ballSize: 1.3, color: 'yellow', shape: 'square' },
     { level: 10, difficulty: 8, ballCount: 25, ballSize: 1, color: 'green', shape: 'star' },
   ];
+
+  // Function to process the results for the test component
+const processResults = (results, finalLevel, config) => {
+  // Process the game results to return a simplified object
+  // with the most important information for the test component
+  return {
+    finalLevel: finalLevel || 0,
+    shadeDifference: 10 - config.difficulty, // Convert difficulty to a percentage difference
+    tileSize: config.ballSize,
+    colorName: config.color,
+    ballCount: config.ballCount,
+    shape: config.shape,
+    accuracy: calculateAccuracy(results)
+  };
+};
+
+// Function to calculate accuracy from results
+const calculateAccuracy = (results) => {
+  if (!results || results.length === 0) return 0;
+  
+  const correct = results.filter(result => result === true).length;
+  return Math.round((correct / results.length) * 100);
+};
 
   // Function to generate balls with one target ball
   const generateBalls = () => {
@@ -103,12 +130,14 @@ const ColorShadeGame = ({activeUser}) => {
     
     generateBalls();
   };
-
   // Function to handle ball selection
   const handleBallClick = (id) => {
     if (!isGameActive) return;
     const correct = id === targetBall;
     setFeedback(correct ? 'מצויין!' : 'נסו שוב!');
+    
+    // Add to test results for accuracy calculation
+    setTestResults(prevResults => [...prevResults, correct]);
     
     if (correct) {
       setScore(score + 1);
@@ -137,6 +166,12 @@ const ColorShadeGame = ({activeUser}) => {
           setFinalLevel(testLevel);
           setTestComplete(true);
           setIsGameActive(false);
+          
+          // Call onTestComplete with processed results
+          if (onTestComplete) {
+            const config = testConfig[testLevel - 1];
+            onTestComplete(processResults(testResults, testLevel, config));
+          }
         }
       }
     } else {
@@ -147,6 +182,12 @@ const ColorShadeGame = ({activeUser}) => {
         setFinalLevel(testLevel - 1);
         setTestComplete(true);
         setIsGameActive(false);
+        
+        // Call onTestComplete with processed results
+        if (onTestComplete) {
+          const config = testConfig[Math.max(0, testLevel - 2)];
+          onTestComplete(processResults(testResults, testLevel - 1, config));
+        }
       }
     }
     
@@ -338,9 +379,13 @@ const applyPreset = (preset) => {
         <br/>השחק מסתיים לאחר 5 סיבובים, בהצלחה!
         </h3>
         
-        <button onClick={() => { setIsTestMode((prev) => !prev); setScore(0); }}>
-          {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>  
-        </button>
+
+        {!IsTest && ( 
+            <button onClick={() => { setIsTestMode((prev) => !prev); setScore(0); }}>
+            {isTestMode ? 'שחק במשחק הרגיל' : 'שחק במבדק'} <i className="fa-regular fa-eye"></i>  
+            </button>
+          )}
+      
       </div>)}
 
       {!isGameActive && score === 0 && !isTestMode && (
