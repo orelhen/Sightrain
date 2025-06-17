@@ -26,8 +26,9 @@ const MainFrame = () => {
     const location = useLocation();
     const [activeComponent, setActiveComponent] = useState(''); // TODO: navigate to home page based on use.
     const [theme, setTheme] = useState('light');  // light, dark, high-contrast
-    const [activeUser, setActiveUser] = useState(location.state.patientId); // TODO: get the active user from the firebase.
+    const [activeUser, setActiveUser] = useState(location.state ? location.state.patientId || "" : ""); // Get patient ID from location or use empty string
     const [user, setUser] = useState(null);
+    const [showControllers, setShowControllers] = useState(false);
 
 
     const toggleTheme = () => {
@@ -85,8 +86,6 @@ const MainFrame = () => {
     }, []);
     
 
-    const [showControllers, setShowControllers] = useState(true);
-
     const toggleControllers = () => {
         setShowControllers(!showControllers);
     };
@@ -117,7 +116,7 @@ const MainFrame = () => {
 
                 {activeComponent === 'profile' && <UserProfile Loggedinuserdata={user}/>}
                 {activeComponent === 'patientManagment' && <PatientManagement setActiveUser={setActiveUser} ComponentClick={setActiveComponent} Loggedinuserdata={user}/>}
-                {activeComponent === 'HomePage' && <HomePage/>}
+                {activeComponent === 'HomePage' && <HomePage />}
                 {activeComponent === 'cgHomePage' && <CgHomepage ComponentClick={setActiveComponent} />}
                 {activeComponent === 'manual' && <Manual />}
                 {activeComponent === 'Catch5Game' && <Catch5Game activeUser={activeUser} />}

@@ -64,6 +64,7 @@ function LoginPage() {
         <section className="form-container main_section_prop">
             
             <div className="form-content">
+                
             <h1 className="main_logo">SighTrain</h1>
                 
                 <form className='login_form' onSubmit={handleSubmit}>
@@ -95,12 +96,14 @@ function LoginPage() {
                            <i class="fa-solid fa-user-secret"></i> המשך כאורח
                         </button>
                     </div>
+                  
             </div>
             <div className="iframe_bg">
 
-                <iframe className="main_iframe" title="Eye Training Image"/>          
+                <iframe
+               className="main_iframe" title="Eye Training Image"/>          
         
-                <div className="why_overlay">
+                 <div className="why_overlay">
                     <div className="why_overlay_btn"><a>למה אנחנו?</a></div>
                     <p>
                         ההרשמה לאתר SighTrain מאפשרת לכל משתמש לקבל חוויית אימון אישית וממוקדת.<br />
