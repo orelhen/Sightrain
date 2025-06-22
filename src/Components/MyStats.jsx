@@ -100,7 +100,7 @@ Object.entries(user?.gameResults || {}).forEach(([date, session]) => {
   
     return (
         <div>
-                <div className="summary-table">
+                <div className="summary-table text-center">
                     <h3>סיכום תוצאות משחקים</h3>
                     {user?.gameResults ? (
                         <div>

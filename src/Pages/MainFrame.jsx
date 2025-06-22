@@ -110,7 +110,7 @@ const MainFrame = () => {
             </button>
             <main>
                 
-                <h3>
+                <h3 className="text-center">
                     {activeUser !== "" ? `ברוכים הבאים משתמש מספר ${activeUser}` : ""}
                 </h3>
 

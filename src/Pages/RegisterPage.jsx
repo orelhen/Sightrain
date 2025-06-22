@@ -3,6 +3,7 @@ import '../css/PagesCss/Register.css';
 import { getAuth, createUserWithEmailAndPassword } from "../firebase.js";
 import { useNavigate } from 'react-router-dom'; 
 import AlertDialog from '../Components/Alert';
+import InputForm from '../Components/InputForm.jsx';
 
 const RegisterPage = () => {
     const [userId, setUserId] = useState('');
@@ -99,8 +100,25 @@ const RegisterPage = () => {
         handleRegistration();
     };
 
+    const [showInputForm, setShowInputForm] = useState(false);
+
     return (
+        <div>
+        {showInputForm && (
+            <InputForm 
+                message="אנא הזן קוד מטפל להמשך ההרשמה"
+                correctPassword="TOM"
+                onSuccess={() => {
+                    setRole('caregiver');
+                    setShowRegistrationForm(true);
+                    setShowRegistrationType(false);
+                    setShowInputForm(false);
+                }}
+                onCancel={() => setShowInputForm(false)}
+            />
+        )}
         <section className="registration-section main_section_prop">
+            
                 {showRegistrationType && (
                 <div className="registration-options text-center">
                     <h1 className="main_logo">SighTrain</h1>
@@ -124,21 +142,7 @@ const RegisterPage = () => {
                     
                     <div 
                         className="registration-card caregiver-card"
-                        onClick={() => {
-                            // Show prompt for caregiver code
-                            
-                            const caregiverCode = prompt("אנא הזן קוד מטפל:");
-                            // Check if code is correct - use a proper validation in production
-                            if (caregiverCode !== "TOM") { // Replace with your actual verification logic
-                                alert("קוד שגוי. רק מטפלים מורשים יכולים להירשם.");
-                                return; // Stop the registration process if code is incorrect
-                            }
-
-                            // If code is correct, continue with registration
-                            setRole('caregiver');
-                            setShowRegistrationForm(true);
-                            setShowRegistrationType(false);
-                        }}
+                        onClick={() => setShowInputForm(true)}
                     >
                         <div className="card-icon">👨‍⚕️</div>
                         <h2>הרשמה כמטפל</h2>
@@ -183,26 +187,30 @@ const RegisterPage = () => {
                                     </select>
                                 </label>
                             )}
-                            </div>
-    
-                            <div className="reg_btn_container">
-                                <button type="submit">הירשם</button>
-                                {serverMessage && <p className="server-message">{serverMessage}</p>}
-                                <h3>כבר יש לך חשבון?</h3>
-                                    <button type="button" onClick={() =>  navigate('/login')}>   התחבר
-                                    </button>
-                            </div>
-                        </form>)}
+                                </div>
+        
+                                <div className="reg_btn_container">
+                                    <button type="submit">הירשם</button>
+                                    {serverMessage && <p className="server-message">{serverMessage}</p>}
+                                    <h3>כבר יש לך חשבון?</h3>
+                                    <button type="button" onClick={() => navigate('/login')}>התחבר</button>
+                                </div>
+                            </form>
+                        )}
                     </div>
 
             {showAlert && (
-                        <AlertDialog 
-                            open={showAlert} 
-                            title="שגיאת התחברות" 
-                            message={serverMessage}
-                            onClose={() => setShowAlert(false)}
-                        />  )}
+                <AlertDialog 
+                    open={showAlert} 
+                    title="שגיאת התחברות" 
+                    message={serverMessage}
+                    onClose={() => setShowAlert(false)}
+                />
+            )}
+
+          
         </section>
+        </div>
     );
 };
 

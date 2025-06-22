@@ -16,7 +16,6 @@ body {
 
 .text-center{
   text-align: center;
-  color:black;
 }
 
 h1{
@@ -629,8 +628,8 @@ font-size: 24px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border-radius: 15px;
     transition: 0.4s all;
-        text-align: center;
-        color: black;
+    text-align: center;
+    color: black;
 }
 
 .button-group {
@@ -728,6 +727,7 @@ font-size: 24px;
 .footer-logo {
   width: 300px; /* Adjust as needed */
   object-fit:contain;
+  background-color: white;
 }
 
 .main_logo_sbar{
@@ -806,3 +806,147 @@ font-size: 24px;
   font-size: 26px;
   font-weight: bold;
 }
+
+
+/* Notes in profile component */
+
+.notes-section{
+  border-radius: 15px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  padding: 5%;
+  text-align: center;
+  border: 3px solid black;
+}
+
+/* Notes Grid Layout */
+.notes-list {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* Single Note Card */
+.note-card {
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 3px solid black;
+
+}
+
+.note-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Title */
+.note-title {
+  font-weight: 600;
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+
+/* Content */
+.note-content {
+  font-size: 14px;
+  line-height: 1.5;
+  flex-grow: 1;
+  margin-bottom: 12px;
+}
+
+/* Footer Row */
+.note-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+/* Action Buttons */
+.note-footer button {
+  border: none;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s ease;
+}
+
+
+/* Note Input Section */
+input[type="text"] {
+  font-family: 'Rubik';
+  font-size: 20px;
+  margin: 10px auto;
+  padding: 15px;
+  border: 4px solid #000;
+  border-radius: 8px;
+  background: #f5f6f8;
+  transition: 0.4s all;
+}
+.note-input {
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+.note-input input,
+.note-input textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+}
+
+.note-input input:focus,
+.note-input textarea:focus {
+  outline: none;
+}
+
+.note-input button {
+  border: none;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+
+
+/* Edit Mode Fields */
+.note-card input,
+.note-card textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* Edit Buttons Container */
+.edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.edit-buttons button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
