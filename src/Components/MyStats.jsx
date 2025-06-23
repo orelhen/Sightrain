@@ -7,9 +7,36 @@ const MyStats = ({ Loggedinuserdata ,activeUser }) => {
     const [user, setUser] = useState(Loggedinuserdata);
     const [selectedSession, setSelectedSession] = useState(null);
      // Helper functions
-
     useEffect(() => {
-        if (activeUser!== "") {
+        // Refresh stats when MyStats is shown or activeUser changes
+        if (activeUser !== "") {
+            const fetchUserData = async (activeUser) => {
+                const userDoc = doc(firestore, "patients", activeUser);
+                const userSnapshot = await getDoc(userDoc);
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    setUser({
+                        id: userData.ID,
+                        age: userData.age,
+                        createdAt: userData.createdAt,
+                        email: userData.email,
+                        patients: userData.patients || [],
+                        hospital: userData.hospital,
+                        name: userData.name,
+                        role: userData.role,
+                        gameResults: userData.gameResults || {},
+                    });
+                } else {
+                    console.error("No such user document!");
+                }
+            };
+            fetchUserData(activeUser);
+        }
+        // Only refresh when MyStats is the active component
+    }, [activeUser, window.location.pathname]);
+    // Ensure component refreshes every time it is opened by listening to route changes
+    useEffect(() => {
+        if (activeUser !== "") {
             const fetchUserData = async (activeUser) => {
                 const userDoc = doc(firestore, "patients", activeUser);
                 const userSnapshot = await getDoc(userDoc);
@@ -33,6 +60,32 @@ const MyStats = ({ Loggedinuserdata ,activeUser }) => {
             fetchUserData(activeUser);
         }
     }, [activeUser]);
+
+    // Optional: force refresh when component is mounted (covers navigation to this component)
+    useEffect(() => {
+        if (activeUser !== "") {
+            const fetchUserData = async (activeUser) => {
+                const userDoc = doc(firestore, "patients", activeUser);
+                const userSnapshot = await getDoc(userDoc);
+                if (userSnapshot.exists()) {
+                    const userData = userSnapshot.data();
+                    setUser({
+                        id: userData.ID,
+                        age: userData.age,
+                        createdAt: userData.createdAt,
+                        email: userData.email,
+                        patients: userData.patients || [],
+                        hospital: userData.hospital,
+                        name: userData.name,
+                        role: userData.role,
+                        gameResults: userData.gameResults || {},
+                    });
+                }
+            };
+            fetchUserData(activeUser);
+        }
+        // eslint-disable-next-line
+    }, []);
 
     const calculateCatch5Stats = (gamesBySession) => {
         const allGames = [];

@@ -273,36 +273,38 @@ const ScanningGame = ({activeUser, IsTest , onTestComplete}) => {
       
       const sessionKey = `Session (${new Date().toLocaleDateString()})`;
       const gameData = {
-        correctDetections,
-        totalTargets,
-        reactionTimes,
-        averageReactionTime: reactionTimes.length > 0
+        correctDetections: correctDetections ?? 0,
+        totalTargets: totalTargets ?? 0,
+        reactionTimes: Array.isArray(reactionTimes) ? reactionTimes : [],
+        averageReactionTime: reactionTimes && reactionTimes.length > 0
           ? (reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length).toFixed(2)
-          : null,
-        displayTime,
-        charactersPerRow,
-        spacing,
-        fontSize,
-        symbolSetType,
-        scanDirection,
-        targetChar,
-        numberOfLines,
-        isTestMode: isTestMode,
-        ...(isTestMode && { finalLevel, testLevel }),
+          : 0,
+        displayTime: displayTime ?? 0,
+        charactersPerRow: charactersPerRow ?? 0,
+        spacing: spacing ?? 0,
+        fontSize: fontSize ?? 0,
+        symbolSetType: symbolSetType ?? '',
+        scanDirection: scanDirection ?? '',
+        targetChar: targetChar ?? '',
+        numberOfLines: numberOfLines ?? 0,
+        isTestMode: !!isTestMode,
+        ...(isTestMode && finalLevel !== 0 ? { finalLevel: finalLevel ?? 0 } : {}),
+        ...(isTestMode && testLevel !== 0 ? { testLevel: testLevel ?? 0 } : {}),
         timestamp: new Date().toISOString()
       };
 
       if (activeUser !== "") {
         // Save to patient document
         const patientDoc = doc(firestore, "patients", activeUser);
-        // If document doesn't exist, initialize it with empty gameResults
         const patientSnapshot = await getDoc(patientDoc);
+
         if (!patientSnapshot.exists()) {
           await setDoc(patientDoc, { gameResults: {} });
-          console.log("Patient document created successfully!");
         }
+
         const patientData = patientSnapshot.exists() ? patientSnapshot.data() : { gameResults: {} };
-        const existingGames = patientData.gameResults?.[sessionKey]?.["ScanningGame"] || [];
+        const existingGames = (patientData.gameResults && patientData.gameResults[sessionKey] && patientData.gameResults[sessionKey]["ScanningGame"]) ? patientData.gameResults[sessionKey]["ScanningGame"] : [];
+
         const patientResults = {
           gameResults: {
             ...patientData.gameResults,
@@ -312,11 +314,11 @@ const ScanningGame = ({activeUser, IsTest , onTestComplete}) => {
             }
           }
         };
-        
+
         await setDoc(patientDoc, patientResults, { merge: true });
         console.log("Patient results saved successfully!");
-        
-        setStage('start')
+
+        setStage('start');
       } else {
         // Save to user document
         if (user) {
