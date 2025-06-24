@@ -451,6 +451,11 @@ const QuickMemoryGame = ({activeUser, IsTest, onTestComplete}) => {
                         onChange={handleInputChange}
                         maxLength={numberOfDigits.toString()}
                         autoFocus
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                handleInputSubmit();
+                            }
+                        }}
                     />
                     <button onClick={handleInputSubmit}>אישור</button>
                     {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

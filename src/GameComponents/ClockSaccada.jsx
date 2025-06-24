@@ -316,7 +316,8 @@ const SaccadeClockGame = ({activeUser}) => {
           {Array.from({ length: symbolLength }).map((_, index) => {
             let symbolStyle = {
               fontSize: `${fontSize}rem`,
-              position: 'absolute'
+              position: 'absolute',
+              color: 'black',
             };
 
             let hourPositions;
@@ -377,6 +378,11 @@ const SaccadeClockGame = ({activeUser}) => {
             onChange={e => setUserInput(e.target.value.slice(0, 5))}
             onKeyDown={e => e.key === 'Enter' && handleInput()}
             maxLength={5}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleInput();
+              }
+          }}
           />
           <button onClick={handleInput}>שלח</button>
         </div>

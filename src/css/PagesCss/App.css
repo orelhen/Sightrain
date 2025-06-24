@@ -486,6 +486,7 @@ select option {
   text-align: center;
   direction: rtl; /* for Hebrew text */
   font-family: Arial, sans-serif;
+color:black;
 }
 
 .alert-message {

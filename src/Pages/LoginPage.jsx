@@ -99,7 +99,6 @@ function LoginPage() {
                   
             </div>
             <div className="iframe_bg">
-
                 <iframe
                className="main_iframe" title="Eye Training Image"/>          
         
