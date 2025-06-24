@@ -23,7 +23,7 @@
     text-align: center;
   }
   
-  .form-content input {
+  .login_form input, .login_form input[type="text"], input[type="text"] {
     height: 50px;
     font-family: 'Rubik';
     font-size: 20px;

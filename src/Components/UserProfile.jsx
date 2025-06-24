@@ -1,6 +1,6 @@
-import '../css/ComponentsCss/UserProfile.css';
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import "../css/ComponentsCss/UserProfile.css";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import {
   firestore,
@@ -9,7 +9,7 @@ import {
   getDocs,
   addDoc,
   updateDoc,
-  deleteDoc
+  deleteDoc,
 } from "../firebase.js";
 
 const UserProfile = ({ Loggedinuserdata }) => {
@@ -27,9 +27,9 @@ const UserProfile = ({ Loggedinuserdata }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error("Error logging out:", error);
     }
   };
 
@@ -38,7 +38,10 @@ const UserProfile = ({ Loggedinuserdata }) => {
       if (!currentUser?.uid) return;
       const notesRef = collection(firestore, "users", currentUser.uid, "notes");
       const notesSnapshot = await getDocs(notesRef);
-      const notesList = notesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const notesList = notesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       setNotes(notesList);
     };
 
@@ -53,7 +56,7 @@ const UserProfile = ({ Loggedinuserdata }) => {
       const docRef = await addDoc(notesRef, {
         title: newNote.title,
         content: newNote.content,
-        timestamp
+        timestamp,
       });
       setNotes([...notes, { id: docRef.id, ...newNote, timestamp }]);
       setNewNote({ title: "", content: "" });
@@ -64,17 +67,19 @@ const UserProfile = ({ Loggedinuserdata }) => {
 
   const handleDeleteNote = async (noteId) => {
     await deleteDoc(doc(firestore, "users", currentUser.uid, "notes", noteId));
-    setNotes(notes.filter(note => note.id !== noteId));
+    setNotes(notes.filter((note) => note.id !== noteId));
   };
 
   const handleEditNote = async (noteId, updatedContent) => {
     await updateDoc(doc(firestore, "users", currentUser.uid, "notes", noteId), {
       title: updatedContent.title,
-      content: updatedContent.content
+      content: updatedContent.content,
     });
-    setNotes(notes.map(note =>
-      note.id === noteId ? { ...note, ...updatedContent } : note
-    ));
+    setNotes(
+      notes.map((note) =>
+        note.id === noteId ? { ...note, ...updatedContent } : note
+      )
+    );
     setEditNoteId(null);
   };
 
@@ -90,94 +95,145 @@ const UserProfile = ({ Loggedinuserdata }) => {
     return (
       <div className="profile-container">
         <h2>משתמש לא מחובר</h2>
-        <button onClick={() => navigate('/login')}>התחבר</button>
+        <button onClick={() => navigate("/login")}>התחבר</button>
       </div>
     );
   }
 
   return (
-    <div className="profile-page">
-    <div className="profile-container">
-      <h2>הפרופיל שלי</h2>
+    <section className="form-container main_section_prop profile-page">
+      <div className="profile-container">
+        <h2>הפרופיל שלי</h2>
 
-      <img src="../images/user_profile.jpg"  className="profile-image" />
+        <img src="../images/user_profile.jpg" className="profile-image" />
 
-      <p className="profile-info"><strong>שם מלא:</strong> {user?.name}</p>
-      <p className="profile-info"><strong>כתובת מייל:</strong> {user?.email}</p>
-      <p className="profile-info"><strong>תאריך לידה:</strong> {user?.age}</p>
+        <p className="profile-info">
+          <strong>שם מלא:</strong> {user?.name}
+        </p>
+        <p className="profile-info">
+          <strong>כתובת מייל:</strong> {user?.email}
+        </p>
+        <p className="profile-info">
+          <strong>תאריך לידה:</strong> {user?.age}
+        </p>
 
-      {user?.role === "caregiver" && (
-        <p className="profile-info"><strong>מחלקה:</strong> {user?.department}</p>
-      )}
+        {user?.role === "caregiver" && (
+          <p className="profile-info">
+            <strong>מחלקה:</strong> {user?.department}
+          </p>
+        )}
 
-      <button style={{ backgroundColor: 'red'}} onClick={handleLogout}>התנתק</button>
-      <hr />
+        <button style={{ backgroundColor: "#d56666" }} onClick={handleLogout}>
+          התנתק <i className="fa-solid fa-right-from-bracket"></i>
+        </button>
       </div>
+
       {/* Notes Section */}
       <div className="notes-section">
-        <h2>פתקים</h2>
-        
-        <button 
-          className="new-note-btn" 
+        <button
+          className="new-note-btn"
           onClick={() => setShowNoteInput(!showNoteInput)}
         >
-          {showNoteInput ? "ביטול הוספה" : "➕ פתק חדש"}
+          {showNoteInput ? (
+            ""
+          ) : (
+            <div>
+              <i className="fa-regular fa-note-sticky"></i> פתק חדש
+            </div>
+          )}
         </button>
 
         {showNoteInput && (
-          <div className="note-input">
-            <input
-              placeholder="כותרת"
-              value={newNote.title}
-              onChange={(e) => setNewNote({ ...newNote, title: e.target.value })}
-            />
-            <textarea
-              placeholder="כתוב לעצמך תזכורת או הערה..."
-              value={newNote.content}
-              onChange={(e) => setNewNote({ ...newNote, content: e.target.value })}
-              rows={3}
-            />
-            <button onClick={() => {
-              handleAddNote();
-              setShowNoteInput(false);
-            }}>💾 שמור הערה</button>
+          <div className="note-input-overlay">
+            <div className="note-input">
+              <input
+                placeholder="כתוב כותרת..."
+                value={newNote.title}
+                onChange={(e) =>
+                  setNewNote({ ...newNote, title: e.target.value })
+                }
+              />
+              <textarea
+                placeholder="כתוב לעצמך תזכורת או הערה..."
+                value={newNote.content}
+                onChange={(e) =>
+                  setNewNote({ ...newNote, content: e.target.value })
+                }
+                rows={3}
+              />
+
+              <div className="notes-btn-wrapper">
+                <button
+                  onClick={() => {
+                    handleAddNote();
+                    setShowNoteInput(false);
+                  }}
+                >
+                  <i className="fa-solid fa-floppy-disk"></i> שמור הערה
+                </button>
+                <button
+                  onClick={() => {
+                    setShowNoteInput(false);
+                  }}
+                >
+                  <i className="fa-solid fa-xmark"></i> ביטול
+                </button>
+              </div>
+            </div>
           </div>
         )}
 
+        <h2 className="text-center" style={{ color: "black" }}>
+          פתקים
+        </h2>
+
         <ul className="notes-list">
-          {notes.map(note => (
+          {notes.map((note) => (
             <li key={note.id} className="note-card">
               {editNoteId === note.id ? (
                 <>
                   <input
                     value={editContent.title}
-                    onChange={(e) => setEditContent({ ...editContent, title: e.target.value })}
+                    onChange={(e) =>
+                      setEditContent({ ...editContent, title: e.target.value })
+                    }
                   />
                   <textarea
                     value={editContent.content}
-                    onChange={(e) => setEditContent({ ...editContent, content: e.target.value })}
+                    onChange={(e) =>
+                      setEditContent({
+                        ...editContent,
+                        content: e.target.value,
+                      })
+                    }
                     rows={3}
                   />
                   <div className="edit-buttons">
-                    <button onClick={() => handleEditNote(note.id, editContent)}>💾 שמור</button>
-                    <button onClick={cancelEdit}>❌ בטל</button>
+                    <button
+                      onClick={() => handleEditNote(note.id, editContent)}
+                    >
+                      <i className="fa-solid fa-floppy-disk"></i> שמור
+                    </button>
+                    <button onClick={cancelEdit}>
+                      <i className="fa-solid fa-xmark"></i> בטל
+                    </button>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="note-title">{note.title}
-                  <hr />
+                  <div className="note-title">{note.title}</div>
 
-                  </div>
-                  
                   <div className="note-content">{note.content}</div>
                   <div className="note-footer">
                     <span>{new Date(note.timestamp).toLocaleDateString()}</span>
                     <div>
-                      <button onClick={() => startEditingNote(note)}>✏️ערוך</button>
-                      <button onClick={() => handleDeleteNote(note.id)}>🗑️מחק</button>
+                      <button onClick={() => startEditingNote(note)}>
+                        <i className="fa-solid fa-pen"></i> ערוך
+                      </button>
+                      <button onClick={() => handleDeleteNote(note.id)}>
+                        <i className="fa-solid fa-trash"></i> מחק
+                      </button>
                     </div>
-                    
                   </div>
                 </>
               )}
@@ -185,8 +241,7 @@ const UserProfile = ({ Loggedinuserdata }) => {
           ))}
         </ul>
       </div>
-   
-    </div>
+    </section>
   );
 };
 

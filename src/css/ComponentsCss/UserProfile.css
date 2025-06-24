@@ -1,114 +1,298 @@
-/* Container for the profile component */
-.profile-page{
-  align-content: center;
+.profile-page {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding-left: 10%;
+  justify-content: space-around;
+  align-items: stretch;
+  max-height: 70vh;
 }
 
 .profile-container {
-    margin: 2rem auto;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    border: 3px solid black;
-  }
-  
-  /* Heading for the profile section */
-  .profile-container h2 {
-    margin-bottom: 1rem;
+  padding: 2em;
+  width: 40%;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-  }
-  
-  /* Profile image styling */
-  .profile-image {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 1rem;
-    border: 3px solid black;
-  }
-  
-  /* User information text */
-  .profile-info {
-    margin: 0.5rem 0;
-  }
-  
-  /* Bold labels for user details */
-  .profile-info strong {
-  }
-  
-  /* Button styling */
-  .profile-button {
-    display: inline-block;
-    margin-top: 1.5rem;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    font-size: 1rem;
-  }
-  
-  /* Button hover effect */
-  .profile-button:hover {
-  }
-  
-  .summary-table {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-    overflow: hidden;
-  }
+/* Heading for the profile section */
+.profile-container h2 {
+  margin-bottom: 1rem;
+}
 
-  .summary-table h3, .summary-table h4, .summary-table h5 {
-    margin-bottom: 10px;
-  }
+/* Profile image styling */
+.profile-image {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid black;
+}
 
-  .summary-table table {
-    border-collapse: collapse;
-    display: block;
-    overflow-y: auto;
-    max-height: calc(8.5 * 44px); /* Assuming each row is 44px high */
-  }
+/* User information text */
+.profile-info {
+  margin: 0.5rem 0;
+}
 
-  .summary-table thead, .summary-table tbody {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
+/* Bold labels for user details */
+.profile-info strong {
+}
 
-  .summary-table th, .summary-table td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-  }
+/* Button styling */
+.profile-button {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+}
 
-  .summary-table th {
-    font-weight: bold;
-    border-radius: 16px;
-    border: 5px solid #fff;
-  }
-  .session-list {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 1rem 0;
-    justify-content: center;
-  }
+/* Notes in profile component */
+.notes-section {
+  width: 60%;
+  padding: 2em;
+  background: url("C:\Users\orelh\OneDrive\Desktop\sightrain\Sightrain\src\assets\forget-notes.jpg");
+  background-size: cover;
+}
 
-  .session-list li {
-    flex: 0 1 auto;
-  }
+.note-input-overlay {
+  position: fixed;
+  width: 59.3%;
+  left: 0;
+  transform: translateY(-50%);
+  top: 50%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 555;
+}
 
-  .summary-table tr:hover {
-  }
+.note-input {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 10px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
 
+.notes-btn-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.note-input {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+}
+
+.note-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.note-input input,
+.note-card input {
+  border-radius: 10px;
+  border: 0;
+  background: #f5f6f8;
+  font-family: "Rubik";
+  font-size: 20px;
+  font-weight: 800;
+  padding: 15px;
+}
+
+.note-input textarea,
+.note-card textarea {
+  width: unset;
+  border-radius: 10px;
+  border: 0;
+  margin: 15px 0;
+  background: #f5f6f8;
+}
+
+ul.notes-list {
+  padding: 0;
+  max-height: 50vh;
+  overflow-y: scroll;
+  padding-left: 15px;
+}
+
+ul.notes-list::-webkit-scrollbar {
+  width: 10px;
+}
+
+ul.notes-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+ul.notes-list::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 10px;
+}
+
+ul.notes-list::-webkit-scrollbar-thumb:hover {
+  background: #424242;
+}
+
+li.note-card {
+  background: #ffffff;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.note-title {
+  font-weight: bold;
+  width: fit-content;
+  border-bottom: 2px dashed;
+  margin-bottom: 15px;
+  color: black;
+}
+
+.note-content {
+  word-break: break-all;
+  font-size: 20px;
+  color: black;
+}
+
+.note-footer {
+  font-size: 16px;
+  text-align: left;
+  color: #ababab;
+}
+
+li.note-card:nth-child(1) {
+  margin-top: 0;
+}
+
+/*** TABLE ***/
+.stats_main {
+  display: flex;
+  justify-content: center;
+}
+
+.summary-table {
+  margin: 2em;
+  max-width: 80%;
+  padding: 15px;
+  border-radius: 15px;
+  border: 3px solid black;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.summary-table h3,
+.summary-table h4,
+.summary-table h5 {
+  margin-bottom: 10px;
+}
+
+.summary-table table {
+  border-collapse: collapse;
+  display: block;
+  overflow-x: hidden;
+  border-radius: 10px;
+  overflow-y: auto;
+  max-height: calc(8.5 * 44px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.summary-table thead,
+.summary-table tbody {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.summary-table th,
+.summary-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.summary-table th {
+  font-weight: bold;
+  border: 0;
+  background: #f5f6f8;
+  border: 1px solid #d7d7d7;
+  color: black;
+}
+
+.summary-table thead {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 2;
+}
+.session-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  justify-content: center;
+}
+
+.session-list li {
+  flex: 0 1 auto;
+}
+
+.summary-table table::-webkit-scrollbar {
+  width: 10px;
+}
+
+.summary-table table::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.summary-table table::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 10px;
+}
+
+.summary-table table::-webkit-scrollbar-thumb:hover {
+  background: #424242;
+}
+
+.game-summary ul {
+  justify-content: center;
+  display: flex;
+}
+
+.game-summary ul li {
+  background-color: #f5f6f8;
+  margin: 0 10px;
+  padding: 20px 35px;
+  font-size: 26px;
+  display: flex;
+  line-height: 32px;
+  font-weight: bold;
+  border-radius: 10px;
+  flex-direction: column;
+  color: black;
+}
+
+.game-summary ul li i {
+  font-size: 30px;
+  background: #fff;
+  margin: 0 auto;
+  padding: 5px;
+  border-radius: 50%;
+  width: 50px;
+  display: flex;
+  height: 50px;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: center;
+  box-shadow: 0 5px 24px rgba(0, 0, 0, 0.05);
+}
