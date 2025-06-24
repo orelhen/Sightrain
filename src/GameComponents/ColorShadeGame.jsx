@@ -374,7 +374,7 @@ const applyPreset = (preset) => {
 
   return (
     <div className="game">
-      <h2>משחק צבעים</h2>
+      <h2>הבחנת צבעים</h2>
       {!isGameActive &&( 
       <div className="gamedesc">
         <h3>

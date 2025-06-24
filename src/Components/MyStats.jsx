@@ -270,19 +270,28 @@ const MyStats = ({  activeUser }) => {
         <h1>סיכום תוצאות משחקים</h1>
         {user?.gameResults ? (
           <div>
-            <label htmlFor="session-select"></label>
+          <h3>בחר תאריך:</h3>
             <select
+            
               id="session-select"
               value={selectedSession || ""}
               onChange={(e) => setSelectedSession(e.target.value)}
               style={{ minWidth: 180, margin: "10px" }}
             >
               <option value="all">כל התאריכים</option>
-              {Object.keys(user.gameResults).map((session) => (
-                <option key={session} value={session}>
-                  {session.replace("Session (", "").replace(")", "")}
-                </option>
-              ))}
+              {Object.keys(user.gameResults)
+                .sort((a, b) => {
+                  // Extract dates and convert to comparable format
+                  const dateA = new Date(a.replace("Session (", "").replace(")", ""));
+                  const dateB = new Date(b.replace("Session (", "").replace(")", ""));
+                  // Sort in descending order (newest first)
+                  return dateB - dateA;
+                })
+                .map((session) => (
+                  <option key={session} value={session}>
+                    {session.replace("Session (", "").replace(")", "")}
+                  </option>
+                ))}
             </select>
 
             {selectedSession && (
@@ -358,7 +367,7 @@ const MyStats = ({  activeUser }) => {
                       )}
                       {allQuickMemoryGames.length > 0 && (
                         <div>
-                          <h2>תוצאות משחק זיכרון מהיר:</h2>
+                          <h2>תוצאות עבור זיכרון חזותי:</h2>
                           {(() => {
                             const stats = calculateQuickMemoryStats(allQuickMemoryGames);
                             return (
@@ -413,7 +422,7 @@ const MyStats = ({  activeUser }) => {
 
                           {allCatch5Games.length > 0 && (
                           <div>
-                            <h2>תוצאות משחק Catch5:</h2>
+                            <h2>תוצאות עבור תגובה ממוקדם:</h2>
                             {(() => {
                             const stats =
                               calculateCatch5Stats(catch5GamesBySession);
@@ -483,7 +492,7 @@ const MyStats = ({  activeUser }) => {
                       )}
                       {allSaccadeClockGames.length > 0 && (
                         <div>
-                          <h2>תוצאות משחק שעון סקאדות:</h2>
+                          <h2>תוצאות עבור סריקה מעגלית:</h2>
                           {(() => {
                             const stats = calculateSaccadeClockStats(allSaccadeClockGames);
                             return (
@@ -540,7 +549,7 @@ const MyStats = ({  activeUser }) => {
 
                       {allScanningGames.length > 0 && (
                         <div>
-                          <h2>תוצאות משחק סריקה:</h2>
+                          <h2>תוצאות עבור סריקה רוחבית:</h2>
                           {(() => {
                             const stats = calculateScanningStats(allScanningGames);
                             return (
@@ -600,7 +609,7 @@ const MyStats = ({  activeUser }) => {
                       )}
                       {allColorShadeGames.length > 0 && (
                         <div>
-                          <h2>תוצאות משחק ColorShade:</h2>
+                          <h2>תוצאות עבור הבחנת צבעים:</h2>
                           {(() => {
                             const stats =
                               calculateColorShadeStats(allColorShadeGames);

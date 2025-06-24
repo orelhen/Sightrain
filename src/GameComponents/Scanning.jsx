@@ -462,7 +462,7 @@ const ScanningGame = ({activeUser, IsTest , onTestComplete}) => {
     <div className="game">
       {stage === 'start' && (
         <div>
-          <h2>סריקה לרוחב</h2>
+          <h2>סריקה רוחבית</h2>
           <div className="gamedesc">
             <h3>
               משחק זה נועד לשפר את מהירות הסריקה החזותית, זיהוי דפוסים ותגובה מהירה.<br/>

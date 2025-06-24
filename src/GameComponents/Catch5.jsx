@@ -228,7 +228,7 @@ const Catch5Game = ({ activeUser }) => {
 
   return (
     <div className="game" style={{ textAlign: "center", marginTop: "20px" }}>
-      <h1>תפסו את ה 5</h1>
+      <h2>תגובה ממוקדת/תפסו את ה5</h2>
 
       {!isGameRunning && !gameEnd && !isGamePaused && (
         <div>

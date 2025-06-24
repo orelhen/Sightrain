@@ -230,7 +230,7 @@ const SaccadeClockGame = ({activeUser}) => {
 
   return (
     <div className="game">
-      <h2>סקאדת שעון</h2>
+      <h2>סריקה מעגלית</h2>
       {stage === 'start' && (
         <div>
         <div className="gamedesc">

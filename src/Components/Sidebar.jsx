@@ -56,7 +56,7 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
                       handleSetLastClicked('logout'); 
                       setActiveUser(""); 
                       navigate('/home', { state: { patientId: "" } }); 
-                      ComponentClick('HomePage');
+                      ComponentClick('patientManagment');
                       }}>
                           התנתק ממשתמש {activeUser} <i className="fa-solid fa-right-from-bracket"></i>
                     </button>
@@ -118,24 +118,26 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
         {/* does not display only for caregivers.*/}
         {Loggedinuserdata?.role !== 'caregiver'|| activeUser !== "" ? (
           <>
-            <h3>משחקים <i className="fa-solid fa-brain"></i></h3>
+            <h3>תרגילים <i className="fa-solid fa-brain"></i></h3>
             <div className='games_btn'>
               
               <button 
-                className={lastclicked === 'QuickMemoryGame' ? 'active' : ''} onClick={() => { ComponentClick('QuickMemoryGame'); handleSetLastClicked('QuickMemoryGame'); }}>משחק זכרון
+                className={lastclicked === 'QuickMemoryGame' ? 'active' : ''} onClick={() => { ComponentClick('QuickMemoryGame'); handleSetLastClicked('QuickMemoryGame'); }}> זיכרון חזותי
+
+
               </button>
               <button 
-                className={lastclicked === 'ColorShadeGame' ? 'active' : ''} onClick={() => { ComponentClick('ColorShadeGame'); handleSetLastClicked('ColorShadeGame'); }}>צבעים
+                className={lastclicked === 'ColorShadeGame' ? 'active' : ''} onClick={() => { ComponentClick('ColorShadeGame'); handleSetLastClicked('ColorShadeGame'); }}> הבחנת צבעים
               </button>
             
               <button 
-                className={lastclicked === 'Scanning' ? 'active' : ''} onClick={() => { ComponentClick('Scanning'); handleSetLastClicked('Scanning'); }}> סריקה
+                className={lastclicked === 'Scanning' ? 'active' : ''} onClick={() => { ComponentClick('Scanning'); handleSetLastClicked('Scanning'); }}>  סריקה רוחבית
               </button>
               <button 
-                className={lastclicked === 'ClockSaccada' ? 'active' : ''} onClick={() => { ComponentClick('ClockSaccada'); handleSetLastClicked('ClockSaccada'); }}>סאקדת שעון
+                className={lastclicked === 'ClockSaccada' ? 'active' : ''} onClick={() => { ComponentClick('ClockSaccada'); handleSetLastClicked('ClockSaccada'); }}> סריקה מעגלית 
               </button>
               <button
-               className={lastclicked === 'Catch5Game' ? 'active' : ''} onClick={() => { ComponentClick('Catch5Game'); handleSetLastClicked('Catch5Game'); }}>לתפוס 5
+               className={lastclicked === 'Catch5Game' ? 'active' : ''} onClick={() => { ComponentClick('Catch5Game'); handleSetLastClicked('Catch5Game'); }}> תגובה ממוקדת
               </button>
 
               <h3>אימון ראיה <i className="fa-regular fa-eye"></i></h3>

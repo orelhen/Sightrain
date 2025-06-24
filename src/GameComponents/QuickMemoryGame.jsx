@@ -322,7 +322,7 @@ const QuickMemoryGame = ({activeUser, IsTest, onTestComplete}) => {
         <div className="game">
             {stage === 'start' && (
                 <div>
-                    <h2>משחק זכרון</h2>
+                    <h2>זכרון חזותי</h2>
 
                     <div className="gamedesc">
                         <h3>
