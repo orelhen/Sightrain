@@ -538,7 +538,7 @@ select option {
   );
   background-size: cover;
   background-position: center;
-  background-image: url("C:\Users\orelh\OneDrive\Desktop\sightrain\Sightrain\src\assets\hero_bg.png");
+  background-image: url("../../assets/hero_bg2.png");
   height: 600px;
   display: flex;
   align-items: center;
@@ -581,14 +581,14 @@ select option {
 }
 
 .hero_banner_titles h2 {
-  font-size: 40px;
+  font-size: 54px;
   margin: 0;
   color: black;
 }
 
 .hero_banner_titles h3 {
   margin: 0;
-  font-size: 30px;
+  font-size: 36px;
   font-weight: 500;
   color: black;
 }

@@ -7,9 +7,6 @@ import logo1 from "../assets/SCE.png";
 // import logo2 from '../assets/SorokaLogo.svg'; // Treated as an image
 import logo3 from "../assets/TOM2.png";
 
-// Then in JSX:
-<img src={logo1} alt="Logo 1" />;
-
 const HomePage = () => {
   const navigate = useNavigate();
   const [showFeedback, setShowFeedback] = useState(false);

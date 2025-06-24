@@ -128,7 +128,7 @@ const MainFrame = () => {
                 {activeComponent === 'ClockSaccada' && <ClockSaccada  activeUser={activeUser}/>} 
                 {activeComponent === 'Scanning' && <Scanning  activeUser={activeUser}/>} 
                 {activeComponent === 'videos' && <VideoGallery />}
-                {activeComponent === 'Statistics' && <MyStats Loggedinuserdata={user} activeUser={activeUser} />}
+                {activeComponent === 'Statistics' && <MyStats  activeUser={activeUser} />}
                 {activeComponent === 'Test' && <Test Loggedinuserdata={user} activeUser={activeUser} />}
             </main>
         </div>

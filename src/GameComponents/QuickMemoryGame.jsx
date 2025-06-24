@@ -214,15 +214,23 @@ const QuickMemoryGame = ({activeUser, IsTest, onTestComplete}) => {
         if (stage === 'SaveResults') {
             const saveResultsToDatabase = async () => {
                 try {
-                    const gameData = results.map(result => ({
-                        ...result,
-                        difficulty,
-                        spacing: Spacing,
-                        fontSize,
-                        timestamp: new Date().toISOString(),
-                        isTestMode,
-                        ...(isTestMode && { finalLevel })
-                    }));
+                    const gameData = results.map(result => {
+                        // Create a clean copy of the result without undefined values
+                        const cleanResult = Object.entries(result).reduce((acc, [key, value]) => {
+                            if (value !== undefined) acc[key] = value;
+                            return acc;
+                        }, {});
+                        
+                        return {
+                            ...cleanResult,
+                            difficulty: difficulty || 0,
+                            spacing: Spacing || 0,
+                            fontSize: fontSize || 0,
+                            timestamp: new Date().toISOString(),
+                            isTestMode: isTestMode || false,
+                            ...(isTestMode && finalLevel !== undefined ? { finalLevel } : {})
+                        };
+                    });
                     
                     const sessionKey = `Session (${new Date().toLocaleDateString()})`;
                     

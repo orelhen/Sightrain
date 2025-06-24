@@ -217,7 +217,8 @@ const calculateAccuracy = (results) => {
       }
       
       const sessionKey = `Session (${new Date().toLocaleDateString()})`;
-      const gameData = {
+      // Create game data and filter out any undefined values
+      let gameData = {
         correctAnswers,
         incorrectAnswers,
         ballCount,
@@ -228,6 +229,11 @@ const calculateAccuracy = (results) => {
         isTestMode,
         ...(isTestMode && { finalLevel }),
       };
+      
+      // Remove any properties with undefined values
+      gameData = Object.fromEntries(
+        Object.entries(gameData).filter(([_, value]) => value !== undefined)
+      );
 
       if (activeUser !== "") {
         // Save to patient document

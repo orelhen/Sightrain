@@ -56,7 +56,7 @@ const Sidebar = ({ComponentClick ,Loggedinuserdata,activeUser,setActiveUser}) =>
                       handleSetLastClicked('logout'); 
                       setActiveUser(""); 
                       navigate('/home', { state: { patientId: "" } }); 
-                      ComponentClick('patientManagment');
+                      ComponentClick('HomePage');
                       }}>
                           התנתק ממשתמש {activeUser} <i className="fa-solid fa-right-from-bracket"></i>
                     </button>

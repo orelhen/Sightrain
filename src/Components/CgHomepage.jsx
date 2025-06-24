@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  
 import FeedbackForm from './feedbackform.jsx';
-
+import logo1 from "../assets/SCE.png";
+import logo3 from "../assets/TOM2.png";
 
 
 
@@ -14,11 +15,21 @@ const CgHomepage = ({ComponentClick}) => {
         <div className="home-container" id="caregiver-home">
             <h1 className="main_logo">SighTrain</h1>
 
+         
             <section className="hero-fullscreen">
-                <div className="overlay">
-                    <h2>ברוכים הבאים ל-SighTrain למטפלים</h2>
-                </div>
-            </section>
+        <div className="hero_content_wrapper">
+          <div className="hero_banner_titles">
+          <h2>ברוכים הבאים ל-SighTrain למטפלים</h2>
+
+          </div>
+
+          <div className="hero_banner_logos">
+            <p>בשיתוף עם:</p>
+            <img src={logo1} alt="SCE Logo" className="footer-logo" />
+            <img src={logo3} alt="TOM Logo" className="footer-logo" />
+          </div>
+        </div>
+      </section>
 
             <div className="homepage_section_wrapper">
                 <section className="welcome_sec">
@@ -40,7 +51,7 @@ const CgHomepage = ({ComponentClick}) => {
 
                 <section className="role_sec" id="caregiver-role">
                 
-                    <p>
+                    <p className="text-center">
                         אתם לא רק תומכים טכנית – אתם שותפים למסע האישי של המטופל. תפקידכם לעודד, להעצים, ולוודא שהחוויה חיובית ומותאמת אישית.
                     </p>
                 </section>

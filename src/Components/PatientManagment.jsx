@@ -54,30 +54,35 @@ const PatientManagement = ({setActiveUser,ComponentClick,Loggedinuserdata}) => {
     }, [auth]);
 
 
-
     const handleAddPatient = async () => {
         try {
-
             const patientDoc = doc(firestore, "patients", newPatientId);
                   
-                  const patientSnapshot = await getDoc(patientDoc);
-                  const NewPatient = {
-                        id: newPatientId,
-                        name: newPatientName,
-                        dateAdded: new Date().toISOString(),
-                        isActive: "true",
-                        department: Loggedinuserdata.department,
-                    };
+            const patientSnapshot = await getDoc(patientDoc);
+            const NewPatient = {
+                id: newPatientId,
+                name: newPatientName,
+                dateAdded: new Date().toISOString(),
+                isActive: "true",
+                department: Loggedinuserdata.department,
+            };
                 
-                  if (!patientSnapshot.exists()) {
-                    await setDoc(patientDoc, NewPatient);
-                    console.log("Patient document created successfully!");
-                  } else {
-                    setShowAlert(true);
-                    // Reset the form fields after showing the alert
-                    setNewPatientId('');
-                    setNewPatientName('');
-                  }
+            if (!patientSnapshot.exists()) {
+                await setDoc(patientDoc, NewPatient);
+                console.log("Patient document created successfully!");
+                // Reset form fields after successful addition
+                setNewPatientId('');
+                setNewPatientName('');
+                // Close the form
+                setShowAddPatientForm(false);
+                // Refresh the patients data
+                fetchPatientsData();
+            } else {
+                setShowAlert(true);
+                // Reset the form fields after showing the alert
+                setNewPatientId('');
+                setNewPatientName('');
+            }
                  
         } catch (error) {
             console.error('Error adding patient:', error);

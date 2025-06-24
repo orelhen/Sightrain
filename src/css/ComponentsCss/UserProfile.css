@@ -55,7 +55,7 @@
 .notes-section {
   width: 60%;
   padding: 2em;
-  background: url("C:\Users\orelh\OneDrive\Desktop\sightrain\Sightrain\src\assets\forget-notes.jpg");
+  background: url("../../assets/forget-notes.jpg");
   background-size: cover;
 }
 
@@ -181,7 +181,6 @@ li.note-card:nth-child(1) {
 
 .summary-table {
   margin: 2em;
-  max-width: 80%;
   padding: 15px;
   border-radius: 15px;
   border: 3px solid black;

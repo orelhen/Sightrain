@@ -40,6 +40,8 @@ const RegisterPage = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             setServerMessage('הרשמה בוצעה בהצלחה');
+            setErrors({});
+            setShowAlert(true);
             console.log('Registered user:', user);
             usid=user.uid;
         } catch (error) {
@@ -199,17 +201,18 @@ const RegisterPage = () => {
                         )}
                     </div>
 
-            {showAlert && (
+         
+
+          
+        </section>
+        {showAlert && (
                 <AlertDialog 
                     open={showAlert} 
-                    title="שגיאת התחברות" 
+                    title="הודעה" 
                     message={serverMessage}
                     onClose={() => setShowAlert(false)}
                 />
             )}
-
-          
-        </section>
         </div>
     );
 };
